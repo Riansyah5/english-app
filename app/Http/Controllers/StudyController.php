@@ -91,4 +91,28 @@ class StudyController extends Controller
             'next_review_date' => $flashcard->next_review_date->format('Y-m-d')
         ]);
     }
+
+    // FUNGSI BARU: Mode Latihan Bebas (Tanpa Skor)
+    public function practice()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $today = \Carbon\Carbon::today();
+
+        // 1. Ambil kartu yang sudah di-review hari ini
+        $practiceCards = UserFlashcard::with('studyItem')
+            ->where('user_id', $user->id)
+            ->whereDate('updated_at', $today)
+            ->get();
+
+        // 2. Jika hari ini belum ada yang di-review (atau masih kosong), ambil 50 kartu acak
+        if ($practiceCards->isEmpty()) {
+            $practiceCards = UserFlashcard::with('studyItem')
+                ->where('user_id', $user->id)
+                ->inRandomOrder()
+                ->limit(50)
+                ->get();
+        }
+
+        return view('study.practice', compact('practiceCards'));
+    }
 }

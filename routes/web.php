@@ -19,6 +19,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware(['auth'])->group(function () {
     // Rute untuk halaman belajar
     Route::get('/study', [StudyController::class, 'index'])->name('study.index');
+    Route::get('/study/practice', [StudyController::class, 'practice'])->name('study.practice');
 
     // Rute untuk memproses jawaban flashcard
     Route::post('/study/{flashcardId}/review', [StudyController::class, 'review'])->name('study.review');

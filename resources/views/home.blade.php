@@ -41,10 +41,13 @@
                         <p class="fs-5 mb-4">
                             Luar biasa! Kamu sudah memenuhi target belajar harianmu hari ini. Otakmu butuh istirahat agar memori tersimpan permanen.
                         </p>
-                        <div>
-                            <button class="btn btn-light btn-lg fw-bold rounded-pill px-5 text-success" disabled>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-lg fw-bold rounded-pill px-4" disabled>
                                 Target Tercapai 🎉
                             </button>
+                            <a href="{{ route('study.practice') }}" class="btn btn-outline-light btn-lg fw-bold rounded-pill px-4">
+                                Latihan Bebas
+                            </a>
                         </div>
                     @endif
                 </div>
