@@ -5,20 +5,38 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h4 class="fw-bold mb-0">Mode Latihan Bebas</h4>
                     <small class="text-muted">Skor tidak akan disimpan</small>
                 </div>
-                <span class="badge bg-info text-white rounded-pill fs-6" id="cardCounter">0 / 0</span>
+                <span class="badge bg-info text-white rounded-pill fs-6 px-3" id="cardCounter">0 / 0</span>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <a href="{{ route('study.practice') }}" class="btn btn-sm rounded-pill fw-semibold {{ !$selectedType ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    Semua
+                </a>
+                <a href="{{ route('study.practice', ['type' => 'word']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'word' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    Vocabulary
+                </a>
+                <a href="{{ route('study.practice', ['type' => 'phrase']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'phrase' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    Phrases
+                </a>
+                <a href="{{ route('study.practice', ['type' => 'grammar_rule']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'grammar_rule' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    Grammar
+                </a>
+                <a href="{{ route('study.practice', ['type' => 'idiom']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'idiom' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    Idioms
+                </a>
             </div>
 
             <div id="completionMessage" class="text-center d-none py-5">
                 <h1 class="display-1 text-primary mb-3">🔁</h1>
                 <h3 class="fw-bold">Latihan Selesai</h3>
-                <p class="text-muted">Anda telah mengulang semua materi. Ingatan Anda semakin kuat!</p>
+                <p class="text-muted" id="completionDesc">Anda telah mengulang semua materi di kategori ini. Ingatan Anda semakin kuat!</p>
                 <div class="d-flex justify-content-center gap-2 mt-4">
-                    <a href="{{ route('study.practice') }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Ulangi Lagi</a>
+                    <a href="{{ route('study.practice', ['type' => $selectedType]) }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Ulangi Kategori Ini</a>
                     <a href="{{ route('home') }}" class="btn btn-primary rounded-pill px-4 fw-semibold">Ke Dashboard</a>
                 </div>
             </div>
@@ -147,5 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
         completionMsg.querySelector('p').innerText = "Belum ada materi untuk dilatih.";
     }
 });
+
+if (flashcards.length > 0) {
+        populateCardData(currentIndex);
+    } else {
+        container.classList.add('d-none');
+        completionMsg.classList.remove('d-none');
+        document.getElementById('completionDesc').innerText = "Belum ada materi untuk kategori ini. Silakan pilih kategori lain atau tambah materi baru.";
+    }
 </script>
 @endsection

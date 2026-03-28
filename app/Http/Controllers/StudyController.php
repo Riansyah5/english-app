@@ -92,27 +92,38 @@ class StudyController extends Controller
         ]);
     }
 
-    // FUNGSI BARU: Mode Latihan Bebas (Tanpa Skor)
-    public function practice()
+    // FUNGSI UPDATE: Mode Latihan Bebas (Dengan Filter Tipe)
+    public function practice(Request $request)
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         $today = \Carbon\Carbon::today();
+        
+        // Menangkap parameter 'type' dari URL (misal: ?type=word)
+        $selectedType = $request->query('type');
 
-        // 1. Ambil kartu yang sudah di-review hari ini
-        $practiceCards = UserFlashcard::with('studyItem')
-            ->where('user_id', $user->id)
+        // Query dasar: Ambil kartu milik user ini
+        $baseQuery = UserFlashcard::with('studyItem')->where('user_id', $user->id);
+
+        // Jika user memilih filter, persempit query-nya dengan whereHas ke tabel relasi study_items
+        if ($selectedType) {
+            $baseQuery->whereHas('studyItem', function($q) use ($selectedType) {
+                $q->where('type', $selectedType);
+            });
+        }
+
+        // 1. Coba ambil kartu yang sudah di-review HARI INI (berdasarkan filter jika ada)
+        $practiceCards = (clone $baseQuery)
             ->whereDate('updated_at', $today)
             ->get();
 
-        // 2. Jika hari ini belum ada yang di-review (atau masih kosong), ambil 50 kartu acak
+        // 2. Jika kosong (misal: user belum belajar tipe tersebut hari ini), ambil 50 kartu acak dari tipe itu
         if ($practiceCards->isEmpty()) {
-            $practiceCards = UserFlashcard::with('studyItem')
-                ->where('user_id', $user->id)
+            $practiceCards = (clone $baseQuery)
                 ->inRandomOrder()
                 ->limit(50)
                 ->get();
         }
 
-        return view('study.practice', compact('practiceCards'));
+        return view('study.practice', compact('practiceCards', 'selectedType'));
     }
 }
