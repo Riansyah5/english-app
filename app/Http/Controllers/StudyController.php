@@ -92,17 +92,18 @@ class StudyController extends Controller
         ]);
     }
 
-    // FUNGSI UPDATE: Mode Latihan Bebas (Filter Tipe & Sumber Data)
+    // FUNGSI UPDATE TERAKHIR: Mode Latihan Bebas (Filter Tipe, Sumber, & Limit)
     public function practice(Request $request)
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         $today = \Carbon\Carbon::today();
         
-        // Menangkap parameter dari URL
+        // Menangkap 3 parameter dari URL
         $selectedType = $request->query('type');
-        $source = $request->query('source', 'today'); // Default ke 'today' jika kosong
+        $source = $request->query('source', 'today'); // Default 'today'
+        $limit = $request->query('limit', '50');      // Default '50'
 
-        // Query dasar: Ambil kartu milik user ini
+        // Query dasar
         $baseQuery = UserFlashcard::with('studyItem')->where('user_id', $user->id);
 
         // 1. Terapkan Filter Tipe (Jika ada)
@@ -112,22 +113,25 @@ class StudyController extends Controller
             });
         }
 
-        // 2. Terapkan Filter Sumber Data (Materi Hari Ini vs Semua Acak)
+        // 2. Terapkan Filter Sumber Data & Limit
         if ($source === 'today') {
-            // Ambil kartu yang HANYA di-review hari ini
+            // Jika materi hari ini, kita tidak batasi limit-nya (tampilkan semua yang di-review hari ini)
             $practiceCards = (clone $baseQuery)
                 ->whereDate('updated_at', $today)
-                // Memastikan statusnya benar-benar sudah di-review (jadwal bergeser ke masa depan)
-                ->whereDate('next_review_date', '>', $today) 
+                ->whereDate('next_review_date', '>', $today)
                 ->get();
         } else {
-            // Mode 'all': Ambil 100 kartu acak dari seluruh database user
-            $practiceCards = (clone $baseQuery)
-                ->inRandomOrder()
-                ->limit(100)
-                ->get();
+            // Mode 'all': Ambil data acak
+            $query = (clone $baseQuery)->inRandomOrder();
+            
+            // Jika limit bukan 'all', terapkan pembatasan angka
+            if ($limit !== 'all') {
+                $query->limit((int) $limit);
+            }
+
+            $practiceCards = $query->get();
         }
 
-        return view('study.practice', compact('practiceCards', 'selectedType', 'source'));
+        return view('study.practice', compact('practiceCards', 'selectedType', 'source', 'limit'));
     }
 }

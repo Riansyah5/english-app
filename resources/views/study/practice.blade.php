@@ -10,39 +10,47 @@
                     <h4 class="fw-bold mb-0">Mode Latihan Bebas</h4>
                     <small class="text-muted">Skor tidak akan disimpan</small>
                 </div>
-                <span class="badge bg-info text-white rounded-pill fs-6 px-3" id="cardCounter">0 / 0</span>
+                <div class="d-flex gap-2 align-items-center">
+                    <button id="btnToggleDirection" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold shadow-sm">
+                        🔄 ID ➔ EN
+                    </button>
+                    <span class="badge bg-info text-white rounded-pill fs-6 px-3" id="cardCounter">0 / 0</span>
+                </div>
             </div>
 
             <div class="card shadow-sm border-0 rounded-4 mb-3 bg-light">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <span class="fw-semibold text-muted small text-uppercase">Sumber Data:</span>
                     <div class="btn-group" role="group">
-                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => 'today']) }}" class="btn btn-sm fw-bold {{ $source == 'today' ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}">
-                            Materi Hari Ini
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => 'today', 'limit' => $limit]) }}" class="btn btn-sm fw-bold {{ $source == 'today' ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}">
+                            Hari Ini
                         </a>
-                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => 'all']) }}" class="btn btn-sm fw-bold {{ $source == 'all' ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}">
-                            Semua Data (Acak)
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => 'all', 'limit' => $limit]) }}" class="btn btn-sm fw-bold {{ $source == 'all' ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}">
+                            Semua (Acak)
                         </a>
                     </div>
                 </div>
             </div>
 
+            @if($source == 'all')
+            <div class="card shadow-sm border-0 rounded-4 mb-3 bg-white border-start border-4 border-info">
+                <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold text-muted small text-uppercase">Batas Jumlah:</span>
+                    <div class="btn-group" role="group">
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => $source, 'limit' => '50']) }}" class="btn btn-sm fw-bold {{ $limit == '50' ? 'btn-info text-white shadow-sm' : 'btn-outline-info' }}">50</a>
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => $source, 'limit' => '100']) }}" class="btn btn-sm fw-bold {{ $limit == '100' ? 'btn-info text-white shadow-sm' : 'btn-outline-info' }}">100</a>
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => $source, 'limit' => 'all']) }}" class="btn btn-sm fw-bold {{ $limit == 'all' ? 'btn-info text-white shadow-sm' : 'btn-outline-info' }}">Semua</a>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="d-flex flex-wrap gap-2 mb-4">
-                <a href="{{ route('study.practice', ['type' => null, 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ !$selectedType ? 'btn-dark' : 'btn-outline-secondary' }}">
-                    Semua Tipe
-                </a>
-                <a href="{{ route('study.practice', ['type' => 'word', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'word' ? 'btn-dark' : 'btn-outline-secondary' }}">
-                    Vocabulary
-                </a>
-                <a href="{{ route('study.practice', ['type' => 'phrase', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'phrase' ? 'btn-dark' : 'btn-outline-secondary' }}">
-                    Phrases
-                </a>
-                <a href="{{ route('study.practice', ['type' => 'grammar_rule', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'grammar_rule' ? 'btn-dark' : 'btn-outline-secondary' }}">
-                    Grammar
-                </a>
-                <a href="{{ route('study.practice', ['type' => 'idiom', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'idiom' ? 'btn-dark' : 'btn-outline-secondary' }}">
-                    Idioms
-                </a>
+                <a href="{{ route('study.practice', ['type' => null, 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ !$selectedType ? 'btn-dark' : 'btn-outline-secondary' }}">Semua Tipe</a>
+                <a href="{{ route('study.practice', ['type' => 'word', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'word' ? 'btn-dark' : 'btn-outline-secondary' }}">Vocabulary</a>
+                <a href="{{ route('study.practice', ['type' => 'phrase', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'phrase' ? 'btn-dark' : 'btn-outline-secondary' }}">Phrases</a>
+                <a href="{{ route('study.practice', ['type' => 'grammar_rule', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'grammar_rule' ? 'btn-dark' : 'btn-outline-secondary' }}">Grammar</a>
+                <a href="{{ route('study.practice', ['type' => 'idiom', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'idiom' ? 'btn-dark' : 'btn-outline-secondary' }}">Idioms</a>
             </div>
 
             <div id="completionMessage" class="text-center d-none py-5">
@@ -50,7 +58,7 @@
                 <h3 class="fw-bold">Latihan Selesai</h3>
                 <p class="text-muted" id="completionDesc">Anda telah mengulang semua materi di pengaturan ini.</p>
                 <div class="d-flex justify-content-center gap-2 mt-4">
-                    <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => $source]) }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Ulangi Lagi</a>
+                    <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => $source, 'limit' => $limit]) }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Ulangi Lagi</a>
                     <a href="{{ route('home') }}" class="btn btn-primary rounded-pill px-4 fw-semibold">Ke Dashboard</a>
                 </div>
             </div>
@@ -99,7 +107,6 @@
 
 @section('styles')
 <style>
-/* CSS Animasi 3D Tetap Sama */
 .flip-container { perspective: 1500px; position: relative; height: 500px; }
 .flipper { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s ease-in-out; }
 .flipper.flipped { transform: rotateY(180deg); }
@@ -114,6 +121,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let flashcards = @json($practiceCards);
     let currentIndex = 0;
+    let isReversed = false; // Status arah terjemahan
 
     const container = document.getElementById('flashcardContainer');
     const flipper = document.getElementById('flipperCard');
@@ -130,16 +138,37 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const btnShowAnswer = document.getElementById('btnShowAnswer');
     const btnNextCard = document.getElementById('btnNextCard');
+    const btnToggleDirection = document.getElementById('btnToggleDirection');
+
+    // EVENT: Toggle Arah Terjemahan
+    btnToggleDirection.addEventListener('click', function() {
+        isReversed = !isReversed;
+        this.innerText = isReversed ? "🔄 EN ➔ ID" : "🔄 ID ➔ EN";
+        this.classList.toggle('btn-secondary');
+        this.classList.toggle('btn-outline-secondary');
+        this.classList.toggle('text-white');
+        
+        if (currentIndex < flashcards.length) {
+            populateCardData(currentIndex);
+        }
+    });
 
     function populateCardData(index) {
         const item = flashcards[index].study_item;
         counter.innerText = `${index + 1} / ${flashcards.length}`;
-        
-        contentEl.innerText = item.content;
         typeElFront.innerText = item.type.toUpperCase();
         
-        contentElRepeat.innerText = item.content;
-        translationEl.innerText = item.translation;
+        // Cek arah bahasa
+        if (!isReversed) {
+            contentEl.innerText = item.content;
+            contentElRepeat.innerText = item.content;
+            translationEl.innerText = item.translation;
+        } else {
+            contentEl.innerText = item.translation;
+            contentElRepeat.innerText = item.translation;
+            translationEl.innerText = item.content;
+        }
+
         exampleEl.innerText = item.example_sentence || 'Tidak ada contoh kalimat.';
         notesEl.innerText = item.notes || '';
     }
@@ -155,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         setTimeout(() => {
             populateCardData(currentIndex);
-            // Tombol diaktifkan kembali setelah rotasi selesai
             btnNextCard.disabled = false;
         }, 500); 
     }
@@ -164,9 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
         flipper.classList.add('flipped');
     });
 
-    // EVENT BARU: Langsung lanjut tanpa Fetch API ke Backend
     btnNextCard.addEventListener('click', function() {
-        this.disabled = true; // Cegah double click
+        this.disabled = true;
         currentIndex++;
         loadNextCard();
     });
@@ -176,19 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         container.classList.add('d-none');
         completionMsg.classList.remove('d-none');
-        completionMsg.querySelector('p').innerText = "Belum ada materi untuk dilatih.";
-    }
-});
-
-if (flashcards.length > 0) {
-        populateCardData(currentIndex);
-    } else {
-        container.classList.add('d-none');
-        completionMsg.classList.remove('d-none');
         
-        // Pesan yang lebih cerdas berdasarkan sumber
         let sourceText = "{{ $source }}" === "today" ? "yang kamu review hari ini" : "di dalam database-mu";
         document.getElementById('completionDesc').innerText = `Belum ada materi untuk kategori ini ${sourceText}. Silakan ubah filter di atas.`;
     }
+});
 </script>
 @endsection

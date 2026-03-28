@@ -7,7 +7,12 @@
             
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold mb-0">Daily Review</h4>
-                <span class="badge bg-primary rounded-pill fs-6" id="cardCounter">0 / 0</span>
+                <div class="d-flex gap-2 align-items-center">
+                    <button id="btnToggleDirection" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold shadow-sm">
+                        🔄 ID ➔ EN
+                    </button>
+                    <span class="badge bg-primary rounded-pill fs-6" id="cardCounter">0 / 0</span>
+                </div>
             </div>
 
             <div id="completionMessage" class="text-center d-none py-5">
@@ -151,6 +156,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tombol Aksi
     const btnShowAnswer = document.getElementById('btnShowAnswer');
     const rateBtns = document.querySelectorAll('.rate-btn');
+    
+    // ELEMEN BARU
+    const btnToggleDirection = document.getElementById('btnToggleDirection');
+    let isReversed = false; // Status awal: Inggris ke Indonesia
+
+    // EVENT BARU: Tombol Toggle Arah
+    btnToggleDirection.addEventListener('click', function() {
+        isReversed = !isReversed; // Balikkan status
+        
+        // Ubah tampilan tombol
+        this.innerText = isReversed ? "🔄 EN ➔ ID" : "🔄 ID ➔ EN";
+        this.classList.toggle('btn-secondary');
+        this.classList.toggle('btn-outline-secondary');
+        this.classList.toggle('text-white');
+        
+        // Render ulang teks di kartu yang sedang tampil secara instan
+        if (currentIndex < flashcards.length) {
+            populateCardData(currentIndex);
+        }
+    });
+
+    // FUNGSI UPDATE: Memasukkan teks dengan kondisi arah
+    function populateCardData(index) {
+        const item = flashcards[index].study_item;
+        counter.innerText = `${index + 1} / ${flashcards.length}`;
+        typeElFront.innerText = item.type.toUpperCase();
+        
+        if (!isReversed) {
+            // Mode Normal (Inggris di Depan, Indonesia di Belakang)
+            contentEl.innerText = item.content;
+            contentElRepeat.innerText = item.content;
+            translationEl.innerText = item.translation;
+        } else {
+            // Mode Terbalik (Indonesia di Depan, Inggris di Belakang)
+            contentEl.innerText = item.translation;
+            contentElRepeat.innerText = item.translation;
+            translationEl.innerText = item.content;
+        }
+
+        exampleEl.innerText = item.example_sentence || 'Tidak ada contoh kalimat.';
+        notesEl.innerText = item.notes || '';
+    }
 
     // Fungsi: Memuat kartu ke layar
     function loadCard() {
