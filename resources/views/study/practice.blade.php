@@ -13,20 +13,34 @@
                 <span class="badge bg-info text-white rounded-pill fs-6 px-3" id="cardCounter">0 / 0</span>
             </div>
 
+            <div class="card shadow-sm border-0 rounded-4 mb-3 bg-light">
+                <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold text-muted small text-uppercase">Sumber Data:</span>
+                    <div class="btn-group" role="group">
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => 'today']) }}" class="btn btn-sm fw-bold {{ $source == 'today' ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}">
+                            Materi Hari Ini
+                        </a>
+                        <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => 'all']) }}" class="btn btn-sm fw-bold {{ $source == 'all' ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}">
+                            Semua Data (Acak)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="d-flex flex-wrap gap-2 mb-4">
-                <a href="{{ route('study.practice') }}" class="btn btn-sm rounded-pill fw-semibold {{ !$selectedType ? 'btn-primary' : 'btn-outline-secondary' }}">
-                    Semua
+                <a href="{{ route('study.practice', ['type' => null, 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ !$selectedType ? 'btn-dark' : 'btn-outline-secondary' }}">
+                    Semua Tipe
                 </a>
-                <a href="{{ route('study.practice', ['type' => 'word']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'word' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                <a href="{{ route('study.practice', ['type' => 'word', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'word' ? 'btn-dark' : 'btn-outline-secondary' }}">
                     Vocabulary
                 </a>
-                <a href="{{ route('study.practice', ['type' => 'phrase']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'phrase' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                <a href="{{ route('study.practice', ['type' => 'phrase', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'phrase' ? 'btn-dark' : 'btn-outline-secondary' }}">
                     Phrases
                 </a>
-                <a href="{{ route('study.practice', ['type' => 'grammar_rule']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'grammar_rule' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                <a href="{{ route('study.practice', ['type' => 'grammar_rule', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'grammar_rule' ? 'btn-dark' : 'btn-outline-secondary' }}">
                     Grammar
                 </a>
-                <a href="{{ route('study.practice', ['type' => 'idiom']) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'idiom' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                <a href="{{ route('study.practice', ['type' => 'idiom', 'source' => $source]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'idiom' ? 'btn-dark' : 'btn-outline-secondary' }}">
                     Idioms
                 </a>
             </div>
@@ -34,9 +48,9 @@
             <div id="completionMessage" class="text-center d-none py-5">
                 <h1 class="display-1 text-primary mb-3">🔁</h1>
                 <h3 class="fw-bold">Latihan Selesai</h3>
-                <p class="text-muted" id="completionDesc">Anda telah mengulang semua materi di kategori ini. Ingatan Anda semakin kuat!</p>
+                <p class="text-muted" id="completionDesc">Anda telah mengulang semua materi di pengaturan ini.</p>
                 <div class="d-flex justify-content-center gap-2 mt-4">
-                    <a href="{{ route('study.practice', ['type' => $selectedType]) }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Ulangi Kategori Ini</a>
+                    <a href="{{ route('study.practice', ['type' => $selectedType, 'source' => $source]) }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Ulangi Lagi</a>
                     <a href="{{ route('home') }}" class="btn btn-primary rounded-pill px-4 fw-semibold">Ke Dashboard</a>
                 </div>
             </div>
@@ -171,7 +185,10 @@ if (flashcards.length > 0) {
     } else {
         container.classList.add('d-none');
         completionMsg.classList.remove('d-none');
-        document.getElementById('completionDesc').innerText = "Belum ada materi untuk kategori ini. Silakan pilih kategori lain atau tambah materi baru.";
+        
+        // Pesan yang lebih cerdas berdasarkan sumber
+        let sourceText = "{{ $source }}" === "today" ? "yang kamu review hari ini" : "di dalam database-mu";
+        document.getElementById('completionDesc').innerText = `Belum ada materi untuk kategori ini ${sourceText}. Silakan ubah filter di atas.`;
     }
 </script>
 @endsection

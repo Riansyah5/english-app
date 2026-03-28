@@ -92,38 +92,42 @@ class StudyController extends Controller
         ]);
     }
 
-    // FUNGSI UPDATE: Mode Latihan Bebas (Dengan Filter Tipe)
+    // FUNGSI UPDATE: Mode Latihan Bebas (Filter Tipe & Sumber Data)
     public function practice(Request $request)
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         $today = \Carbon\Carbon::today();
         
-        // Menangkap parameter 'type' dari URL (misal: ?type=word)
+        // Menangkap parameter dari URL
         $selectedType = $request->query('type');
+        $source = $request->query('source', 'today'); // Default ke 'today' jika kosong
 
         // Query dasar: Ambil kartu milik user ini
         $baseQuery = UserFlashcard::with('studyItem')->where('user_id', $user->id);
 
-        // Jika user memilih filter, persempit query-nya dengan whereHas ke tabel relasi study_items
+        // 1. Terapkan Filter Tipe (Jika ada)
         if ($selectedType) {
             $baseQuery->whereHas('studyItem', function($q) use ($selectedType) {
                 $q->where('type', $selectedType);
             });
         }
 
-        // 1. Coba ambil kartu yang sudah di-review HARI INI (berdasarkan filter jika ada)
-        $practiceCards = (clone $baseQuery)
-            ->whereDate('updated_at', $today)
-            ->get();
-
-        // 2. Jika kosong (misal: user belum belajar tipe tersebut hari ini), ambil 50 kartu acak dari tipe itu
-        if ($practiceCards->isEmpty()) {
+        // 2. Terapkan Filter Sumber Data (Materi Hari Ini vs Semua Acak)
+        if ($source === 'today') {
+            // Ambil kartu yang HANYA di-review hari ini
+            $practiceCards = (clone $baseQuery)
+                ->whereDate('updated_at', $today)
+                // Memastikan statusnya benar-benar sudah di-review (jadwal bergeser ke masa depan)
+                ->whereDate('next_review_date', '>', $today) 
+                ->get();
+        } else {
+            // Mode 'all': Ambil 100 kartu acak dari seluruh database user
             $practiceCards = (clone $baseQuery)
                 ->inRandomOrder()
-                ->limit(50)
+                ->limit(100)
                 ->get();
         }
 
-        return view('study.practice', compact('practiceCards', 'selectedType'));
+        return view('study.practice', compact('practiceCards', 'selectedType', 'source'));
     }
 }
