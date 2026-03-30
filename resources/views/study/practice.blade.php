@@ -51,6 +51,7 @@
                 <a href="{{ route('study.practice', ['type' => 'phrase', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'phrase' ? 'btn-dark' : 'btn-outline-secondary' }}">Phrases</a>
                 <a href="{{ route('study.practice', ['type' => 'grammar_rule', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'grammar_rule' ? 'btn-dark' : 'btn-outline-secondary' }}">Grammar</a>
                 <a href="{{ route('study.practice', ['type' => 'idiom', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'idiom' ? 'btn-dark' : 'btn-outline-secondary' }}">Idioms</a>
+                <a href="{{ route('study.practice', ['type' => 'speaking_prompt', 'source' => $source, 'limit' => $limit]) }}" class="btn btn-sm rounded-pill fw-semibold {{ $selectedType == 'speaking_prompt' ? 'btn-dark' : 'btn-outline-secondary' }}">Speaking Prompts</a>
             </div>
 
             <div id="completionMessage" class="text-center d-none py-5">

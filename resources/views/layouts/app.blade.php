@@ -40,6 +40,9 @@
               <a class="nav-link fw-semibold {{ request()->routeIs('study.index') ? 'active text-primary' : '' }}" href="{{ route('study.index') }}">Ruang Belajar</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link fw-semibold {{ request()->routeIs('videos.user.index') ? 'active text-primary' : '' }}" href="{{ route('videos.user.index') }}">Video Learning</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link fw-semibold {{ request()->routeIs('exams.*') ? 'active text-primary' : '' }}" href="{{ route('exams.index') }}">Evaluasi (CBT)</a>
             </li>
             @endauth
@@ -50,6 +53,10 @@
               </a>
               <ul class="dropdown-menu shadow border-0 mt-2">
                 <li><a class="dropdown-item" href="{{ route('admin.study-items.index') }}">Kelola Materi Flashcard</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><h6 class="dropdown-header">Video Learning</h6></li>
+                <li><a class="dropdown-item" href="{{ route('admin.video-folders.index') }}">Kelola Folder</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.videos.index') }}">Kelola Video</a></li>
               </ul>
             </li>
             @endif
@@ -101,6 +108,21 @@
       @yield('content')
     </main>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  @if(session('success'))
+  <script>
+      Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: "{{ session('success') }}",
+          showConfirmButton: false,
+          timer: 2000,
+          border: 'none',
+          borderRadius: '15px'
+      });
+  </script>
+  @endif
   @yield('scripts')
 </body>
 </html>

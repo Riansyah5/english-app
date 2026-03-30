@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\StudyItemController;
+use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\VideoFolderController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudyController;
+use App\Http\Controllers\VideoLearningController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\StudyItemController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -20,6 +23,11 @@ Route::middleware(['auth'])->group(function () {
     // Rute untuk halaman belajar
     Route::get('/study', [StudyController::class, 'index'])->name('study.index');
     Route::get('/study/practice', [StudyController::class, 'practice'])->name('study.practice');
+
+    // Rute Video Learning (User)
+    Route::get('/video-learning', [VideoLearningController::class, 'index'])->name('videos.user.index');
+    Route::get('/video-learning/{id}', [VideoLearningController::class, 'show'])->name('videos.user.show');
+    Route::post('/video-learning/save-vocab', [VideoLearningController::class, 'saveVocab'])->name('videos.user.save-vocab');
 
     // Rute untuk memproses jawaban flashcard
     Route::post('/study/{flashcardId}/review', [StudyController::class, 'review'])->name('study.review');
@@ -41,5 +49,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Rute CRUD Master Materi (Otomatis membuat rute index, create, store, destroy dll)
     Route::resource('study-items', StudyItemController::class)->except(['show']);
+    
+    // Rute Modul Video Learning
+    Route::resource('video-folders', VideoFolderController::class);
+    Route::resource('videos', VideoController::class);
     
 });
