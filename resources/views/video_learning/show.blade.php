@@ -1,4 +1,27 @@
 @extends('layouts.app')
+@section('styles')
+<style>
+    /* Animasi berkedip saat merekam suara */
+    @keyframes pulse-record {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+    .recording-active {
+        animation: pulse-record 1.5s infinite;
+    }
+    
+    /* Tambahan CSS Animasi Teks Berkedip */
+    @keyframes blink-animation {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    .blink-text {
+        animation: blink-animation 1s linear infinite;
+    }
+</style>    
+@endsection
 
 @section('content')
 <div class="container-fluid px-4 py-3">
@@ -58,6 +81,10 @@
                                         🌐
                                     </button>
                                     @endif
+
+                                    <button class="btn btn-sm btn-outline-success rounded-circle shadow-sm btn-mic" onclick="startSpeakingPractice(this, '{{ addslashes($transcript->text) }}')" title="Latihan Pelafalan (Pronunciation)">
+                                        🎤
+                                    </button>
                                 </div>
                             </div>
 
@@ -107,7 +134,7 @@
 
 @section('scripts')
 <script src="https://www.youtube.com/iframe_api"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
     // Data dari Laravel
     const youtubeVideoId = "{{ $video->youtube_id }}";
@@ -333,6 +360,151 @@
             buttonElement.classList.toggle('btn-outline-secondary');
             buttonElement.classList.toggle('text-white');
         }
+    }
+
+    // ==========================================
+    // MODUL SPEAKING & PRONUNCIATION (WEB SPEECH API)
+    // ==========================================
+    
+    // Cek dukungan browser
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    // Fungsi untuk membersihkan tanda baca agar perbandingan teks lebih akurat
+    function cleanText(str) {
+        return str.toLowerCase().replace(/[^\w\s\']/gi, '').trim();
+    }
+
+    // Fungsi menghitung persentase kemiripan (Akurasi Pelafalan)
+    function calculateAccuracy(spoken, expected) {
+        let spokenWords = cleanText(spoken).split(' ');
+        let expectedWords = cleanText(expected).split(' ');
+        
+        let matches = 0;
+        expectedWords.forEach(word => {
+            if(spokenWords.includes(word)) matches++;
+        });
+        
+        // Mencegah pembagian dengan nol
+        if(expectedWords.length === 0) return 0; 
+        
+        let accuracy = (matches / expectedWords.length) * 100;
+        return accuracy > 100 ? 100 : accuracy;
+    }
+
+    function startSpeakingPractice(btnElement, expectedText) {
+        if (!SpeechRecognition) {
+            Swal.fire('Browser Tidak Mendukung', 'Maaf, fitur latihan berbicara hanya didukung di browser Google Chrome atau Microsoft Edge terbaru.', 'error');
+            return;
+        }
+
+        // Pause video jika sedang berjalan
+        if(player && typeof player.pauseVideo === 'function') {
+            player.pauseVideo();
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US'; // Deteksi bahasa Inggris
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        let hasResult = false; // Penanda apakah ada suara yang tertangkap
+
+        recognition.onstart = function() {
+            // Ubah tombol jadi warna merah menandakan sedang merekam
+            btnElement.classList.remove('btn-outline-success');
+            btnElement.classList.add('btn-danger', 'recording-active');
+            btnElement.innerHTML = '🛑';
+            
+            // SweetAlert SEKARANG PUNYA TOMBOL SELESAI
+            Swal.fire({
+                title: '🎤 Sedang Merekam...',
+                html: `Silakan ucapkan kalimat ini:<br><br><strong class="fs-4 text-primary">"${expectedText}"</strong><br><br><span class="text-danger blink-text fw-bold">● Merekam suara Anda...</span>`,
+                showConfirmButton: true,
+                confirmButtonText: 'Selesai & Periksa ✔️',
+                confirmButtonColor: '#198754',
+                allowOutsideClick: false,
+            }).then((result) => {
+                // JIKA TOMBOL DIKLIK MANUAL OLEH PENGGUNA
+                if (result.isConfirmed) {
+                    recognition.stop(); // Paksa mikrofon berhenti
+                    
+                    // Munculkan loading sebentar saat mencocokkan teks
+                    Swal.fire({
+                        title: 'Menganalisis Suara...',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+                }
+            });
+        };
+
+        // Jika berhasil menangkap kata
+        recognition.onresult = function(event) {
+            hasResult = true;
+            const spokenText = event.results[0][0].transcript;
+            const accuracy = calculateAccuracy(spokenText, expectedText);
+
+            if (accuracy >= 80) {
+                // Tembakkan konfeti jika sukses!
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#198754', '#0d6efd', '#ffc107']
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Excellent! 🌟',
+                    html: `Skor Akurasi: <b class="text-success fs-5">${Math.round(accuracy)}%</b><br><br>
+                           <span class="text-muted">Sistem mendengar:</span><br>
+                           <i>"${spokenText}"</i>`
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Coba Lagi! 💪',
+                    html: `Skor Akurasi: <b class="text-warning fs-5">${Math.round(accuracy)}%</b><br><br>
+                           <span class="text-muted">Sistem mendengar:</span><br>
+                           <i class="text-danger">"${spokenText}"</i><br><br>
+                           <span class="text-muted">Seharusnya:</span><br>
+                           <i class="text-success">"${expectedText}"</i>`
+                });
+            }
+        };
+
+        // Jika ada error (izin ditolak, dll)
+        recognition.onerror = function(event) {
+            let errorMsg = 'Terjadi kesalahan pada mikrofon Anda.';
+            if(event.error === 'not-allowed') errorMsg = 'Izin mikrofon ditolak oleh browser.';
+            if(event.error === 'no-speech') {
+                errorMsg = 'Tidak ada suara yang terdeteksi. Pastikan mikrofon Anda aktif dan bicara sedikit lebih keras.';
+                hasResult = true; // Mencegah pesan error ganda di onend
+            }
+            
+            Swal.fire('Ups!', errorMsg, 'error');
+            resetBtn();
+        };
+
+        // Terpanggil otomatis saat mikrofon benar-benar mati
+        recognition.onend = function() {
+            resetBtn();
+            
+            // Jika user klik "Selesai" tapi mikrofon tidak menangkap kata satu pun
+            if (!hasResult && Swal.isVisible() && Swal.getTitle().textContent === 'Menganalisis Suara...') {
+                 Swal.fire('Kosong!', 'Sistem tidak mendengar ucapan apapun. Silakan coba lagi dan bicara lebih keras.', 'warning');
+            }
+        };
+
+        // Fungsi kembalikan tombol ke warna hijau
+        function resetBtn() {
+            btnElement.classList.add('btn-outline-success');
+            btnElement.classList.remove('btn-danger', 'recording-active');
+            btnElement.innerHTML = '🎤';
+        }
+
+        // Mulai merekam!
+        recognition.start();
     }
 </script>
 @endsection
