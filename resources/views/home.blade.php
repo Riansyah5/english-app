@@ -77,7 +77,7 @@
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 rounded-4 mt-2 bg-white overflow-hidden">
+    <div class="card shadow-sm border-0 rounded-4 mt-4 bg-white overflow-hidden">
         <div class="row g-0">
             @if($dailyVideo)
                 <div class="col-md-4">
@@ -129,6 +129,48 @@
         </div>
     </div>
 
+    {{-- Rekomendasi Materi Hari Ini --}}
+    <div class="card shadow-sm border-0 rounded-4 mt-4 overflow-hidden border-start border-4 border-success">
+        <div class="card-body p-4">
+            @if($randomCategory && $nextLessonToRead)
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                <i class="bi {{ $randomCategory->icon }} small"></i>
+                            </div>
+                            <span class="fw-bold text-success text-uppercase small tracking-wider">Materi Rekomendasi</span>
+                        </div>
+                        <h4 class="fw-bold mb-1">{{ $nextLessonToRead->title }}</h4>
+                        <p class="text-muted mb-3">Kategori: <strong>{{ $randomCategory->name }}</strong></p>
+                        
+                        <div class="d-flex align-items-center">
+                            <a href="{{ route('lessons.user.show', $nextLessonToRead->slug) }}" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm me-3">
+                                Lanjut Membaca
+                            </a>
+                            <div class="flex-grow-1 d-none d-md-block" style="max-width: 200px;">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small class="text-muted">Progres Kategori</small>
+                                    <small class="fw-bold">{{ $categoryProgress }}%</small>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ $categoryProgress }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-none d-md-flex justify-content-end">
+                        <i class="bi bi-book-half display-1 text-light opacity-50"></i>
+                    </div>
+                </div>
+            @else
+                <div class="text-center py-3">
+                    <p class="text-muted mb-0 italic">Belum ada materi pelajaran yang tersedia untuk dipelajari.</p>
+                </div>
+            @endif
+        </div>
+    </div>
+
     <div class="row g-4 mt-2">
         <div class="col-md-4">
             <div class="card shadow-sm border-0 rounded-4 h-100" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);">
@@ -158,6 +200,7 @@
             </div>
         </div>
     </div>
+
 
 </div>
 @endsection
