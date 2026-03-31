@@ -57,6 +57,10 @@
                 <li><h6 class="dropdown-header">Video Learning</h6></li>
                 <li><a class="dropdown-item" href="{{ route('admin.video-folders.index') }}">Kelola Folder</a></li>
                 <li><a class="dropdown-item" href="{{ route('admin.videos.index') }}">Kelola Video</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><h6 class="dropdown-header">Buku & Materi</h6></li>
+                <li><a class="dropdown-item" href="{{ route('admin.lesson-categories.index') }}">Kelola Kategori</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.lessons.index') }}">Tulis Materi</a></li>
               </ul>
             </li>
             @endif
@@ -126,7 +130,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+
   @yield('scripts')
 </body>
 </html>

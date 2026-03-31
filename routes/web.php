@@ -9,6 +9,9 @@ use App\Http\Controllers\StudyController;
 use App\Http\Controllers\VideoLearningController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\LessonCategoryController;
+use App\Http\Controllers\Admin\LessonController;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -53,5 +56,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Rute Modul Video Learning
     Route::resource('video-folders', VideoFolderController::class);
     Route::resource('videos', VideoController::class);
+
+    // Rute Materi Pelajaran (Buku Digital)
+    Route::resource('lesson-categories', LessonCategoryController::class);
+    Route::resource('lessons', LessonController::class);
     
 });
