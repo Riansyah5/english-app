@@ -31,7 +31,13 @@
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">Ikon Bootstrap</label>
-                            <input type="text" name="icon" class="form-control" placeholder="Misal: bi-book" value="bi-book-half">
+                            <div class="input-group input-group-lg">
+                                <input type="text" name="icon" class="form-control" placeholder="Misal: bi-book-half" value="bi-book-half">
+                                <a href="https://icons.getbootstrap.com/" target="_blank" class="btn btn-outline-primary d-flex align-items-center">
+                                    Cari Ikon 🔍
+                                </a>
+                            </div>
+                            <div class="form-text">Klik tombol "Cari Ikon" untuk membuka galeri, lalu copy-paste nama ikon (contoh: <strong>bi-laptop</strong>) ke kolom ini.</div>
                         </div>
 
                         <div class="d-grid mt-4">
