@@ -39,19 +39,39 @@ class LessonLearningController extends Controller
         $user = Auth::user();
         $lesson = Lesson::where('slug', $slug)->where('is_published', true)->firstOrFail();
 
-        // Cek apakah user sudah menyelesaikan bab ini
-        $isCompleted = LessonProgress::where('user_id', $user->id)
-                                     ->where('lesson_id', $lesson->id)
-                                     ->exists();
+        // Cari data progres user untuk bab ini (termasuk catatan pribadinya)
+        $progress = LessonProgress::where('user_id', $user->id)
+                                  ->where('lesson_id', $lesson->id)
+                                  ->first();
 
-        // Cari bab selanjutnya di kategori yang sama
+        $isCompleted = $progress ? true : false;
+        $personalNote = $progress ? $progress->personal_note : '';
+
+        // Cari bab selanjutnya
         $nextLesson = Lesson::where('lesson_category_id', $lesson->lesson_category_id)
                             ->where('is_published', true)
                             ->where('order_number', '>', $lesson->order_number)
                             ->orderBy('order_number', 'asc')
                             ->first();
 
-        return view('lessons.show', compact('lesson', 'isCompleted', 'nextLesson'));
+        return view('lessons.show', compact('lesson', 'isCompleted', 'nextLesson', 'personalNote'));
+    }
+
+    // Fungsi Baru: Simpan Catatan
+    public function saveNote(Request $request, $id)
+    {
+        $user = Auth::user();
+        
+        // Gunakan updateOrCreate agar catatan bisa disimpan walau bab belum ditandai 'selesai'
+        LessonProgress::updateOrCreate(
+            ['user_id' => $user->id, 'lesson_id' => $id],
+            ['personal_note' => $request->note]
+        );
+
+        return response()->json([
+            'status' => 'success', 
+            'message' => 'Catatan pribadimu berhasil disimpan!'
+        ]);
     }
 
     // 3. Endpoint AJAX untuk "Tandai Selesai"

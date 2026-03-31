@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lessons', [LessonLearningController::class, 'index'])->name('lessons.user.index');
     Route::get('/lessons/{slug}', [LessonLearningController::class, 'show'])->name('lessons.user.show');
     Route::post('/lessons/{id}/complete', [LessonLearningController::class, 'markAsDone'])->name('lessons.user.complete');
+    Route::post('/lessons/{id}/save-note', [LessonLearningController::class, 'saveNote'])->name('lessons.user.save-note');
 });
 
 
