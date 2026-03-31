@@ -41,7 +41,7 @@
                         $readTime = ceil($wordCount / 200);
                     @endphp
                     <div class="d-flex align-items-center opacity-75 small fw-medium">
-                        <i class="bi bi-clock me-2"></i> Estimasi waktu baca: {{ $readTime }} menit
+                        <i class="bi bi-hourglass-split me-2"></i> Estimasi waktu baca: {{ $readTime }} menit
                     </div>
                 </div>
 
