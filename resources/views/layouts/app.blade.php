@@ -36,9 +36,18 @@
             <li class="nav-item">
               <a class="nav-link fw-semibold {{ request()->routeIs('home') ? 'active text-primary' : '' }}" href="{{ route('home') }}">Dashboard</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link fw-semibold {{ request()->routeIs('study.index') ? 'active text-primary' : '' }}" href="{{ route('study.index') }}">Ruang Belajar</a>
+            <li class="nav-item dropdown border-start ms-2 ps-2">
+              <a class="nav-link dropdown-toggle fw-semibold {{ request()->routeIs('study.*') ? 'active text-primary' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Ruang Belajar
+              </a>
+              <ul class="dropdown-menu shadow border-0 mt-2">
+                <li><a class="dropdown-item" href="{{ route('study.index') }}">Flashcard Interaktif</a></li>
+                <li><a class="dropdown-item" href="{{ route('lessons.user.index') }}">Buku Materi Digital</a></li>
+                {{-- <li><a class="dropdown-item" href="{{ route('study.lessons') }}">Buku Materi Digital</a></li>
+                <li><a class="dropdown-item" href="{{ route('study.videos') }}">Video Learning</a></li> --}}
+              </ul>
             </li>
+              {{-- <a class="nav-link fw-semibold {{ request()->routeIs('study.index') ? 'active text-primary' : '' }}" href="{{ route('study.index') }}">Ruang Belajar</a> --}}
             <li class="nav-item">
               <a class="nav-link fw-semibold {{ request()->routeIs('videos.user.index') ? 'active text-primary' : '' }}" href="{{ route('videos.user.index') }}">Video Learning</a>
             </li>
@@ -130,6 +139,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   @yield('scripts')
 </body>

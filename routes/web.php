@@ -10,7 +10,8 @@ use App\Http\Controllers\VideoLearningController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LessonCategoryController;
-use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\LessonController;    
+use App\Http\Controllers\LessonLearningController;
 
 
 Route::get('/', function () {
@@ -44,6 +45,11 @@ Route::middleware(['auth'])->group(function () {
     // Rute untuk Profil dan Target Belajar
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Rute Materi Pelajaran (User)
+    Route::get('/lessons', [LessonLearningController::class, 'index'])->name('lessons.user.index');
+    Route::get('/lessons/{slug}', [LessonLearningController::class, 'show'])->name('lessons.user.show');
+    Route::post('/lessons/{id}/complete', [LessonLearningController::class, 'markAsDone'])->name('lessons.user.complete');
 });
 
 
