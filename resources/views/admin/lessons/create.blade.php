@@ -34,6 +34,12 @@
                     </div>
                 </div>
 
+                <div class="mb-4 bg-light p-3 rounded border">
+                    <label class="form-label fw-bold text-danger"><i class="bi bi-youtube"></i> Video Pembahasan (Opsional)</label>
+                    <input type="text" name="youtube_url" class="form-control" placeholder="Tempel URL YouTube di sini (Misal: https://www.youtube.com/watch?v=...)">
+                    <small class="text-muted mt-1 d-block">Video ini akan ditampilkan di bagian atas materi bacaan. Kosongkan jika materi ini hanya berupa teks.</small>
+                </div>
+
                 <div class="mb-4 mt-4">
                     <label class="form-label fw-bold text-primary fs-5">Isi Materi</label>
                     <textarea name="content" id="summernote" required></textarea>

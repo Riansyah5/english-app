@@ -45,6 +45,25 @@
                     </div>
                 </div>
 
+                @if($lesson->youtube_video_id)
+                    <div class="mb-5">
+                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-dark">
+                            <div class="ratio ratio-16x9">
+                                <iframe 
+                                    src="https://www.youtube.com/embed/{{ $lesson->youtube_video_id }}?rel=0" 
+                                    title="YouTube video player" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="text-center mt-2 small text-muted opacity-75">
+                            <i class="bi bi-info-circle me-1"></i> Tonton video di atas sebagai pengantar materi.
+                        </div>
+                    </div>
+                @endif
+
                 <article class="lesson-content">
                     {!! $lesson->content !!}
                 </article>
