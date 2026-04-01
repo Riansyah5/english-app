@@ -20,6 +20,32 @@
     .blink-text {
         animation: blink-animation 1s linear infinite;
     }
+
+    /* Baris transkrip yang sedang aktif/diucapkan */
+    .transcript-line.active {
+        background-color: #fff3cd !important; /* Kuning muda khas highlight */
+        border-left: 4px solid #ffc107;
+        transition: all 0.3s ease;
+    }
+
+    /* Styling kata yang bisa diklik */
+    .clickable-word {
+        cursor: pointer;
+        padding: 0 2px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    .clickable-word:hover {
+        background-color: #e2e8f0;
+    }
+
+    /* Highlight untuk Kosakata yang SUDAH TERSIMPAN di Flashcard */
+    .saved-word {
+        color: #198754 !important; /* Hijau Success */
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+    }
 </style>    
 @endsection
 
@@ -44,6 +70,37 @@
             <p class="text-muted mt-2 small">
                 💡 <strong>Tips:</strong> Klik kata manapun pada transkrip di sebelah kanan untuk melihat kamus dan menyimpannya ke Flashcard Anda.
             </p>
+
+            {{-- Flashcard Anda --}}
+            <div class="card shadow-sm border-0 rounded-4 mt-4 mb-4 bg-light">
+                <div class="card-header bg-transparent border-0 pt-4 pb-2 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-archive-fill text-success me-2"></i>Bank Kosakatamu
+                    </h5>
+                    <span class="badge bg-success rounded-pill">{{ $savedFlashcards->count() }} Kata</span>
+                </div>
+                
+                <div class="card-body p-4 overflow-auto" style="max-height: 250px;">
+                    @if($savedFlashcards->count() > 0)
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach($savedFlashcards as $card)
+                                <div class="badge bg-white text-dark border border-secondary-subtle p-2 fs-6 shadow-sm d-flex align-items-center">
+                                    <span class="fw-bold me-2">{{ $card->studyItem->content }}</span>
+                                    <span class="text-success border-start ps-2 border-success-subtle">
+                                        {{ $card->studyItem->translation }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-journal-x fs-1 opacity-50 mb-2 d-block"></i>
+                            <p class="mb-0">Belum ada kosakata yang disimpan.</p>
+                            <small>Klik kata pada transkrip di sebelah kanan untuk mulai mengumpulkan!</small>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <div class="col-lg-4">
@@ -102,36 +159,6 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
-@section('styles')
-<style>
-    /* Baris transkrip yang sedang aktif/diucapkan */
-    .transcript-line.active {
-        background-color: #fff3cd !important; /* Kuning muda khas highlight */
-        border-left: 4px solid #ffc107;
-        transition: all 0.3s ease;
-    }
-
-    /* Styling kata yang bisa diklik */
-    .clickable-word {
-        cursor: pointer;
-        padding: 0 2px;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-    .clickable-word:hover {
-        background-color: #e2e8f0;
-    }
-
-    /* Highlight untuk Kosakata yang SUDAH TERSIMPAN di Flashcard */
-    .saved-word {
-        color: #198754; /* Hijau Success */
-        font-weight: 600;
-        text-decoration: underline;
-        text-decoration-style: dotted;
-    }
-</style>
-@endsection
-
 @section('scripts')
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -139,6 +166,8 @@
     // Data dari Laravel
     const youtubeVideoId = "{{ $video->youtube_id }}";
     const savedVocabs = @json($savedVocabs); // Array berisi kata yang sudah disimpan user
+    // Memastikan format array jika PHP associative (object) terbaca oleh JS
+    const savedVocabsArray = Array.isArray(savedVocabs) ? savedVocabs : Object.values(savedVocabs);
 
     let player;
     let syncInterval;

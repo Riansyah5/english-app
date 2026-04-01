@@ -31,21 +31,29 @@ class VideoLearningController extends Controller
         $video = Video::with('transcripts')->findOrFail($id);
         $user = Auth::user();
 
-        // Ambil SEMUA kosakata (words) yang sudah pernah disimpan user ini
-        // Kita ubah ke huruf kecil (lowercase) agar mudah dicocokkan di JavaScript
-        $savedVocabs = UserFlashcard::where('user_id', $user->id)
+        // 1. Ambil SEMUA data flashcard (lengkap dengan relasi StudyItem)
+        $savedFlashcards = UserFlashcard::where('user_id', $user->id)
             ->whereHas('studyItem', function($q) {
                 $q->where('type', 'word');
             })
             ->with('studyItem')
-            ->get()
-            ->pluck('studyItem.content')
+            ->latest() // Urutkan dari yang terbaru disimpan
+            ->get();
+
+        // 2. Buat array terpisah khusus untuk JS Highlight (huruf kecil semua)
+        $savedVocabsArray = $savedFlashcards->pluck('studyItem.content')
             ->map(function ($word) {
                 return strtolower(trim($word));
             })
+            ->values()
             ->toArray();
 
-        return view('video_learning.show', compact('video', 'savedVocabs'));
+        // Kirim $savedFlashcards untuk UI HTML, dan $savedVocabsArray untuk JavaScript
+        return view('video_learning.show', [
+            'video' => $video,
+            'savedFlashcards' => $savedFlashcards,
+            'savedVocabs' => $savedVocabsArray 
+        ]);
     }
 
     // Endpoint AJAX untuk menyimpan kosakata baru dari klik transkrip
