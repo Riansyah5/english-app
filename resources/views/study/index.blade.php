@@ -1,44 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4 mb-5 position-relative z-1">
+<div class="container py-4 position-relative z-1">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold text-theme-main text-glow mb-0">Daily Review</h4>
-                <div class="d-flex gap-3 align-items-center">
-                    <button id="btnToggleDirection" class="btn btn-sm btn-glass rounded-pill fw-bold px-3">
+                <h5 class="fw-bold text-theme-main mb-0 opacity-90">Daily Review</h5>
+                <div class="d-flex gap-2 align-items-center">
+                    <button id="btnToggleDirection" class="btn btn-sm btn-minimal-secondary px-3">
                         🔄 ID ➔ EN
                     </button>
-                    <span class="badge badge-glass rounded-pill fs-6 px-3 py-2" id="cardCounter">0 / 0</span>
+                    <span class="badge bg-minimal-badge border-minimal text-theme-main fw-semibold rounded-pill px-3 py-2" id="cardCounter" style="font-size: 0.8rem;">0 / 0</span>
                 </div>
             </div>
 
-            <div id="completionMessage" class="glass-card text-center d-none py-5 px-4 mb-4">
-                <div class="mb-4 position-relative">
-                    <div class="position-absolute top-50 start-50 translate-middle ambient-glow-success"></div>
-                    <h1 class="display-1 mb-0 position-relative z-1" style="filter: drop-shadow(0 0 15px rgba(52, 211, 153, 0.5));">🎉</h1>
+            <div id="completionMessage" class="minimal-card text-center d-none py-5 px-4 mb-4">
+                <div class="mb-3">
+                    <h1 class="display-3 mb-0">🎉</h1>
                 </div>
-                <h3 class="fw-bold text-theme-main mb-2 text-glow">Luar Biasa!</h3>
-                <p class="text-theme-muted mb-4">Anda telah menyelesaikan semua review hari ini.</p>
-                <div class="d-flex justify-content-center gap-3 mt-2 flex-wrap">
-                    <a href="{{ route('home') }}" class="btn btn-neon-primary rounded-pill px-4 py-2 fw-semibold">Ke Dashboard</a>
-                    <a href="{{ route('study.practice') }}" class="btn btn-glass rounded-pill px-4 py-2 fw-semibold">Latihan Bebas</a>
+                <h4 class="fw-bold text-theme-main mb-2">Luar Biasa!</h4>
+                <p class="text-theme-muted small mb-4">Anda telah menyelesaikan semua review hari ini.</p>
+                <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
+                    <a href="{{ route('home') }}" class="btn btn-minimal btn-minimal-primary px-4 btn-sm">Ke Dashboard</a>
+                    <a href="{{ route('study.practice') }}" class="btn btn-minimal btn-minimal-secondary px-4 btn-sm">Latihan Bebas</a>
                 </div>
             </div>
 
-            <div id="flashcardContainer" class="flip-container mb-4">
+            <div id="flashcardContainer" class="fade-container mb-4">
                 <div class="flipper" id="flipperCard">
                     
                     <div class="front-card glass-panel rounded-4 text-center">
-                        <div class="position-absolute top-0 end-0 ambient-glow-info"></div>
-                        
-                        <div class="card-body p-4 p-md-5 d-flex flex-column justify-content-center h-100 position-relative z-1">
-                            <div>
-                                <span class="badge badge-glass mb-4 text-uppercase px-3 py-2 fw-semibold" id="itemTypeFront">...</span>
-                                <h1 class="display-4 fw-bold text-theme-main mb-5 text-glow" id="itemContent" style="letter-spacing: 1px;">...</h1>
-                                <button id="btnShowAnswer" class="btn btn-neon-primary btn-lg rounded-pill px-5 py-3 fw-bold shadow-sm" style="letter-spacing: 1px;">
+                        <div class="card-body p-4 p-md-5 d-flex flex-column justify-content-between h-100">
+                            <div class="mt-2">
+                                <span class="text-uppercase tracking-wider text-theme-muted fw-bold" id="itemTypeFront" style="font-size: 0.75rem; letter-spacing: 0.05em;">...</span>
+                            </div>
+                            
+                            <div class="my-auto py-4">
+                                <h2 class="fw-bold text-theme-main mb-0 tracking-tight" id="itemContent" style="font-size: 2.25rem;">...</h2>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <button id="btnShowAnswer" class="btn btn-minimal btn-minimal-primary w-100 py-3 fw-semibold">
                                     Show Answer
                                 </button>
                             </div>
@@ -46,25 +49,35 @@
                     </div>
 
                     <div class="back-card glass-panel rounded-4 text-center">
-                        <div class="card-body p-4 p-md-5 d-flex flex-column h-100 position-relative z-1">
-                            <h4 class="fw-semibold text-theme-muted mb-2" id="itemContentRepeat">...</h4>
-                            <h2 class="fw-bold neon-green mb-4 display-6" id="itemTranslation">...</h2>
+                        <div class="card-body p-4 d-flex flex-column h-100">
+                            <div class="mb-3 text-start">
+                                <span class="text-uppercase tracking-wider text-theme-muted fw-bold" id="itemTypeBack" style="font-size: 0.7rem; letter-spacing: 0.05em;">ANSWER</span>
+                                <h6 class="fw-medium text-theme-muted mt-2 mb-1" id="itemContentRepeat">...</h6>
+                                <h3 class="fw-bold text-theme-main tracking-tight" id="itemTranslation">...</h3>
+                            </div>
                             
-                            <div class="glass-box p-4 rounded-4 mb-4 text-start flex-grow-1">
-                                <small class="text-theme-muted fw-bold d-block mb-2 text-uppercase" style="letter-spacing: 1.5px; font-size: 0.75rem;">Example:</small>
-                                <p class="mb-0 fst-italic fs-5 text-theme-main" id="itemExample" style="line-height: 1.6;">...</p>
+                            <div class="minimal-box p-3 rounded-3 mb-3 text-start flex-grow-1 overflow-auto">
+                                <span class="text-theme-muted fw-bold d-block mb-1 text-uppercase letter-spacing-wide" style="font-size: 0.65rem;">Example Sentence:</span>
+                                <p class="mb-0 fst-italic text-theme-main small" id="itemExample" style="line-height: 1.5;">...</p>
                             </div>
 
-                            <p class="text-theme-muted small mb-4" id="itemNotes"></p>
+                            <p class="text-theme-muted small mb-3 text-start px-1" id="itemNotes" style="font-size: 0.8rem;"></p>
 
-                            <div class="mt-auto">
-                                <hr class="border-theme-muted opacity-25 mb-4">
-                                <p class="mb-3 fw-semibold text-theme-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Seberapa mudah ini untukmu?</p>
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                    <button class="btn btn-neon-danger flex-fill rate-btn rounded-pill py-2" data-quality="1">Lupa</button>
-                                    <button class="btn btn-neon-warning flex-fill rate-btn rounded-pill py-2" data-quality="3">Sulit</button>
-                                    <button class="btn btn-neon-info flex-fill rate-btn rounded-pill py-2" data-quality="4">Bagus</button>
-                                    <button class="btn btn-neon-success flex-fill rate-btn rounded-pill py-2" data-quality="5">Mudah</button>
+                            <div class="mt-auto pt-2 border-top-minimal">
+                                <p class="mb-3 fw-medium text-theme-muted small">Seberapa mudah materi ini untukmu?</p>
+                                <div class="row g-2">
+                                    <div class="col-3">
+                                        <button class="btn btn-rate btn-rate-danger w-100" data-quality="1">Lupa</button>
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-rate btn-rate-warning w-100" data-quality="3">Sulit</button>
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-rate btn-rate-info w-100" data-quality="4">Bagus</button>
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-rate btn-rate-success w-100" data-quality="5">Mudah</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -78,187 +91,156 @@
 </div>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
 @endsection
 
 @section('styles')
 <style>
 /* ======================================================== */
-/* PREMIUM GLASSMORPHISM & FLIP ANIMATION STYLES            */
+/* MINIMALIST ELEGANT THEME & VARIABLES                     */
 /* ======================================================== */
 
-/* Theme Variables for Flashcard Components */
 [data-theme="dark"] {
-    --flip-bg: rgba(15, 23, 42, 0.6);
-    --flip-border: rgba(255, 255, 255, 0.08);
-    --flip-shadow: rgba(0, 0, 0, 0.4);
-    --flip-inner-shadow: rgba(255, 255, 255, 0.1);
+    --card-bg: #1e2530;
+    --card-border: rgba(255, 255, 255, 0.04);
+    --box-bg: rgba(255, 255, 255, 0.02);
+    --panel-bg: rgba(30, 37, 48, 0.6); /* Glassmorphism background */
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --panel-shadow: rgba(0, 0, 0, 0.2);
+    --panel-inner-shadow: rgba(255, 255, 255, 0.1);
+    --badge-bg: rgba(255, 255, 255, 0.04);
     
-    --box-bg: rgba(255, 255, 255, 0.03);
-    --box-border: rgba(255, 255, 255, 0.05);
-    
-    --badge-bg: rgba(56, 189, 248, 0.1);
-    --badge-border: rgba(56, 189, 248, 0.3);
-    
-    --glow-text: rgba(255, 255, 255, 0.3);
-    --hr-color: #64748b;
-    
-    --btn-glass-bg: rgba(255, 255, 255, 0.05);
-    --btn-glass-border: rgba(255, 255, 255, 0.1);
-    --btn-glass-hover: rgba(56, 189, 248, 0.15);
+    --accent-primary: #3b82f6;
+    --accent-danger: #f43f5e;
+    --accent-warning: #eab308;
+    --accent-info: #06b6d4;
+    --accent-success: #10b981;
 }
 
 [data-theme="light"] {
-    --flip-bg: rgba(255, 255, 255, 0.7);
-    --flip-border: rgba(0, 0, 0, 0.1);
-    --flip-shadow: rgba(0, 0, 0, 0.1);
-    --flip-inner-shadow: rgba(0, 0, 0, 0.05);
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --box-bg: #f8fafc;
+    --panel-bg: rgba(255, 255, 255, 0.6); /* Glassmorphism background */
+    --panel-border: rgba(0, 0, 0, 0.08);
+    --panel-shadow: rgba(0, 0, 0, 0.05);
+    --panel-inner-shadow: rgba(255, 255, 255, 0.7);
+    --badge-bg: rgba(0, 0, 0, 0.02);
     
-    --box-bg: rgba(0, 0, 0, 0.03);
-    --box-border: rgba(0, 0, 0, 0.05);
-    
-    --badge-bg: rgba(14, 165, 233, 0.1);
-    --badge-border: rgba(14, 165, 233, 0.3);
-    
-    --glow-text: rgba(148, 163, 184, 0.3);
-    --hr-color: #cbd5e1;
-    
-    --btn-glass-bg: rgba(0, 0, 0, 0.03);
-    --btn-glass-border: rgba(0, 0, 0, 0.1);
-    --btn-glass-hover: rgba(14, 165, 233, 0.1);
+    --accent-primary: #2563eb;
+    --accent-danger: #dc2626;
+    --accent-warning: #ca8a04;
+    --accent-info: #0891b2;
+    --accent-success: #059669;
 }
 
-/* Typography & Utilities */
-.text-glow { text-shadow: 0 0 15px var(--glow-text); transition: text-shadow 0.4s ease; }
-.neon-green { color: #34d399; text-shadow: 0 0 15px rgba(52, 211, 153, 0.4); }
-.border-theme-muted { border-color: var(--hr-color) !important; transition: border-color 0.4s ease; }
-
-/* Ambient Glow Abstractions (Replaces inline styles) */
-.ambient-glow-success {
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(52, 211, 153, 0.4) 0%, transparent 70%);
-    filter: blur(15px); pointer-events: none;
-}
-.ambient-glow-info {
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, transparent 70%);
-    transform: translate(30%, -30%); pointer-events: none; opacity: 0.4;
-}
-
-/* Base Glass Components */
-.badge-glass {
-    background: var(--badge-bg);
-    border: 1px solid var(--badge-border);
-    color: #0ea5e9;
-    backdrop-filter: blur(8px);
-    transition: all 0.4s ease;
-}
-
-.glass-card {
-    background: var(--flip-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--flip-border);
-    border-radius: 1.5rem;
-    box-shadow: 0 16px 32px var(--flip-shadow);
-    transition: all 0.4s ease;
-}
-
-.glass-box {
-    background: var(--box-bg);
-    border: 1px solid var(--box-border);
+/* Base Layout Components */
+.minimal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 1rem;
-    transition: all 0.4s ease;
 }
 
-/* Base Buttons */
-.btn-glass {
-    background: var(--btn-glass-bg);
-    border: 1px solid var(--btn-glass-border);
-    backdrop-filter: blur(10px);
-    color: var(--text-main);
+.minimal-box {
+    background: var(--box-bg);
+    border: 1px solid var(--card-border);
+}
+
+.bg-minimal-badge { background: var(--badge-bg); }
+.border-minimal { border: 1px solid var(--card-border); }
+.border-top-minimal { border-top: 1px solid var(--card-border); }
+
+/* Elegant Custom Buttons */
+.btn-minimal {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
     transition: all 0.2s ease;
 }
-.btn-glass:hover, .btn-glass.active-glass {
-    background: var(--btn-glass-hover);
-    border-color: rgba(56, 189, 248, 0.4);
-    color: #0ea5e9;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1), 0 0 15px rgba(56, 189, 248, 0.2);
-}
-
-.btn-neon-primary {
-    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+.btn-minimal-primary {
+    background: var(--accent-primary);
+    color: #ffffff !important;
     border: none;
-    color: white;
-    box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
-    transition: all 0.2s ease;
 }
-.btn-neon-primary:hover {
-    box-shadow: 0 0 25px rgba(79, 70, 229, 0.6);
-    color: white;
-    transform: translateY(-2px);
+.btn-minimal-primary:hover {
+    filter: brightness(1.08);
+}
+.btn-minimal-secondary {
+    background: transparent;
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border);
+}
+.btn-minimal-secondary:hover {
+    background: var(--box-bg);
 }
 
-/* Rate Buttons */
-.rate-btn { font-weight: 600; letter-spacing: 0.5px; transition: all 0.2s ease; border: none; color: white; }
-.btn-neon-danger { background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.4); color: #f43f5e; }
-.btn-neon-danger:hover { background: #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.6); color: white; }
+/* Minimalist Rate Style Buttons */
+.btn-rate {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 0.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+.btn-rate-danger { background: rgba(244, 63, 94, 0.06); color: var(--accent-danger); border-color: rgba(244, 63, 94, 0.1); }
+.btn-rate-danger:hover { background: var(--accent-danger); color: #fff; }
 
-.btn-neon-warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #d97706; }
-.btn-neon-warning:hover { background: #f59e0b; box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); color: white; }
+.btn-rate-warning { background: rgba(234, 179, 8, 0.06); color: var(--accent-warning); border-color: rgba(234, 179, 8, 0.1); }
+.btn-rate-warning:hover { background: var(--accent-warning); color: #fff; }
 
-.btn-neon-info { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #0ea5e9; }
-.btn-neon-info:hover { background: #0ea5e9; box-shadow: 0 0 20px rgba(56, 189, 248, 0.6); color: white; }
+.btn-rate-info { background: rgba(6, 180, 212, 0.06); color: var(--accent-info); border-color: rgba(6, 180, 212, 0.1); }
+.btn-rate-info:hover { background: var(--accent-info); color: #fff; }
 
-.btn-neon-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; }
-.btn-neon-success:hover { background: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); color: white; }
+.btn-rate-success { background: rgba(16, 185, 129, 0.06); color: var(--accent-success); border-color: rgba(16, 185, 129, 0.1); }
+.btn-rate-success:hover { background: var(--accent-success); color: #fff; }
 
 /* ======================================================== */
-/* 3D FLIP MECHANICS                                        */
+/* SMOOTH FADE GLASSMORPHISM MECHANICS                      */
 /* ======================================================== */
-
-.flip-container {
-    perspective: 1500px; 
+.fade-container {
     position: relative;
-    height: 520px; 
+    height: 440px; /* Adjusted from 520px to match original layout */
+    width: 100%;
 }
 
 .flipper {
-    position: relative;
     width: 100%;
     height: 100%;
-    transform-style: preserve-3d; 
-    -webkit-transform-style: preserve-3d;
-    transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+    position: relative;
+    /* The parent flipper needs perspective for 3D-like transitions if ever needed */
+    perspective: 1200px;
 }
 
-.flipped { transform: rotateY(180deg); }
-
-/* Glass Panels applied to Flip sides */
 .glass-panel {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    backface-visibility: hidden; 
-    -webkit-backface-visibility: hidden;
-    overflow-y: auto; 
+    overflow: hidden; 
     
-    background: var(--flip-bg);
+    background: var(--panel-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--flip-border);
-    box-shadow: 0 16px 40px var(--flip-shadow), inset 0 1px 0 var(--flip-inner-shadow);
-    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 16px 40px var(--panel-shadow), inset 0 1px 0 var(--panel-inner-shadow);
+    
+    opacity: 0; visibility: hidden;
+    transform: scale(0.95); filter: blur(5px);
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.front-card { z-index: 2; transform: rotateY(0deg); }
-.back-card { transform: rotateY(180deg); }
+.front-card { opacity: 1; visibility: visible; transform: scale(1); filter: blur(0); z-index: 2; }
+.back-card  { z-index: 1; }
 
-/* Custom Scrollbar for Glass Panels */
-.glass-panel::-webkit-scrollbar { width: 6px; }
-.glass-panel::-webkit-scrollbar-track { background: transparent; }
-.glass-panel::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 10px; }
-.glass-panel::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+.flipper.flipped .front-card { opacity: 0; visibility: hidden; transform: scale(0.95); filter: blur(5px); z-index: 1; }
+.flipper.flipped .back-card  { opacity: 1; visibility: visible; transform: scale(1); filter: blur(0); z-index: 2; }
+
+/* Scrollbar Customization */
+.minimal-box::-webkit-scrollbar { width: 4px; }
+.minimal-box::-webkit-scrollbar-track { background: transparent; }
+.minimal-box::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 10px; }
 </style>
 @endsection
 
@@ -282,16 +264,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const notesEl = document.getElementById('itemNotes');
     
     const btnShowAnswer = document.getElementById('btnShowAnswer');
-    const rateBtns = document.querySelectorAll('.rate-btn');
+    const rateBtns = document.querySelectorAll('.rate-btn, .btn-rate');
     
     const btnToggleDirection = document.getElementById('btnToggleDirection');
     let isReversed = false; 
 
     btnToggleDirection.addEventListener('click', function() {
         isReversed = !isReversed; 
-        
         this.innerText = isReversed ? "🔄 EN ➔ ID" : "🔄 ID ➔ EN";
-        this.classList.toggle('active-glass');
         
         if (currentIndex < flashcards.length) {
             populateCardData(currentIndex);
@@ -325,25 +305,22 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        flipper.classList.remove('flipped');
+        // 1. Fade out the current card
+        flipper.style.opacity = '0';
+        flipper.style.transition = 'opacity 0.2s ease-out';
 
+        // 2. Wait for the fade-out to complete
         setTimeout(() => {
-            const card = flashcards[currentIndex];
-            const item = card.study_item;
-
-            counter.innerText = `${currentIndex + 1} / ${flashcards.length}`;
-            
-            contentEl.innerText = item.content;
-            typeElFront.innerText = item.type.toUpperCase();
-            
-            contentElRepeat.innerText = item.content; 
-            translationEl.innerText = item.translation;
-            exampleEl.innerText = item.example_sentence || 'No example sentence provided.';
-            notesEl.innerText = item.notes || '';
-
+            // 3. Update content and reset card state while it's invisible
             populateCardData(currentIndex);
+            flipper.classList.remove('flipped');
+            
+            // Remove inline transition to use the CSS class transition for the next flip
+            flipper.style.transition = ''; 
 
-        }, 200); 
+            // 4. Fade in the new card
+            flipper.style.opacity = '1';
+        }, 200); // This duration should match the transition time above
     }
 
     btnShowAnswer.addEventListener('click', function() {

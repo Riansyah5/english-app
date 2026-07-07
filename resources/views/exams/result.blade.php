@@ -1,264 +1,105 @@
 @extends('layouts.app')
 
-@section('styles')
-<style>
-    /* ======================================================== */
-    /* PREMIUM GLASSMORPHISM UI - EXAM RESULTS                  */
-    /* ======================================================== */
-
-    body {
-        background-color: #0b0f19;
-        color: #f8fafc;
-        min-height: 100vh;
-        position: relative;
-    }
-
-    /* Ambient Background Glows */
-    .ambient-glow {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(120px);
-        z-index: 0;
-        opacity: 0.4;
-        pointer-events: none;
-    }
-    .glow-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.4), transparent 70%); }
-    .glow-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent 70%); }
-
-    /* Typography & Utilities */
-    .text-slate { color: #94a3b8 !important; }
-    .text-glow { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-    .neon-green { color: #34d399; text-shadow: 0 0 15px rgba(52, 211, 153, 0.4); }
-    .neon-red { color: #fb7185; text-shadow: 0 0 15px rgba(251, 113, 133, 0.4); }
-    .neon-warning { color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
-    .neon-blue { color: #38bdf8; }
-
-    /* Glass Components */
-    .glass-card {
-        background: rgba(20, 25, 40, 0.5);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 1.5rem;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Top Accent Line for Card */
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #4f46e5, #38bdf8);
-        z-index: 1;
-    }
-
-    /* Score Circle */
-    .score-circle {
-        width: 160px; 
-        height: 160px;
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(10px);
-        border: 6px solid transparent;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    }
-    
-    .score-success {
-        border-color: #10b981;
-        box-shadow: 0 0 30px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(16, 185, 129, 0.2);
-    }
-    
-    .score-danger {
-        border-color: #e11d48;
-        box-shadow: 0 0 30px rgba(225, 29, 72, 0.3), inset 0 0 20px rgba(225, 29, 72, 0.2);
-    }
-
-    /* Buttons */
-    .btn-neon-primary {
-        background: linear-gradient(135deg, #4f46e5, #3b82f6);
-        border: none;
-        color: white;
-        box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
-        transition: all 0.3s ease;
-    }
-    .btn-neon-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.6);
-        color: white;
-    }
-
-    .btn-glass {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #cbd5e1;
-        transition: all 0.2s ease;
-    }
-    .btn-glass:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-        color: #fff;
-        transform: translateY(-2px);
-    }
-
-    /* Alert */
-    .alert-glass-success {
-        background: rgba(16, 185, 129, 0.15);
-        border: 1px solid rgba(16, 185, 129, 0.3);
-        color: #34d399;
-        backdrop-filter: blur(10px);
-    }
-
-    /* Glass Accordion Override */
-    .glass-accordion .accordion-item {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 1rem;
-        border-radius: 1rem !important;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    
-    .glass-accordion .accordion-button {
-        background: rgba(15, 23, 42, 0.6);
-        color: #f8fafc;
-        border: none;
-        box-shadow: none;
-        padding: 1.25rem 1.5rem;
-    }
-    
-    .glass-accordion .accordion-button:not(.collapsed) {
-        background: rgba(56, 189, 248, 0.1);
-        color: #38bdf8;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .glass-accordion .accordion-button::after {
-        filter: invert(1); /* Makes the arrow white in dark mode */
-        transition: all 0.3s ease;
-    }
-    
-    .glass-accordion .accordion-button:not(.collapsed)::after {
-        filter: invert(0.6) sepia(1) saturate(3) hue-rotate(180deg); /* Cyan tint for active */
-    }
-
-    .glass-accordion .accordion-body {
-        background: rgba(20, 25, 40, 0.8);
-        color: #cbd5e1;
-        padding: 1.5rem;
-    }
-
-    /* Inner Glass Elements */
-    .glass-box {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .badge-glass-success {
-        background: rgba(16, 185, 129, 0.15);
-        border: 1px solid rgba(16, 185, 129, 0.3);
-        color: #34d399;
-    }
-</style>
-@endsection
-
 @section('content')
-<div class="ambient-glow glow-1"></div>
-<div class="ambient-glow glow-2"></div>
-
-<div class="container py-5 text-center position-relative z-1">
+<div class="container py-4 text-center position-relative z-1">
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-            <div class="glass-card">
+            <div class="minimal-card">
                 <div class="card-body p-4 p-md-5">
 
+                    <!-- Alert Toast State -->
                     @if(session('success'))
-                        <div class="alert alert-glass-success rounded-pill mb-4 fw-semibold shadow-sm d-inline-flex align-items-center justify-content-center px-4 py-2">
-                            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <div class="badge-minimal-success rounded-pill mb-4 fw-medium d-inline-flex align-items-center justify-content-center px-4 py-2 small">
+                            <i class="bi bi-check-circle-fill me-2 fs-6"></i>
                             {{ session('success') }}
                         </div>
                     @endif
 
-                    <h2 class="fw-bold mb-2 text-white text-glow display-6">Hasil Evaluasi</h2>
-                    <h5 class="text-slate fw-medium mb-5" style="letter-spacing: 0.5px;">{{ $exam->title }}</h5>
+                    <!-- Header Titles -->
+                    <h3 class="fw-bold mb-2 text-theme-main tracking-tight">Hasil Evaluasi</h3>
+                    <h6 class="text-theme-muted fw-medium mb-5">{{ $exam->title }}</h6>
 
+                    <!-- Score Geometric Circle Display -->
                     <div class="d-inline-flex justify-content-center align-items-center rounded-circle score-circle {{ $attempt->score >= 70 ? 'score-success' : 'score-danger' }} mb-5">
-                        <h1 class="display-2 fw-bold mb-0 text-white text-glow">{{ $attempt->score }}</h1>
+                        <h1 class="display-3 fw-bold mb-0 text-theme-main tracking-tight">{{ $attempt->score }}</h1>
                     </div>
 
-                    <div class="row text-center mb-5 g-4 justify-content-center">
-                        <div class="col-5 col-md-4">
-                            <div class="glass-box p-3 rounded-4">
-                                <h3 class="fw-bold neon-green mb-1">{{ $attempt->total_correct }}</h3>
-                                <span class="text-slate small text-uppercase fw-semibold" style="letter-spacing: 0.5px;">Jawaban Benar</span>
+                    <!-- Statistics Micro Boxes Grid -->
+                    <div class="row text-center mb-5 g-3 justify-content-center">
+                        <div class="col-6 col-sm-4">
+                            <div class="minimal-box p-3 rounded-3">
+                                <h4 class="fw-bold text-success mb-1">{{ $attempt->total_correct }}</h4>
+                                <span class="text-theme-muted small text-uppercase tracking-wider" style="font-size: 0.65rem;">Jawaban Benar</span>
                             </div>
                         </div>
-                        <div class="col-5 col-md-4">
-                            <div class="glass-box p-3 rounded-4">
-                                <h3 class="fw-bold neon-red mb-1">{{ $attempt->total_questions - $attempt->total_correct }}</h3>
-                                <span class="text-slate small text-uppercase fw-semibold" style="letter-spacing: 0.5px;">Jawaban Salah</span>
+                        <div class="col-6 col-sm-4">
+                            <div class="minimal-box p-3 rounded-3">
+                                <h4 class="fw-bold text-danger mb-1">{{ $attempt->total_questions - $attempt->total_correct }}</h4>
+                                <span class="text-theme-muted small text-uppercase tracking-wider" style="font-size: 0.65rem;">Jawaban Salah</span>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Motivational Response Messages -->
                     @if($attempt->score >= 70)
-                        <h4 class="fw-bold neon-green mb-2">Kerja Bagus! 🎉</h4>
-                        <p class="text-slate mb-5">Pemahaman tata bahasa Anda sudah sangat baik. Pertahankan!</p>
+                        <h5 class="fw-bold text-success mb-2">Kerja Bagus! 🎉</h5>
+                        <p class="text-theme-muted small mb-5 mx-auto" style="max-width: 480px;">Pemahaman tata bahasa Anda sudah sangat baik. Pertahankan progres belajarmu!</p>
                     @else
-                        <h4 class="fw-bold neon-warning mb-2">Jangan Menyerah! 💪</h4>
-                        <p class="text-slate mb-5">Masih ada ruang untuk perbaikan. Terus gunakan fitur <i class="text-white">Flashcard</i> setiap hari untuk memperkuat insting bahasa Anda.</p>
+                        <h5 class="fw-bold text-warning mb-2">Jangan Menyerah! 💪</h5>
+                        <p class="text-theme-muted small mb-5 mx-auto" style="max-width: 480px;">Masih ada ruang untuk perbaikan. Terus gunakan fitur <i>Flashcard</i> setiap hari untuk memperkuat insting bahasa Anda.</p>
                     @endif
 
-                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-5">
-                        <a href="{{ route('exams.index') }}" class="btn btn-glass rounded-pill px-4 py-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-card-list"></i> Kembali ke Daftar Ujian
+                    <!-- Operational Navigation Footer Actions -->
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mb-5">
+                        <a href="{{ route('exams.index') }}" class="btn btn-minimal btn-minimal-secondary btn-sm px-4 py-2.5">
+                            <i class="bi bi-card-list me-1"></i> Daftar Ujian
                         </a>
-                        <a href="{{ route('home') }}" class="btn btn-neon-primary rounded-pill px-4 py-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-house-door"></i> Ke Dashboard
+                        <a href="{{ route('home') }}" class="btn btn-minimal btn-minimal-primary btn-sm px-4 py-2.5">
+                            <i class="bi bi-house me-1"></i> Dashboard
                         </a>
                     </div>
 
-                    <hr class="my-5" style="border-color: rgba(255,255,255,0.1);">
+                    <!-- INTERACTIVE ACCORDION EXPLANATIONS KEY -->
+                    <div class="border-top-minimal pt-5 text-start">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="bi bi-lightbulb-fill text-warning fs-5 me-2"></i>
+                            <h5 class="fw-bold text-theme-main mb-0 tracking-tight">Kunci Jawaban & Pembahasan</h5>
+                        </div>
 
-                    <div class="d-flex align-items-center mb-4">
-                        <i class="bi bi-lightbulb-fill text-warning fs-4 me-2"></i>
-                        <h4 class="fw-bold text-white text-start mb-0">Kunci Jawaban & Pembahasan</h4>
-                    </div>
+                        <div class="accordion minimal-accordion" id="accordionExplanations">
+                            @foreach($exam->questions as $index => $question)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{ $question->id }}">
+                                        <button class="accordion-button collapsed fw-semibold small" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $question->id }}" aria-expanded="false" aria-controls="collapse{{ $question->id }}">
+                                            Soal {{ $index + 1 }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ $question->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $question->id }}" data-bs-parent="#accordionExplanations">
+                                        <div class="accordion-body p-4 bg-minimal-body">
+                                            <p class="mb-4 fw-semibold text-theme-main small lh-base">{{ $question->question_text }}</p>
 
-                    <div class="accordion glass-accordion text-start" id="accordionExplanations">
-                        @foreach($exam->questions as $index => $question)
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading{{ $question->id }}">
-                                    <button class="accordion-button collapsed fw-bold fs-6" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $question->id }}" aria-expanded="false" aria-controls="collapse{{ $question->id }}">
-                                        Soal {{ $index + 1 }}
-                                    </button>
-                                </h2>
-                                <div id="collapse{{ $question->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $question->id }}" data-bs-parent="#accordionExplanations">
-                                    <div class="accordion-body">
-                                        <p class="mb-4 fw-medium text-white lh-base">{{ $question->question_text }}</p>
+                                            <!-- Correct Option Section -->
+                                            <div class="mb-4">
+                                                <span class="badge badge-minimal-success mb-2 px-2.5 py-1.5 font-monospace" style="font-size: 0.7rem;">
+                                                    JAWABAN BENAR: {{ strtoupper($question->correct_answer) }}
+                                                </span>
+                                                <div class="p-3 border-minimal bg-minimal-badge rounded-3 mt-1">
+                                                    <span class="text-theme-main small"><strong class="text-success me-1.5">{{ strtoupper($question->correct_answer) }}.</strong> {{ $question->options[$question->correct_answer] }}</span>
+                                                </div>
+                                            </div>
 
-                                        <div class="mb-4">
-                                            <span class="badge badge-glass-success mb-3 px-3 py-2 fw-semibold text-uppercase" style="letter-spacing: 0.5px;">
-                                                Jawaban Benar: {{ strtoupper($question->correct_answer) }}
-                                            </span>
-                                            <ul class="list-unstyled ms-2 mb-0 p-3 rounded-3" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.1);">
-                                                <li class="text-white"><strong class="neon-green me-2">{{ strtoupper($question->correct_answer) }}.</strong> {{ $question->options[$question->correct_answer] }}</li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="glass-box p-4 rounded-4 border-start border-4 border-info">
-                                            <small class="neon-blue text-uppercase fw-bold d-flex align-items-center gap-2 mb-2" style="letter-spacing: 1px;">
-                                                <i class="bi bi-chat-left-text"></i> Pembahasan:
-                                            </small>
-                                            <p class="mb-0 text-slate lh-lg">{{ $question->explanation ?? 'Tidak ada pembahasan untuk soal ini.' }}</p>
+                                            <!-- Explanation Block -->
+                                            <div class="minimal-box p-3 rounded-3 border-accent-info">
+                                                <span class="text-primary small text-uppercase fw-bold tracking-wider d-block mb-1.5" style="font-size: 0.65rem;">
+                                                    <i class="bi bi-chat-left-text me-1"></i> Pembahasan:
+                                                </span>
+                                                <p class="mb-0 text-theme-muted small lh-lg">{{ $question->explanation ?? 'Tidak ada pembahasan untuk soal ini.' }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
 
                 </div>
@@ -266,4 +107,117 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+/* ======================================================== */
+/* MINIMALIST DESIGN SYSTEM - EXAM RESULTS SUBMODULE        */
+/* ======================================================== */
+
+[data-theme="dark"] {
+    --card-bg: #1e2530;
+    --card-border: rgba(255, 255, 255, 0.04);
+    --box-bg: #131822;
+    --badge-bg: rgba(255, 255, 255, 0.03);
+    --bg-body-panel: #141922;
+    
+    --accent-primary: #3b82f6;
+    --accent-info: #06b6d4;
+    --accent-success: #10b981;
+    --accent-danger: #f43f5e;
+}
+
+[data-theme="light"] {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --box-bg: #f8fafc;
+    --badge-bg: rgba(0, 0, 0, 0.02);
+    --bg-body-panel: #f8fafc;
+    
+    --accent-primary: #2563eb;
+    --accent-info: #0891b2;
+    --accent-success: #059669;
+    --accent-danger: #dc2626;
+}
+
+/* Base Structural Container Blocks */
+.minimal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 15px -10px rgba(0, 0, 0, 0.05);
+}
+
+.minimal-box {
+    background: var(--box-bg);
+    border: 1px solid var(--card-border);
+}
+
+.bg-minimal-badge { background: var(--badge-bg); }
+.border-minimal { border: 1px solid var(--card-border); }
+.border-top-minimal { border-top: 1px solid var(--card-border); }
+.border-accent-info { border-left: 3px solid var(--accent-info) !important; }
+
+.badge-minimal-success { background: rgba(16, 185, 129, 0.06); color: var(--accent-success); }
+
+/* Score Circle Block Components */
+.score-circle {
+    width: 140px; 
+    height: 140px;
+    background: var(--box-bg);
+    border: 4px solid transparent;
+}
+.score-success { border-color: var(--accent-success); }
+.score-danger { border-color: var(--accent-danger); }
+
+/* Elegant Custom Buttons Framework */
+.btn-minimal {
+    font-weight: 500;
+    padding: 0.45rem 1.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+.btn-minimal-primary { background: var(--accent-primary); color: #ffffff !important; border: none; }
+.btn-minimal-primary:hover { filter: brightness(1.08); }
+.btn-minimal-secondary { background: transparent; color: var(--text-main) !important; border: 1px solid var(--card-border); }
+.btn-minimal-secondary:hover { background: var(--card-border); }
+
+/* ======================================================== */
+/* FLAT SEGMENTED ACCORDION MECHANICS                       */
+/* ======================================================== */
+.minimal-accordion .accordion-item {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem !important;
+    overflow: hidden;
+}
+
+.minimal-accordion .accordion-button {
+    background: var(--box-bg);
+    color: var(--text-main);
+    border: none;
+    box-shadow: none;
+    padding: 1rem 1.25rem;
+}
+
+.minimal-accordion .accordion-button:not(.collapsed) {
+    background: var(--box-bg);
+    color: var(--accent-primary);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.minimal-accordion .accordion-button::after {
+    filter: var(--text-main) === '#ffffff' ? 'invert(1)' : 'none';
+    opacity: 0.5;
+    transform: scale(0.85);
+    transition: transform 0.2s ease;
+}
+
+.minimal-accordion .accordion-body {
+    background: var(--bg-body-panel);
+    color: var(--text-muted);
+}
+</style>
 @endsection

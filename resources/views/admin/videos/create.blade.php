@@ -1,167 +1,32 @@
 @extends('layouts.app')
 
-@section('styles')
-<style>
-    /* ======================================================== */
-    /* PREMIUM GLASSMORPHISM UI - FORM INPUTS                   */
-    /* ======================================================== */
-
-    body {
-        background-color: #0b0f19;
-        color: #f8fafc;
-        min-height: 100vh;
-        position: relative;
-    }
-
-    /* Ambient Background Glows */
-    .ambient-glow {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(120px);
-        z-index: 0;
-        opacity: 0.4;
-        pointer-events: none;
-    }
-    .glow-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent 70%); }
-    .glow-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(56, 189, 248, 0.3), transparent 70%); }
-
-    /* Typography & Utilities */
-    .text-slate { color: #94a3b8 !important; }
-    .text-glow { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-    .neon-red { color: #fb7185; }
-    .neon-blue { color: #38bdf8; }
-
-    /* Glass Components */
-    .glass-card {
-        background: rgba(20, 25, 40, 0.5);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 1.5rem;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Top Accent Line for Card */
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, #4f46e5, #38bdf8);
-        z-index: 1;
-    }
-
-    /* Glass Form Inputs */
-    .form-control-glass, .form-select-glass {
-        background: rgba(15, 23, 42, 0.4) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #f8fafc !important;
-        border-radius: 0.75rem;
-        transition: all 0.3s ease;
-    }
-    .form-control-glass:focus, .form-select-glass:focus {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border-color: rgba(56, 189, 248, 0.5) !important;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2) !important;
-        color: #ffffff !important;
-    }
-    .form-control-glass::placeholder {
-        color: #64748b !important;
-        opacity: 0.8;
-    }
-
-    /* Select Dropdown Options */
-    .form-select-glass option {
-        background-color: #0f172a;
-        color: #f8fafc;
-    }
-
-    /* Validation Errors */
-    .is-invalid {
-        border-color: rgba(244, 63, 94, 0.5) !important;
-        box-shadow: 0 0 15px rgba(244, 63, 94, 0.1) !important;
-    }
-    .invalid-feedback {
-        color: #fb7185;
-        font-weight: 500;
-        letter-spacing: 0.3px;
-    }
-
-    /* Buttons */
-    .btn-glass-back {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #cbd5e1;
-        transition: all 0.3s ease;
-    }
-    .btn-glass-back:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-        color: #fff;
-        transform: translateX(-3px);
-    }
-
-    .btn-neon-primary {
-        background: linear-gradient(135deg, #4f46e5, #3b82f6);
-        border: none;
-        color: white;
-        box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
-        transition: all 0.3s ease;
-    }
-    .btn-neon-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.6);
-        color: white;
-    }
-
-    /* Labels & Tips */
-    .form-label {
-        color: #cbd5e1;
-        letter-spacing: 0.5px;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-    }
-
-    .tip-box {
-        background: rgba(56, 189, 248, 0.05);
-        border: 1px solid rgba(56, 189, 248, 0.2);
-        color: #94a3b8;
-        border-radius: 0.75rem;
-    }
-</style>
-@endsection
-
 @section('content')
-<div class="ambient-glow glow-1"></div>
-<div class="ambient-glow glow-2"></div>
-
-<div class="container py-4 position-relative z-1">
+<div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
             
+            <!-- Header Navigation & Title -->
             <div class="d-flex align-items-center mb-5">
-                <a href="{{ route('admin.videos.index') }}" class="btn btn-glass-back rounded-circle me-3 shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                <a href="{{ route('admin.videos.index') }}" class="btn btn-minimal btn-minimal-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0;">
                     <i class="bi bi-arrow-left fs-5"></i>
                 </a>
                 <div>
-                    <h3 class="fw-bold mb-1 text-white text-glow" style="letter-spacing: -0.5px;">Tambah Video Baru 🎥</h3>
-                    <p class="text-slate mb-0 fw-medium">Upload video pembelajaran beserta transkrip interaktifnya.</p>
+                    <h4 class="fw-bold mb-1 text-theme-main tracking-tight">Tambah Video Baru 🎥</h4>
+                    <p class="text-theme-muted mb-0 small">Upload video pembelajaran beserta transkrip interaktifnya.</p>
                 </div>
             </div>
 
-            <div class="glass-card">
+            <!-- Main Form Card -->
+            <div class="minimal-card">
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('admin.videos.store') }}" method="POST">
                         @csrf
 
+                        <!-- Row Grid: Folder Selection & Difficulty -->
                         <div class="row g-4 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold">Pilih Folder <span class="neon-red">*</span></label>
-                                <select name="video_folder_id" class="form-select form-select-lg form-select-glass @error('video_folder_id') is-invalid @enderror" required>
+                                <label class="form-label-minimal">Pilih Folder <span class="text-danger">*</span></label>
+                                <select name="video_folder_id" class="form-select form-control-minimal @error('video_folder_id') is-invalid-minimal @enderror" required>
                                     <option value="" disabled selected>Pilih kategori folder...</option>
                                     @foreach($folders as $folder)
                                         <option value="{{ $folder->id }}" {{ old('video_folder_id') == $folder->id ? 'selected' : '' }}>
@@ -170,67 +35,69 @@
                                     @endforeach
                                 </select>
                                 @error('video_folder_id')
-                                    <div class="invalid-feedback mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                    <div class="invalid-feedback-minimal mt-1.5"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold">Tingkat Kesulitan <span class="neon-red">*</span></label>
-                                <select name="difficulty" class="form-select form-select-lg form-select-glass @error('difficulty') is-invalid @enderror" required>
+                                <label class="form-label-minimal">Tingkat Kesulitan <span class="text-danger">*</span></label>
+                                <select name="difficulty" class="form-select form-control-minimal @error('difficulty') is-invalid-minimal @enderror" required>
                                     <option value="" disabled selected>Pilih tingkat kesulitan...</option>
                                     <option value="beginner" {{ old('difficulty') == 'beginner' ? 'selected' : '' }}>Beginner (Dasar)</option>
                                     <option value="intermediate" {{ old('difficulty') == 'intermediate' ? 'selected' : '' }}>Intermediate (Menengah)</option>
                                     <option value="advanced" {{ old('difficulty') == 'advanced' ? 'selected' : '' }}>Advanced (Mahir)</option>
                                 </select>
                                 @error('difficulty')
-                                    <div class="invalid-feedback mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                    <div class="invalid-feedback-minimal mt-1.5"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
+                        <!-- Video Title Input -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Judul Video <span class="neon-red">*</span></label>
-                            <input type="text" name="title" class="form-control form-control-lg form-control-glass @error('title') is-invalid @enderror" value="{{ old('title') }}" placeholder="Misal: Percakapan di Kantin Sekolah" required>
+                            <label class="form-label-minimal">Judul Video <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control form-control-minimal @error('title') is-invalid-minimal @enderror" value="{{ old('title') }}" placeholder="Misal: Percakapan di Kantin Sekolah" required>
                             @error('title')
-                                <div class="invalid-feedback mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                <div class="invalid-feedback-minimal mt-1.5"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-5">
-                            <label class="form-label fw-bold">YouTube Video ID <span class="neon-red">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-right: none; color: #94a3b8;">youtube.com/watch?v=</span>
-                                <input type="text" name="youtube_id" class="form-control form-control-lg form-control-glass @error('youtube_id') is-invalid @enderror" value="{{ old('youtube_id') }}" placeholder="Contoh: dQw4w9WgXcQ" required>
+                        <!-- YouTube ID Input -->
+                        <div class="mb-4">
+                            <label class="form-label-minimal">YouTube Video ID <span class="text-danger">*</span></label>
+                            <div class="input-group border-minimal rounded-2 overflow-hidden">
+                                <span class="input-group-text small px-3 border-0 text-theme-muted" style="background: var(--box-bg); font-size: 0.85rem;">youtube.com/watch?v=</span>
+                                <input type="text" name="youtube_id" class="form-control form-control-minimal border-0 @error('youtube_id') is-invalid-minimal @enderror" value="{{ old('youtube_id') }}" placeholder="Contoh: dQw4w9WgXcQ" required style="border-radius: 0;">
                             </div>
                             @error('youtube_id')
-                                <div class="invalid-feedback mt-2 d-block"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                <div class="invalid-feedback-minimal mt-1.5 d-block"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <hr class="my-5" style="border-color: rgba(255, 255, 255, 0.1);">
+                        <div class="border-top-minimal my-4"></div>
 
+                        <!-- Transcript Bulk Input -->
                         <div class="mb-5">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-card-text neon-blue fs-4 me-2"></i>
-                                <label class="form-label fw-bold mb-0" style="color: #38bdf8;">Input Transkrip (Format Bulk) <span class="neon-red">*</span></label>
-                            </div>
+                            <label class="form-label-minimal text-primary">Input Transkrip (Format Bulk) <span class="text-danger">*</span></label>
                             
-                            <div class="tip-box p-3 mb-3 d-flex align-items-start gap-2">
-                                <i class="bi bi-lightbulb-fill text-warning mt-1"></i>
-                                <span class="fw-medium text-slate text-none" style="text-transform: none; letter-spacing: 0;">
-                                    Gunakan format: <strong class="text-white">detik_mulai | detik_selesai | teks</strong>. Buat satu baris untuk setiap kalimat.
+                            <!-- Minimalist Notification Tip Box -->
+                            <div class="minimal-box p-3 mb-3 d-flex align-items-start gap-2 rounded-2">
+                                <i class="bi bi-lightbulb-fill text-warning mt-0.5"></i>
+                                <span class="small text-theme-muted">
+                                    Gunakan format: <strong class="text-theme-main">detik_mulai | detik_selesai | teks</strong>. Buat satu baris baru untuk setiap kalimat.
                                 </span>
                             </div>
 
-                            <textarea name="transcripts" class="form-control form-control-glass font-monospace @error('transcripts') is-invalid @enderror" rows="10" placeholder="0.5|2.1|Hello, how are you?&#10;2.5|5.0|I am fine, thank you." required>{{ old('transcripts') }}</textarea>
+                            <textarea name="transcripts" class="form-control form-control-minimal font-monospace @error('transcripts') is-invalid-minimal @enderror" rows="8" placeholder="0.5|2.1|Hello, how are you?&#10;2.5|5.0|I am fine, thank you." required style="font-size: 0.85rem; line-height: 1.5;">{{ old('transcripts') }}</textarea>
                             @error('transcripts')
-                                <div class="invalid-feedback mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                <div class="invalid-feedback-minimal mt-1.5"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="d-grid mt-5 pt-3">
-                            <button type="submit" class="btn btn-neon-primary btn-lg fw-bold rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2">
-                                <i class="bi bi-cloud-arrow-up-fill fs-5"></i> Simpan Video & Transkrip
+                        <!-- Action Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-minimal btn-minimal-primary py-2.5">
+                                <i class="bi bi-cloud-arrow-up-fill me-1.5"></i> Simpan Video & Transkrip
                             </button>
                         </div>
 
@@ -241,4 +108,122 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+/* ======================================================== */
+/* MINIMALIST DESIGN SYSTEM - ADMIN FORM VIDEO CREATION     */
+/* ======================================================== */
+
+[data-theme="dark"] {
+    --card-bg: #1e2530;
+    --card-border: rgba(255, 255, 255, 0.04);
+    --box-bg: rgba(255, 255, 255, 0.02);
+    --input-bg: #131822;
+    --input-focus-bg: #10141d;
+    
+    --accent-primary: #3b82f6;
+    --accent-success: #10b981;
+    --accent-danger: #f43f5e;
+}
+
+[data-theme="light"] {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --box-bg: #f8fafc;
+    --input-bg: #f8fafc;
+    --input-focus-bg: #ffffff;
+    
+    --accent-primary: #2563eb;
+    --accent-success: #059669;
+    --accent-danger: #dc2626;
+}
+
+/* Base Structural Block Containers */
+.minimal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 15px -10px rgba(0, 0, 0, 0.05);
+}
+
+.minimal-box { background: var(--box-bg); border: 1px solid var(--card-border); }
+.border-top-minimal { border-top: 1px solid var(--card-border); }
+.border-minimal { border: 1px solid var(--card-border); }
+.badge-minimal-success { background: rgba(16, 185, 129, 0.06); color: var(--accent-success); }
+
+/* Typography Component Labels */
+.form-label-minimal {
+    color: var(--text-main);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* ======================================================== */
+/* FLAT CLEAN FORM CONTROL FIELDS                           */
+/* ======================================================== */
+.form-control-minimal {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.925rem;
+    transition: all 0.2s ease-in-out;
+}
+.form-control-minimal:focus {
+    background: var(--input-focus-bg) !important;
+    border-color: var(--text-muted) !important;
+    box-shadow: none !important;
+}
+.form-control-minimal::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.4;
+}
+
+/* Select Dropdown options behavior */
+select.form-control-minimal option {
+    background-color: var(--card-bg);
+    color: var(--text-main);
+}
+
+/* Validation System Mapping Hook */
+.is-invalid-minimal {
+    border-color: var(--accent-danger) !important;
+}
+.invalid-feedback-minimal {
+    color: var(--accent-danger);
+    font-size: 0.825rem;
+    font-weight: 500;
+}
+
+/* Reusable Custom Button Layouts */
+.btn-minimal {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+.btn-minimal-primary {
+    background: var(--accent-primary);
+    color: #ffffff !important;
+    border: none;
+}
+.btn-minimal-primary:hover {
+    filter: brightness(1.08);
+}
+.btn-minimal-secondary {
+    background: transparent;
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border);
+}
+.btn-minimal-secondary:hover {
+    background: var(--input-bg);
+}
+</style>
 @endsection

@@ -7,7 +7,7 @@
     <title>{{ config('app.name', 'English-App') }}</title>
 
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
@@ -19,42 +19,41 @@
     </script>
 
     <style>
-        /* CSS Variables - Dark Mode (Default) */
+        /* CSS Variables - Minimalist Elegant Mode */
         :root, [data-theme="dark"] {
-            --bg-body: #0b0f19;
+            --bg-body: #0f131a;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --glow-1: rgba(99, 102, 241, 0.5);
-            --glow-2: rgba(236, 72, 153, 0.3);
-            --nav-bg: rgba(11, 15, 25, 0.7);
-            --nav-border: rgba(255, 255, 255, 0.08);
+            --nav-bg: rgba(15, 19, 26, 0.85);
+            --nav-border: rgba(255, 255, 255, 0.05);
             --nav-link: #94a3b8;
-            --dropdown-bg: rgba(20, 25, 40, 0.85);
+            --nav-link-hover: #3b82f6;
+            --dropdown-bg: #161b26;
             --dropdown-item: #cbd5e1;
-            --dropdown-hover: rgba(255, 255, 255, 0.1);
-            --dropdown-border: rgba(255, 255, 255, 0.1);
-            --swal-bg: rgba(20, 25, 40, 0.95);
+            --dropdown-hover: rgba(255, 255, 255, 0.04);
+            --dropdown-border: rgba(255, 255, 255, 0.05);
+            --swal-bg: #161b26;
             --swal-color: #ffffff;
-            --toggler-bg: rgba(255, 255, 255, 0.1);
+            --toggler-bg: rgba(255, 255, 255, 0.03);
+            --accent-danger: #f43f5e;
         }
 
-        /* CSS Variables - Light Mode */
         [data-theme="light"] {
             --bg-body: #f8fafc;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --glow-1: rgba(99, 102, 241, 0.15);
-            --glow-2: rgba(236, 72, 153, 0.15);
-            --nav-bg: rgba(255, 255, 255, 0.7);
-            --nav-border: rgba(0, 0, 0, 0.05);
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --nav-border: rgba(0, 0, 0, 0.04);
             --nav-link: #475569;
-            --dropdown-bg: rgba(255, 255, 255, 0.9);
+            --nav-link-hover: #2563eb;
+            --dropdown-bg: #ffffff;
             --dropdown-item: #334155;
-            --dropdown-hover: rgba(0, 0, 0, 0.05);
+            --dropdown-hover: rgba(0, 0, 0, 0.02);
             --dropdown-border: rgba(0, 0, 0, 0.05);
-            --swal-bg: rgba(255, 255, 255, 0.95);
+            --swal-bg: #ffffff;
             --swal-color: #0f172a;
-            --toggler-bg: rgba(0, 0, 0, 0.05);
+            --toggler-bg: rgba(0, 0, 0, 0.02);
+            --accent-danger: #dc2626;
         }
 
         /* Base Theme Application */
@@ -65,111 +64,114 @@
             font-family: 'Nunito', sans-serif;
             position: relative;
             overflow-x: hidden;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Ambient Background Glows */
-        body::before, body::after {
+        /* Ambient Background - Subtly Muted */
+        body::before {
             content: '';
             position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            z-index: -1;
-            pointer-events: none;
-            transition: background 0.4s ease;
-        }
-        body::before {
-            top: -10%; left: -10%; width: 600px; height: 600px;
-            background: radial-gradient(circle, var(--glow-1), transparent 70%);
-        }
-        body::after {
-            bottom: -20%; right: -10%; width: 700px; height: 700px;
-            background: radial-gradient(circle, var(--glow-2), transparent 70%);
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--nav-border), transparent);
+            z-index: 1000;
         }
 
-        /* Utility Classes (to replace static text-white/text-muted) */
-        .text-theme-main { color: var(--text-main) !important; transition: color 0.4s ease; }
-        .text-theme-muted { color: var(--text-muted) !important; transition: color 0.4s ease; }
+        /* Utility Classes */
+        .text-theme-main { color: var(--text-main) !important; }
+        .text-theme-muted { color: var(--text-muted) !important; }
 
-        /* Glass Navbar */
+        /* Elegant Thin Navbar */
         .glass-navbar {
             background: var(--nav-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--nav-border);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-            transition: background 0.4s ease, border-color 0.4s ease;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .navbar-brand {
             color: var(--text-main) !important;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(148, 163, 184, 0.2);
-            transition: color 0.4s ease;
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease;
         }
 
         .nav-link {
             color: var(--nav-link) !important;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
+            font-weight: 500;
+            font-size: 0.925rem;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
         }
         .nav-link:hover, .nav-link.active {
-            color: #38bdf8 !important; 
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            color: var(--nav-link-hover) !important;
+            background: var(--toggler-bg);
         }
-        .nav-link.admin-link { color: #fb7185 !important; }
-        .nav-link.admin-link:hover { color: #f43f5e !important; text-shadow: 0 0 10px rgba(244, 63, 94, 0.4); }
+        .nav-link.admin-link { color: var(--accent-danger) !important; opacity: 0.9; }
+        .nav-link.admin-link:hover { opacity: 1; background: rgba(244, 63, 94, 0.05); }
 
-        /* Dropdowns */
+        /* Minimal Menus */
         .dropdown-menu {
             background: var(--dropdown-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--dropdown-border);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
-            padding: 0.5rem 0;
-            transition: background 0.4s ease, border-color 0.4s ease;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+            border-radius: 0.75rem;
+            padding: 0.375rem;
+            animation: fadeInMenu 0.15s ease-out;
+        }
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .dropdown-item {
             color: var(--dropdown-item);
             font-weight: 500;
-            transition: all 0.2s ease;
-            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.15s ease;
         }
         .dropdown-item:hover, .dropdown-item:focus {
             background: var(--dropdown-hover);
             color: var(--text-main);
         }
-        .dropdown-header { color: #38bdf8; font-weight: 700; letter-spacing: 1px; font-size: 0.75rem; }
-        .dropdown-divider { border-top: 1px solid var(--dropdown-border); }
+        .dropdown-header { 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            font-size: 0.7rem; 
+            text-uppercase: uppercase; 
+            letter-spacing: 0.05em;
+            padding: 0.5rem 1rem 0.25rem;
+        }
+        .dropdown-divider { border-top: 1px solid var(--dropdown-border); margin: 0.375rem 0; }
 
-        /* Theme Toggler Button */
+        /* Round Theme Toggler */
         .theme-toggle-btn {
             background: var(--toggler-bg);
             border: 1px solid var(--dropdown-border);
             color: var(--text-main);
             border-radius: 50%;
-            width: 38px; height: 38px;
+            width: 36px; height: 36px;
             display: flex; justify-content: center; align-items: center;
-            cursor: pointer; transition: all 0.3s ease;
+            cursor: pointer; transition: all 0.2s ease;
         }
-        .theme-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+        .theme-toggle-btn:hover { transform: translateY(-1px); background: var(--dropdown-hover); }
 
-        /* Navbar Toggler for Mobile */
-        .navbar-toggler { border: 1px solid var(--nav-border); background: var(--toggler-bg); }
-        .navbar-toggler:focus { box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
-        .navbar-toggler-icon { filter: grayscale(1) contrast(2); }
+        /* Toggler Mobile */
+        .navbar-toggler { border: 1px solid var(--nav-border); background: var(--toggler-bg); padding: 0.4rem 0.6rem; }
+        .navbar-toggler:focus { box-shadow: none; border-color: var(--nav-link-hover); }
+        .navbar-toggler-icon { filter: initial; opacity: 0.7; }
 
-        .border-start { border-left-color: var(--dropdown-border) !important; }
+        .border-divider { border-left: 1px solid var(--dropdown-border) !important; }
         
-        .glass-swal {
+        .minimal-swal {
             background: var(--swal-bg) !important;
-            backdrop-filter: blur(16px) !important;
             border: 1px solid var(--dropdown-border) !important;
             color: var(--swal-color) !important;
+            border-radius: 1rem !important;
         }
     </style>
     @yield('styles')
@@ -178,21 +180,22 @@
     <div id="app">
         <nav class="navbar navbar-expand-md glass-navbar sticky-top">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('/') }}">
+                    <i class="bi bi-journal-bookmark-fill text-primary fs-5"></i>
+                    <span>{{ config('app.name', 'Laravel') }}</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon small"><i class="bi bi-list text-theme-main"></i></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto gap-1 mt-2 mt-md-0">
                         @auth
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Dashboard</a>
                         </li>
-                        <li class="nav-item dropdown border-start ms-2 ps-2">
-                            <a class="nav-link dropdown-toggle {{ request()->routeIs('study.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ruang Belajar</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('study.*') || request()->routeIs('lessons.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ruang Belajar</a>
                             <ul class="dropdown-menu mt-2">
                                 <li><a class="dropdown-item" href="{{ route('study.index') }}">Flashcard Interaktif</a></li>
                                 <li><a class="dropdown-item" href="{{ route('lessons.user.index') }}">Buku Materi Digital</a></li>
@@ -207,7 +210,7 @@
                         @endauth
                         
                         @if(Auth::check() && Auth::user()->is_admin)
-                        <li class="nav-item dropdown border-start ms-2 ps-2">
+                        <li class="nav-item dropdown border-divider-md-start ms-md-2 ps-md-2">
                             <a class="nav-link dropdown-toggle admin-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin Panel 🔒</a>
                             <ul class="dropdown-menu mt-2">
                                 <li><a class="dropdown-item" href="{{ route('admin.study-items.index') }}">Kelola Materi Flashcard</a></li>
@@ -224,8 +227,8 @@
                         @endif
                     </ul>
 
-                    <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item me-3">
+                    <ul class="navbar-nav ms-auto align-items-center gap-2 mt-2 mt-md-0">
+                        <li class="nav-item">
                             <button class="theme-toggle-btn" id="theme-toggler" aria-label="Toggle Dark Mode">
                                 <i class="bi bi-sun-fill" id="theme-icon"></i>
                             </button>
@@ -233,15 +236,15 @@
 
                         @guest
                             @if (Route::has('login'))
-                            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                            <li class="nav-item"><a class="nav-link px-3" href="{{ route('login') }}">{{ __('Login') }}</a></li>
                             @endif
                             @if (Route::has('register'))
-                            <li class="nav-item"><a class="nav-link border-start ms-2 ps-3" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            <li class="nav-item"><a class="nav-link px-3 border-divider ms-1 ps-3" href="{{ route('register') }}">{{ __('Register') }}</a></li>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->name }}
+                            <li class="nav-item dropdown w-100 text-center text-md-start">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle d-inline-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <i class="bi bi-person-circle opacity-75"></i> <span>{{ Auth::user()->name }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-gear me-2 opacity-75"></i> Profil & Target</a>
@@ -255,7 +258,7 @@
             </div>
         </nav>
 
-        <main class="py-4 position-relative z-1">
+        <main class="py-5">
             @yield('content')
         </main>
     </div>
@@ -272,7 +275,7 @@
             
             function updateIcon(theme) {
                 if(theme === 'light') {
-                    themeIcon.className = 'bi bi-moon-stars-fill text-slate';
+                    themeIcon.className = 'bi bi-moon-stars-fill text-secondary';
                 } else {
                     themeIcon.className = 'bi bi-sun-fill text-warning';
                 }
@@ -288,7 +291,6 @@
                 localStorage.setItem('theme', newTheme);
                 updateIcon(newTheme);
                 
-                // Dispatch event untuk merender ulang Chart.js agar merespon ganti tema
                 window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme }}));
             });
         });
@@ -298,11 +300,11 @@
     <script>
         Swal.fire({
             icon: 'success',
-            title: 'Berhasil!',
+            title: 'Berhasil',
             text: "{{ session('success') }}",
             showConfirmButton: false,
-            timer: 2000,
-            customClass: { popup: 'glass-swal', title: 'text-glow' }
+            timer: 1800,
+            customClass: { popup: 'minimal-swal' }
         });
     </script>
     @endif

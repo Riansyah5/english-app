@@ -1,248 +1,99 @@
 @extends('layouts.app')
 
-@section('styles')
-<style>
-    /* ======================================================== */
-    /* PREMIUM GLASSMORPHISM UI - LOGIN PAGE                    */
-    /* ======================================================== */
-
-    body {
-        background-color: #0b0f19;
-        color: #f8fafc;
-        min-height: 100vh;
-        position: relative;
-    }
-
-    /* Ambient Background Glows */
-    .ambient-glow {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(120px);
-        z-index: 0;
-        opacity: 0.5;
-        pointer-events: none;
-    }
-    .glow-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.6), transparent 70%); }
-    .glow-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(236, 72, 153, 0.4), transparent 70%); }
-    .glow-3 { top: 40%; right: 10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(56, 189, 248, 0.3), transparent 70%); }
-
-    /* Typography & Utilities */
-    .text-slate { color: #94a3b8 !important; }
-    .text-glow { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-    .neon-blue { color: #38bdf8; text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
-    .neon-red { color: #fb7185; }
-
-    /* Main Typography */
-    .display-custom {
-        font-size: 3.5rem;
-        font-weight: 800;
-        letter-spacing: -1.5px;
-        line-height: 1.1;
-        background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-    }
-
-    /* Glass Components */
-    .glass-card {
-        background: rgba(20, 25, 40, 0.5);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 1.5rem;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Top Accent Line for Card */
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #4f46e5, #38bdf8);
-        z-index: 1;
-    }
-
-    /* Glass Form Inputs */
-    .form-control-glass {
-        background: rgba(15, 23, 42, 0.4) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #f8fafc !important;
-        border-radius: 0.75rem;
-        transition: all 0.3s ease;
-        padding-left: 1.25rem;
-    }
-    .form-control-glass:focus {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border-color: rgba(56, 189, 248, 0.5) !important;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2) !important;
-        color: #ffffff !important;
-    }
-    .form-control-glass::placeholder {
-        color: #64748b !important;
-        opacity: 0.7;
-    }
-
-    /* Validation Errors */
-    .is-invalid {
-        border-color: rgba(244, 63, 94, 0.5) !important;
-        box-shadow: 0 0 15px rgba(244, 63, 94, 0.1) !important;
-    }
-    .invalid-feedback {
-        color: #fb7185;
-        font-weight: 500;
-        letter-spacing: 0.3px;
-        margin-top: 0.5rem;
-    }
-
-    /* Custom Checkbox */
-    .form-check-input {
-        background-color: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        cursor: pointer;
-    }
-    .form-check-input:checked {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-    }
-    .form-check-input:focus {
-        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
-    }
-
-    /* Buttons & Links */
-    .btn-neon-primary {
-        background: linear-gradient(135deg, #4f46e5, #3b82f6);
-        border: none;
-        color: white;
-        box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
-        transition: all 0.3s ease;
-        letter-spacing: 1px;
-    }
-    .btn-neon-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(79, 70, 229, 0.6);
-        color: white;
-    }
-
-    .link-neon {
-        color: #38bdf8;
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
-    .link-neon:hover {
-        color: #fff;
-        text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
-    }
-
-    /* Labels */
-    .form-label {
-        color: #cbd5e1;
-        letter-spacing: 0.5px;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-    }
-
-    /* Custom Height Utility */
-    .min-vh-75 { min-height: 80vh; }
-</style>
-@endsection
-
 @section('content')
-<div class="ambient-glow glow-1"></div>
-<div class="ambient-glow glow-2"></div>
-<div class="ambient-glow glow-3"></div>
-
-<div class="container mt-5 position-relative z-1">
-    <div class="row justify-content-center align-items-center min-vh-75">
+<div class="container py-5 position-relative z-1">
+    <div class="row justify-content-center align-items-center min-vh-75 g-5">
         
-        <div class="col-md-5 text-center text-md-start mb-5 mb-md-0 pe-md-5">
-            <h1 class="display-custom mb-3">Master English Today.</h1>
-            <p class="fs-5 text-slate mt-4" style="line-height: 1.6; letter-spacing: 0.5px;">
-                Tingkatkan kemampuan <strong class="text-white text-glow">Grammar</strong> dan <strong class="text-white text-glow">Speaking</strong> Anda dengan metode belajar yang terbukti secara ilmiah. Masuk sekarang dan lanjutkan progres belajarmu!
+        <!-- Left Column: Branding Content -->
+        <div class="col-md-6 col-lg-5 text-center text-md-start pe-lg-5">
+            <h1 class="display-custom mb-4 tracking-tight">Master English Today.</h1>
+            <p class="fs-6 text-theme-muted mt-3" style="line-height: 1.6;">
+                Tingkatkan kemampuan <span class="text-theme-main fw-semibold">Grammar</span> dan <span class="text-theme-main fw-semibold">Speaking</span> Anda dengan metode belajar yang terbukti secara ilmiah. Masuk sekarang dan lanjutkan progres belajarmu!
             </p>
             
-            <div class="d-none d-md-flex gap-3 mt-5 opacity-75">
-                <div class="p-3 rounded-circle d-flex align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); height: 60px; width: 60px;">
-                    <i class="bi bi-book fs-4 text-white"></i>
+            <!-- Minimal Geometric Icons Badge Row -->
+            <div class="d-none d-md-flex gap-2.5 mt-5 opacity-60">
+                <div class="rounded-3 d-flex align-items-center justify-content-center border-minimal bg-minimal-badge" style="height: 44px; width: 44px;">
+                    <i class="bi bi-book text-theme-main fs-5"></i>
                 </div>
-                <div class="p-3 rounded-circle d-flex align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); height: 60px; width: 60px;">
-                    <i class="bi bi-mic fs-4 text-white"></i>
+                <div class="rounded-3 d-flex align-items-center justify-content-center border-minimal bg-minimal-badge" style="height: 44px; width: 44px;">
+                    <i class="bi bi-mic text-theme-main fs-5"></i>
                 </div>
-                <div class="p-3 rounded-circle d-flex align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); height: 60px; width: 60px;">
-                    <i class="bi bi-graph-up-arrow fs-4 text-white"></i>
+                <div class="rounded-3 d-flex align-items-center justify-content-center border-minimal bg-minimal-badge" style="height: 44px; width: 44px;">
+                    <i class="bi bi-graph-up-arrow text-theme-main fs-5"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-5">
-            <div class="glass-card">
-                <div class="card-body p-4 p-md-5 position-relative z-1">
+        <!-- Right Column: Login Credential Form Card -->
+        <div class="col-md-6 col-lg-5">
+            <div class="minimal-card shadow-sm">
+                <div class="card-body p-4 p-md-5">
                     
                     <div class="text-center mb-5">
-                        <h3 class="fw-bold text-white text-glow mb-2" style="letter-spacing: -0.5px;">Welcome Back! 👋</h3>
-                        <p class="text-slate small fw-medium">Silakan masuk ke akun Anda</p>
+                        <h4 class="fw-bold text-theme-main mb-1 tracking-tight">Welcome Back! 👋</h4>
+                        <p class="text-theme-muted small fw-medium">Silakan masuk ke akun Anda</p>
                     </div>
                     
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
+                        <!-- Email Input Address Box -->
                         <div class="mb-4">
-                            <label for="email" class="form-label fw-bold">Email Address</label>
+                            <label for="email" class="form-label-minimal">Email Address</label>
                             <div class="position-relative">
-                                <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-slate"></i>
-                                <input id="email" type="email" class="form-control form-control-lg form-control-glass ps-5 @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="name@example.com">
+                                <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-theme-muted opacity-50"></i>
+                                <input id="email" type="email" class="form-control form-control-minimal ps-5 @error('email') is-invalid-minimal @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="name@example.com">
                             </div>
                             @error('email')
-                                <span class="invalid-feedback d-block" role="alert">
+                                <span class="invalid-feedback-minimal mt-1.5 d-block" role="alert">
                                     <i class="bi bi-exclamation-circle me-1"></i> <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
 
+                        <!-- Password Input Credentials Box -->
                         <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="password" class="form-label fw-bold mb-0">Password</label>
+                            <div class="d-flex justify-content-between align-items-center mb-1.5">
+                                <label for="password" class="form-label-minimal mb-0">Password</label>
                                 @if (Route::has('password.request'))
-                                    <a class="link-neon small fw-semibold" href="{{ route('password.request') }}">
+                                    <a class="link-minimal-accent small fw-semibold" href="{{ route('password.request') }}" style="font-size: 0.8rem;">
                                         Forgot Password?
                                     </a>
                                 @endif
                             </div>
-                            <div class="position-relative mt-2">
-                                <i class="bi bi-shield-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-slate"></i>
-                                <input id="password" type="password" class="form-control form-control-lg form-control-glass ps-5 @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="••••••••">
+                            <div class="position-relative">
+                                <i class="bi bi-shield-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-theme-muted opacity-50"></i>
+                                <input id="password" type="password" class="form-control form-control-minimal ps-5 @error('password') is-invalid-minimal @enderror" name="password" required autocomplete="current-password" placeholder="••••••••">
                             </div>
                             @error('password')
-                                <span class="invalid-feedback d-block" role="alert">
+                                <span class="invalid-feedback-minimal mt-1.5 d-block" role="alert">
                                     <i class="bi bi-exclamation-circle me-1"></i> <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
 
-                        <div class="mb-5">
+                        <!-- Remember Active Session State -->
+                        <div class="mb-4">
                             <div class="form-check d-flex align-items-center gap-2">
                                 <input class="form-check-input mt-0" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label text-slate fw-medium pt-1" for="remember" style="cursor: pointer;">
+                                <label class="form-check-label text-theme-muted small fw-medium pt-0.5" for="remember" style="cursor: pointer; user-select: none;">
                                     Remember Me
                                 </label>
                             </div>
                         </div>
 
+                        <!-- Submit CTA Action -->
                         <div class="d-grid gap-2 mt-2">
-                            <button type="submit" class="btn btn-neon-primary btn-lg fw-bold rounded-pill py-3">
+                            <button type="submit" class="btn btn-minimal btn-minimal-primary py-2.5">
                                 Start Learning &rarr;
                             </button>
                         </div>
                         
+                        <!-- Anchor Register Navigation Link -->
                         @if (Route::has('register'))
-                            <div class="text-center mt-4 pt-2 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
-                                <p class="text-slate mb-0">Belum punya akun? <a href="{{ route('register') }}" class="link-neon fw-bold">Daftar sekarang</a></p>
+                            <div class="text-center mt-4 pt-4 border-top-minimal">
+                                <p class="text-theme-muted small mb-0">Belum punya akun? <a href="{{ route('register') }}" class="link-minimal-accent fw-bold ms-1">Daftar sekarang</a></p>
                             </div>
                         @endif
                         
@@ -253,4 +104,159 @@
 
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+/* ======================================================== */
+/* MINIMALIST AUTH LOG-IN DESIGN SYSTEM                     */
+/* ======================================================== */
+
+[data-theme="dark"] {
+    --card-bg: #1e2530;
+    --card-border: rgba(255, 255, 255, 0.04);
+    --box-bg: rgba(255, 255, 255, 0.02);
+    --badge-bg: rgba(255, 255, 255, 0.03);
+    --input-bg: #131822;
+    --input-focus-bg: #10141d;
+    --text-gradient-end: #cbd5e1;
+    
+    --accent-primary: #3b82f6;
+    --accent-success: #10b981;
+    --accent-danger: #f43f5e;
+}
+
+[data-theme="light"] {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --box-bg: #f8fafc;
+    --badge-bg: rgba(0, 0, 0, 0.02);
+    --input-bg: #f8fafc;
+    --input-focus-bg: #ffffff;
+    --text-gradient-end: #1e293b;
+    
+    --accent-primary: #2563eb;
+    --accent-success: #059669;
+    --accent-danger: #dc2626;
+}
+
+/* Base Structural Containers Layout */
+.minimal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.08);
+}
+
+.border-top-minimal { border-top: 1px solid var(--card-border); }
+.border-minimal { border: 1px solid var(--card-border); }
+.bg-minimal-badge { background: var(--badge-bg); }
+.badge-minimal-success { background: rgba(16, 185, 129, 0.06); color: var(--accent-success); }
+
+/* Editorial Hero Header Typography */
+.display-custom {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--text-main) 30%, var(--text-gradient-end) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-label-minimal {
+    color: var(--text-main);
+    font-size: 0.775rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.link-minimal-accent {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+.link-minimal-accent:hover {
+    color: var(--text-main);
+}
+
+/* ======================================================== */
+/* FLAT CLEAN FORM CONTROL FIELDS                           */
+/* ======================================================== */
+.form-control-minimal {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.925rem;
+    transition: all 0.2s ease-in-out;
+}
+.form-control-minimal:focus {
+    background: var(--input-focus-bg) !important;
+    border-color: var(--text-muted) !important;
+    box-shadow: none !important;
+}
+.form-control-minimal::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.4;
+}
+
+/* Bootstrap Checkbox Clean Customization Override */
+.form-check-input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    cursor: pointer;
+    width: 1.15em;
+    height: 1.15em;
+}
+.form-check-input:checked {
+    background-color: var(--accent-primary);
+    border-color: transparent;
+    box-shadow: none;
+}
+.form-check-input:focus {
+    box-shadow: none;
+    border-color: var(--text-muted);
+}
+
+/* Validation Exceptions Handling Mapping Hooks */
+.is-invalid-minimal {
+    border-color: var(--accent-danger) !important;
+}
+.invalid-feedback-minimal {
+    color: var(--accent-danger);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Reusable Custom Button Component Architecture */
+.btn-minimal {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+.btn-minimal-primary {
+    background: var(--accent-primary);
+    color: #ffffff !important;
+    border: none;
+}
+.btn-minimal-primary:hover {
+    filter: brightness(1.08);
+}
+.btn-minimal-secondary {
+    background: transparent;
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border);
+}
+.btn-minimal-secondary:hover {
+    background: var(--input-bg);
+}
+
+.min-vh-75 { min-height: 75vh; }
+</style>
 @endsection

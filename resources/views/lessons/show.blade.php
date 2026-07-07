@@ -1,25 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="readingContainer" class="theme-dark py-4 transition-theme position-relative z-1" style="min-height: 100vh; overflow-x: hidden;">
-    
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
+<div id="readingContainer" class="theme-dark py-4 transition-theme position-relative z-1" style="min-height: 100vh;">
 
-    <div class="container mb-5 position-relative z-1">
+    <div class="container mb-5">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
                 
-                <div class="d-flex justify-content-between align-items-center mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-0 fw-semibold" style="letter-spacing: 0.5px;">
+                        <ol class="breadcrumb mb-0 fw-medium" style="font-size: 0.9rem;">
                             <li class="breadcrumb-item"><a href="{{ route('lessons.user.index') }}" class="text-decoration-none accent-link">Daftar Materi</a></li>
                             <li class="breadcrumb-item active-breadcrumb" aria-current="page">{{ $lesson->category->name }}</li>
                         </ol>
                     </nav>
 
                     <div class="theme-switch-wrapper">
-                      <div class="theme-switch-box glass-panel">
+                      <div class="theme-switch-box">
                           <div class="active-indicator" id="indicator"></div>
                           
                           <button class="btn-theme" onclick="changeTheme(this, 'theme-light', 0)" title="Terang">
@@ -35,23 +32,23 @@
                     </div>
                 </div>
 
-                <div class="mb-5 border-bottom-glass pb-4 article-header">
-                    <span class="badge badge-glass-accent text-uppercase px-3 py-2 mb-3 fw-bold shadow-sm" style="letter-spacing: 1.5px;">Bab {{ $lesson->order_number }}</span>
-                    <h1 class="display-4 fw-bold mb-3 article-title text-glow line-height-tight">{{ $lesson->title }}</h1>
+                <div class="mb-5 border-bottom-minimal pb-4">
+                    <span class="badge badge-minimal-accent text-uppercase px-2.5 py-1.5 mb-3 font-monospace" style="font-size: 0.75rem;">Bab {{ $lesson->order_number }}</span>
+                    <h2 class="fw-bold mb-3 text-theme-main tracking-tight line-height-tight" style="font-size: 2.25rem;">{{ $lesson->title }}</h2>
                     
                     @php
                         $wordCount = str_word_count(strip_tags($lesson->content));
                         $readTime = ceil($wordCount / 200);
                     @endphp
-                    <div class="d-flex align-items-center text-muted-adaptive fw-medium" style="letter-spacing: 0.5px;">
-                        <i class="bi bi-hourglass-split me-2 accent-text"></i> Estimasi waktu baca: {{ $readTime }} menit
+                    <div class="d-flex align-items-center text-theme-muted small fw-medium">
+                        <i class="bi bi-hourglass-split me-1.5 accent-text"></i> Estimasi waktu baca: {{ $readTime }} menit
                     </div>
                 </div>
 
                 @if($lesson->youtube_video_id)
                     <div class="mb-5">
-                        <div class="glass-panel p-2 rounded-4">
-                            <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg">
+                        <div class="minimal-card p-1">
+                            <div class="ratio ratio-16x9 rounded-3 overflow-hidden">
                                 <iframe 
                                     src="https://www.youtube.com/embed/{{ $lesson->youtube_video_id }}?rel=0" 
                                     title="YouTube video player" 
@@ -61,54 +58,51 @@
                                 </iframe>
                             </div>
                         </div>
-                        <div class="text-center mt-3 small text-muted-adaptive fw-medium">
+                        <div class="text-center mt-2.5 small text-theme-muted fw-medium">
                             <i class="bi bi-info-circle me-1 accent-text"></i> Tonton video di atas sebagai pengantar materi.
                         </div>
                     </div>
                 @endif
 
-                <article class="lesson-content glass-panel p-4 p-md-5 mb-5 shadow-lg">
+                <article class="lesson-content minimal-panel p-4 p-md-5 mb-4">
                     {!! $lesson->content !!}
                 </article>
 
-                <div class="note-board glass-panel p-4 p-md-5 mb-5 shadow-lg position-relative overflow-hidden">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-note-overlay pointer-events-none"></div>
-                    <div class="position-relative z-1">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-box-warning rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
-                                <i class="bi bi-pin-angle-fill fs-5"></i>
-                            </div>
-                            <h4 class="fw-bold mb-0 article-title">Catatan Pribadiku</h4>
+                <div class="minimal-card p-4 mb-5">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box-warning rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px;">
+                            <i class="bi bi-pin-angle-fill fs-6"></i>
                         </div>
-                        <textarea id="personalNote" class="form-control border-0 note-textarea p-4 rounded-4 shadow-inner" rows="4" placeholder="Ketik ringkasan atau poin penting dari bab ini di sini...">{{ $personalNote }}</textarea>
-                        <div class="text-end mt-3">
-                            <button id="btnSaveNote" class="btn btn-glass-accent rounded-pill px-4 py-2 fw-bold shadow-sm transition-all">
-                                Simpan Catatan
-                            </button>
-                        </div>
+                        <h5 class="fw-bold mb-0 text-theme-main">Catatan Pribadiku</h5>
+                    </div>
+                    <textarea id="personalNote" class="form-control border-minimal note-textarea p-3 rounded-3" rows="4" placeholder="Ketik ringkasan atau poin penting dari bab ini di sini...">{{ $personalNote }}</textarea>
+                    <div class="text-end mt-3">
+                        <button id="btnSaveNote" class="btn btn-minimal btn-minimal-secondary btn-sm px-4 fw-semibold">
+                            Simpan Catatan
+                        </button>
                     </div>
                 </div>
 
-                <div class="mt-5 pt-4 text-center" id="completionArea">
+                <div class="mt-5 pt-2 text-center" id="completionArea">
                     @if($isCompleted)
-                        <div class="alert-glass-success d-inline-block px-5 py-3 rounded-pill fw-bold shadow-lg mb-4">
-                            <i class="bi bi-check-circle-fill me-2"></i> Kamu sudah menyelesaikan bab ini!
+                        <div class="badge-minimal-success d-inline-block px-4 py-2.5 rounded-pill fw-semibold mb-4 small border border-success border-opacity-10">
+                            <i class="bi bi-check-circle-fill me-1.5"></i> Kamu sudah menyelesaikan bab ini!
                         </div>
                         @if($nextLesson)
-                            <div class="mt-3">
-                                <a href="{{ route('lessons.user.show', $nextLesson->slug) }}" class="btn btn-neon-primary btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg w-100 w-md-auto">
+                            <div class="mt-2">
+                                <a href="{{ route('lessons.user.show', $nextLesson->slug) }}" class="btn btn-minimal btn-minimal-primary btn-lg px-5 py-2.5 w-100 w-md-auto">
                                     Lanjut ke Bab {{ $nextLesson->order_number }} &rarr;
                                 </a>
                             </div>
                         @endif
                     @else
-                        <button id="btnMarkDone" class="btn btn-neon-success btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg w-100 w-md-auto mb-4">
-                            <i class="bi bi-check-lg me-2 fs-5"></i> Tandai Selesai Dibaca
+                        <button id="btnMarkDone" class="btn btn-minimal btn-minimal-success btn-lg px-5 py-2.5 w-100 w-md-auto mb-4" style="background: var(--accent-success);">
+                            <i class="bi bi-check-lg me-1.5"></i> Tandai Selesai Dibaca
                         </button>
                         
                         @if($nextLesson)
                             <div id="nextLessonDiv" class="mt-2 d-none transition-fade">
-                                <a href="{{ route('lessons.user.show', $nextLesson->slug) }}" class="btn btn-neon-primary btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg w-100 w-md-auto">
+                                <a href="{{ route('lessons.user.show', $nextLesson->slug) }}" class="btn btn-minimal btn-minimal-primary btn-lg px-5 py-2.5 w-100 w-md-auto">
                                     Lanjut ke Bab {{ $nextLesson->order_number }} &rarr;
                                 </a>
                             </div>
@@ -127,62 +121,59 @@
 @section('styles')
 <style>
     /* ======================================================== */
-    /* ADAPTIVE GLASSMORPHISM THEME SYSTEM                      */
+    /* MINIMALIST ADAPTIVE LITERACY DESIGN SYSTEM               */
     /* ======================================================== */
 
     :root {
-        --transition-speed: 0.5s;
+        --transition-speed: 0.35s;
     }
 
-    /* 1. DARK THEME (Futuristic Crypto/Fintech Vibe) */
+    /* 1. DARK MODE */
     .theme-dark {
-        --bg-page: #0b0f19;
-        --glass-bg: rgba(20, 25, 40, 0.5);
-        --glass-border: rgba(255, 255, 255, 0.08);
+        --bg-page: #0f131a;
+        --card-bg: #1e2530;
+        --card-border: rgba(255, 255, 255, 0.04);
         --text-main: #f8fafc;
         --text-muted: #94a3b8;
-        --accent-color: #38bdf8;
-        --accent-glow: rgba(56, 189, 248, 0.4);
-        --note-bg: rgba(255, 255, 255, 0.02);
-        --shadow-color: rgba(0, 0, 0, 0.4);
-        --ambient-opacity: 0.4;
-        --indicator-bg: rgba(56, 189, 248, 0.2);
-        --switch-bg: rgba(0, 0, 0, 0.3);
+        --accent-color: #3b82f6;
+        --accent-glow: rgba(59, 130, 246, 0.15);
+        --accent-success: #10b981;
+        --indicator-bg: rgba(255, 255, 255, 0.04);
+        --switch-bg: #141922;
+        --note-input-bg: #131822;
     }
 
-    /* 2. LIGHT THEME (Clean Frosted Glass) */
+    /* 2. LIGHT MODE */
     .theme-light {
         --bg-page: #f8fafc;
-        --glass-bg: rgba(255, 255, 255, 0.8);
-        --glass-border: rgba(226, 232, 240, 0.8);
+        --card-bg: #ffffff;
+        --card-border: rgba(0, 0, 0, 0.05);
         --text-main: #0f172a;
         --text-muted: #64748b;
-        --accent-color: #3b82f6;
-        --accent-glow: rgba(59, 130, 246, 0.2);
-        --note-bg: rgba(253, 224, 71, 0.15); /* Soft yellow tint */
-        --shadow-color: rgba(0, 0, 0, 0.05);
-        --ambient-opacity: 0;
+        --accent-color: #2563eb;
+        --accent-glow: rgba(37, 99, 235, 0.08);
+        --accent-success: #059669;
         --indicator-bg: #ffffff;
-        --switch-bg: rgba(226, 232, 240, 0.5);
+        --switch-bg: #e2e8f0;
+        --note-input-bg: #f8fafc;
     }
 
-    /* 3. SEPIA THEME (Warm Vintage Glass) */
+    /* 3. SEPIA MODE */
     .theme-sepia {
-        --bg-page: #fdf6e3;
-        --glass-bg: rgba(253, 246, 227, 0.8);
-        --glass-border: rgba(238, 232, 213, 0.9);
-        --text-main: #4c4033;
-        --text-muted: #837563;
-        --accent-color: #b58900;
-        --accent-glow: rgba(181, 137, 0, 0.2);
-        --note-bg: rgba(238, 232, 213, 0.5);
-        --shadow-color: rgba(76, 64, 51, 0.08);
-        --ambient-opacity: 0;
-        --indicator-bg: #fdf6e3;
-        --switch-bg: rgba(213, 203, 179, 0.4);
+        --bg-page: #fbf0d9;
+        --card-bg: #f4e7cd;
+        --card-border: rgba(76, 64, 51, 0.06);
+        --text-main: #433422;
+        --text-muted: #7c6a52;
+        --accent-color: #b45309;
+        --accent-glow: rgba(180, 83, 9, 0.08);
+        --accent-success: #15803d;
+        --indicator-bg: #fbf0d9;
+        --switch-bg: #eaddc1;
+        --note-input-bg: #fdf6e7;
     }
 
-    /* CORE COMPONENT STYLES (Adaptive based on variables) */
+    /* Base Core Blocks Container */
     #readingContainer {
         background-color: var(--bg-page);
         color: var(--text-main);
@@ -195,74 +186,68 @@
                     box-shadow var(--transition-speed) ease;
     }
 
-    /* Ambient Glows */
-    .ambient-glow {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(120px);
-        z-index: 0;
-        opacity: var(--ambient-opacity);
-        pointer-events: none;
-    }
-    .glow-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.6), transparent 70%); }
-    .glow-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(236, 72, 153, 0.4), transparent 70%); }
-
-    /* Glass Panels */
-    .glass-panel {
-        background: var(--glass-bg);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid var(--glass-border);
-        border-radius: 1.5rem;
-        box-shadow: 0 16px 40px var(--shadow-color);
+    .minimal-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0.75rem;
     }
 
-    /* Typography & Utilities */
-    .article-title { color: var(--text-main) !important; }
-    .text-muted-adaptive { color: var(--text-muted) !important; }
+    .minimal-panel {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0.75rem;
+    }
+
+    /* Utilities Mapping */
+    .text-theme-main { color: var(--text-main) !important; }
+    .text-theme-muted { color: var(--text-muted) !important; }
     .accent-text { color: var(--accent-color) !important; }
-    .border-bottom-glass { border-bottom: 1px solid var(--glass-border) !important; }
-    .line-height-tight { line-height: 1.2; }
-    
-    .theme-dark .text-glow { text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-    .theme-light .text-glow, .theme-sepia .text-glow { text-shadow: none; }
+    .border-bottom-minimal { border-bottom: 1px solid var(--card-border) !important; }
+    .border-minimal { border: 1px solid var(--card-border) !important; }
+    .line-height-tight { line-height: 1.25; }
 
-    /* Badges & Links */
-    .badge-glass-accent {
-        background: rgba(var(--accent-color), 0.1);
-        border: 1px solid var(--accent-glow);
+    /* Custom Badges */
+    .badge-minimal-accent {
+        background: var(--accent-glow);
+        border: 1px solid var(--card-border);
         color: var(--accent-color);
     }
-    .theme-dark .badge-glass-accent { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8; }
-    .theme-light .badge-glass-accent { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #3b82f6; }
-    .theme-sepia .badge-glass-accent { background: rgba(181, 137, 0, 0.1); border-color: rgba(181, 137, 0, 0.3); color: #b58900; }
+    .badge-minimal-success {
+        background: rgba(16, 185, 129, 0.06);
+        color: var(--accent-success);
+    }
 
-    .accent-link { color: var(--accent-color); transition: all 0.2s; }
-    .accent-link:hover { filter: brightness(1.2); text-shadow: 0 0 10px var(--accent-glow); }
+    .accent-link { color: var(--accent-color); font-weight: 500; }
+    .accent-link:hover { opacity: 0.8; }
     .active-breadcrumb { color: var(--text-muted); }
     .breadcrumb-item + .breadcrumb-item::before { color: var(--text-muted); }
 
-    /* Theme Switcher Box */
+    /* ======================================================== */
+    /* THEME SWITCHER CONTROL BAR                               */
+    /* ======================================================== */
+    .theme-switch-wrapper {
+        position: relative;
+        z-index: 10;
+    }
+
     .theme-switch-box {
         position: relative;
         display: flex;
-        padding: 6px;
-        border-radius: 50px;
+        padding: 3px;
+        border-radius: 999px;
         background: var(--switch-bg);
-        border: 1px solid var(--glass-border);
+        border: 1px solid var(--card-border);
     }
 
     .active-indicator {
         position: absolute;
-        top: 6px;
-        left: 6px;
-        width: 42px; 
-        height: 42px; 
+        top: 3px; left: 3px;
+        width: 34px; height: 34px; 
         background-color: var(--indicator-bg);
-        border: 1px solid var(--accent-glow);
+        border: 1px solid var(--card-border);
         border-radius: 50%;
-        box-shadow: 0 4px 12px var(--shadow-color);
-        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy spring */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         z-index: 1;
     }
 
@@ -270,150 +255,134 @@
         position: relative;
         border: none;
         background: transparent;
-        width: 42px;
-        height: 42px;
+        width: 34px; height: 34px;
         cursor: pointer;
         z-index: 2;
         color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.95rem;
     }
-    .theme-dark .btn-theme.active { color: #38bdf8; text-shadow: 0 0 10px rgba(56,189,248,0.5); }
-    .theme-light .btn-theme.active { color: #f59e0b; }
-    .theme-sepia .btn-theme.active { color: #8b4513; }
+    .btn-theme.active { color: var(--accent-color) !important; }
 
-    /* Article Formatting */
+    /* ======================================================== */
+    /* PREMIUM READABILITY ENGINE CORE                          */
+    /* ======================================================== */
     .lesson-content {
         font-family: 'Georgia', 'Cambria', serif;
-        font-size: 1.15rem;
-        line-height: 1.9;
+        font-size: 1.125rem;
+        line-height: 1.85;
     }
     .lesson-content h1, .lesson-content h2, .lesson-content h3 {
         font-family: 'Inter', system-ui, sans-serif;
         font-weight: 700;
-        margin-top: 2.5rem;
-        margin-bottom: 1.25rem;
+        margin-top: 2.25rem;
+        margin-bottom: 1.15rem;
         color: var(--text-main);
     }
-    .lesson-content p { margin-bottom: 1.5rem; }
-    .lesson-content table { width: 100% !important; margin-bottom: 2rem; border-collapse: collapse; }
-    .lesson-content table td, .lesson-content table th { border: 1px solid var(--glass-border); padding: 1rem; }
-    .lesson-content th { background: rgba(0,0,0,0.05); }
-    .theme-dark .lesson-content th { background: rgba(255,255,255,0.05); }
-    .lesson-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 2rem 0; box-shadow: 0 10px 30px var(--shadow-color); }
+    .lesson-content h4, .lesson-content h5 {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+    .lesson-content p { margin-bottom: 1.35rem; }
+    .lesson-content table { width: 100% !important; margin-bottom: 1.5rem; border-collapse: collapse; }
+    .lesson-content table td, .lesson-content table th { border: 1px solid var(--card-border); padding: 0.75rem 1rem; font-size: 0.95rem; }
+    .lesson-content th { background: rgba(0,0,0,0.02); font-family: 'Inter', sans-serif; font-weight: 600; }
+    .theme-dark .lesson-content th { background: rgba(255,255,255,0.02); }
+    .lesson-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0; }
 
-    /* Notes Board */
-    .bg-note-overlay { background: var(--note-bg); }
-    .icon-box-warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #f59e0b; }
+    /* Personal Notepad Textarea Elements */
+    .icon-box-warning { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.15); color: #d97706; }
     .note-textarea { 
         color: var(--text-main); 
         resize: none; 
         font-family: 'Inter', sans-serif; 
-        background: rgba(0,0,0,0.02) !important;
+        font-size: 0.9rem;
+        background: var(--note-input-bg) !important;
     }
-    .theme-dark .note-textarea { background: rgba(255,255,255,0.02) !important; }
-    .note-textarea:focus { outline: none; box-shadow: 0 0 0 2px var(--accent-glow); }
-    .note-textarea::placeholder { color: var(--text-muted); opacity: 0.7; }
-    .shadow-inner { box-shadow: inset 0 2px 6px rgba(0,0,0,0.05); }
+    .note-textarea:focus { outline: none; border-color: var(--text-muted); box-shadow: none; }
+    .note-textarea::placeholder { color: var(--text-muted); opacity: 0.5; }
 
-    /* Buttons */
-    .btn-glass-accent {
-        background: transparent;
-        border: 1px solid var(--accent-color);
-        color: var(--accent-color);
+    /* Minimal Button Override Configurations */
+    .btn-minimal {
+        font-weight: 500;
+        padding: 0.45rem 1.25rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
     }
-    .btn-glass-accent:hover {
-        background: var(--accent-color);
-        color: #fff;
-        box-shadow: 0 0 20px var(--accent-glow);
-        transform: translateY(-2px);
-    }
-    
-    .btn-neon-primary {
-        background: linear-gradient(135deg, #4f46e5, #3b82f6);
-        border: none;
-        color: white;
-    }
-    .theme-dark .btn-neon-primary { box-shadow: 0 0 20px rgba(79, 70, 229, 0.4); }
-    .btn-neon-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(79, 70, 229, 0.6); color: white; }
+    .btn-minimal-primary { background: var(--accent-color); color: #ffffff !important; border: none; }
+    .btn-minimal-primary:hover { filter: brightness(1.08); }
+    .btn-minimal-secondary { background: transparent; color: var(--text-main) !important; border: 1px solid var(--card-border); }
+    .btn-minimal-secondary:hover { background: var(--card-border); }
+    .btn-minimal-success { background: var(--accent-success); color: #ffffff !important; border: none; }
 
-    .btn-neon-success {
-        background: linear-gradient(135deg, #059669, #10b981);
-        border: none;
-        color: white;
-    }
-    .theme-dark .btn-neon-success { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
-    .btn-neon-success:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6); color: white; }
-
-    .alert-glass-success {
-        background: rgba(16, 185, 129, 0.15);
-        border: 1px solid rgba(16, 185, 129, 0.4);
-        color: #10b981;
-        backdrop-filter: blur(10px);
-    }
-
-    .transition-fade { animation: fadeIn 0.5s ease forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .transition-fade { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 @endsection
 
 @section('scripts')
 <script>
-    // 1. ADAPTIVE THEME SWITCHER LOGIC
+    // 1. ADAPTIVE THREE-WAY THEME SWITCHER ENGINE LOGIC
     const readingContainer = document.getElementById('readingContainer');
     const indicator = document.getElementById('indicator');
     const themeButtons = document.querySelectorAll('.btn-theme');
     
-    // Check saved theme or default to dark (matches overall app theme)
-    const savedTheme = localStorage.getItem('lessonTheme') || 'theme-dark';
-    
-    // Initial Setup based on saved theme
     document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('lessonTheme') || 'theme-dark';
         readingContainer.className = `py-4 transition-theme position-relative z-1 ${savedTheme}`;
         
-        let indexToSet = 2; // Default Dark
+        let indexToSet = 2; // Dark Default
         if(savedTheme === 'theme-light') indexToSet = 0;
         if(savedTheme === 'theme-sepia') indexToSet = 1;
         
-        // Setup initial UI without animation
-        indicator.style.transition = 'none';
-        updateIndicatorPosition(indexToSet);
-        
         themeButtons.forEach(btn => btn.classList.remove('active'));
         themeButtons[indexToSet].classList.add('active');
-        
-        // Restore animation after a tiny delay
-        setTimeout(() => {
-            indicator.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        }, 50);
+        updateIndicatorPosition(indexToSet);
     });
 
     function updateIndicatorPosition(index) {
-        const buttonWidth = 42; 
-        const shiftSize = index * buttonWidth; 
-        indicator.style.transform = `translateX(${shiftSize}px)`;
+        const buttonWidth = 34; // Sync matching CSS block sizing 
+        indicator.style.transform = `translateX(${index * buttonWidth}px)`;
     }
 
     function changeTheme(element, themeName, index) {
-        // UI Updates
         themeButtons.forEach(btn => btn.classList.remove('active'));
         element.classList.add('active');
         updateIndicatorPosition(index);
 
-        // Apply Theme
         readingContainer.className = `py-4 transition-theme position-relative z-1 ${themeName}`;
         localStorage.setItem('lessonTheme', themeName);
+
+        // Dispatch a custom event to notify the global theme switcher
+        // Only dispatch for light/dark to sync with the global toggle
+        if (themeName === 'theme-light' || themeName === 'theme-dark') {
+            window.dispatchEvent(new CustomEvent('lessonThemeChanged', { detail: { theme: themeName.replace('theme-', '') } }));
+        }
     }
 
-    // 2. AJAX SAVE NOTE
+    // 4. GLOBAL THEME SYNCHRONIZER
+    // Listen for the global theme change from the navbar
+    window.addEventListener('themeChanged', (e) => {
+        const newGlobalTheme = e.detail.theme; // 'light' or 'dark'
+        
+        if (newGlobalTheme === 'light') {
+            // Trigger this page's light theme
+            changeTheme(themeButtons[0], 'theme-light', 0);
+        } else if (newGlobalTheme === 'dark') {
+            // Trigger this page's dark theme
+            changeTheme(themeButtons[2], 'theme-dark', 2);
+        }
+    });
+
+    // 2. AJAX SAVE POINTER LOGIC
     document.getElementById('btnSaveNote').addEventListener('click', function() {
         const noteText = document.getElementById('personalNote').value;
         const btn = this;
         
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Menyimpan...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1.5" role="status" aria-hidden="true"></span> Menyimpan...';
 
         fetch("{{ route('lessons.user.save-note', $lesson->id) }}", {
             method: 'POST',
@@ -436,22 +405,24 @@
                     title: data.message,
                     position: 'top-end',
                     showConfirmButton: false,
-                    timer: 3000,
-                    background: 'var(--glass-bg)',
+                    timer: 2500,
+                    background: 'var(--card-bg)',
                     color: 'var(--text-main)',
-                    customClass: { popup: 'backdrop-blur-md border border-light border-opacity-10' }
+                    customClass: { popup: 'border-minimal' }
                 });
 
-                btn.innerHTML = 'Tersimpan ✔️';
-                btn.classList.add('btn-success', 'text-white', 'border-success');
-                btn.classList.remove('btn-glass-accent');
+                btn.innerHTML = 'Tersimpan ✓';
+                btn.style.background = 'var(--accent-success)';
+                btn.style.color = '#fff';
+                btn.style.borderColor = 'transparent';
 
                 setTimeout(() => {
                     btn.innerHTML = 'Simpan Catatan';
-                    btn.classList.remove('btn-success', 'text-white', 'border-success');
-                    btn.classList.add('btn-glass-accent');
+                    btn.style.background = 'transparent';
+                    btn.style.color = 'var(--text-main)';
+                    btn.style.borderColor = 'var(--card-border)';
                     btn.disabled = false;
-                }, 2000);
+                }, 1800);
             }
         })
         .catch(error => {
@@ -460,7 +431,7 @@
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Gagal menyimpan catatan. Periksa koneksi internet Anda.',
-                background: 'var(--bg-page)',
+                background: 'var(--card-bg)',
                 color: 'var(--text-main)'
             });
             btn.disabled = false;
@@ -468,14 +439,14 @@
         });
     });
 
-    // 3. MARK AS DONE AJAX
+    // 3. AJAX COMPLETE ACTIONS ENGINE LOGIC
     const btnMarkDone = document.getElementById('btnMarkDone');
     const nextLessonDiv = document.getElementById('nextLessonDiv');
 
     if (btnMarkDone) {
         btnMarkDone.addEventListener('click', function() {
             this.disabled = true;
-            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Memproses...';
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-1.5"></span> Memproses...';
 
             fetch("{{ route('lessons.user.complete', $lesson->id) }}", {
                 method: 'POST',
@@ -488,22 +459,21 @@
             .then(response => response.json())
             .then(data => {
                 if(data.status === 'success') {
-                    if(typeof confetti === "function") confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#10b981', '#38bdf8', '#fbbf24'] });
+                    if(typeof confetti === "function") confetti({ particleCount: 120, spread: 60, origin: { y: 0.75 }, colors: ['#3b82f6', '#10b981', '#f59e0b'] });
                     
                     Swal.fire({ 
                         icon: 'success', 
                         title: 'Hebat!', 
                         text: data.message, 
-                        timer: 2000, 
+                        timer: 1800, 
                         showConfirmButton: false,
-                        background: 'var(--bg-page)',
+                        background: 'var(--card-bg)',
                         color: 'var(--text-main)'
                     });
 
-                    // Update UI to success state
                     btnMarkDone.outerHTML = `
-                        <div class="alert-glass-success d-inline-block px-5 py-3 rounded-pill fw-bold shadow-lg mb-4 transition-fade">
-                            <i class="bi bi-check-circle-fill me-2"></i> Kamu sudah menyelesaikan bab ini!
+                        <div class="badge-minimal-success d-inline-block px-4 py-2.5 rounded-pill fw-semibold mb-4 small transition-fade border border-success border-opacity-10">
+                            <i class="bi bi-check-circle-fill me-1.5"></i> Kamu sudah menyelesaikan bab ini!
                         </div>
                     `;
                     

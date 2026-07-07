@@ -1,234 +1,84 @@
 @extends('layouts.app')
 
-@section('styles')
-<style>
-    /* ======================================================== */
-    /* PREMIUM GLASSMORPHISM UI - REGISTER PAGE                 */
-    /* ======================================================== */
-
-    body {
-        background-color: #0b0f19;
-        color: #f8fafc;
-        min-height: 100vh;
-        position: relative;
-    }
-
-    /* Ambient Background Glows */
-    .ambient-glow {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(120px);
-        z-index: 0;
-        opacity: 0.4;
-        pointer-events: none;
-    }
-    .glow-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4), transparent 70%); } /* Emerald Glow */
-    .glow-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(99, 102, 241, 0.4), transparent 70%); } /* Indigo Glow */
-    .glow-3 { top: 40%; right: 20%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(56, 189, 248, 0.2), transparent 70%); } /* Cyan Glow */
-
-    /* Typography & Utilities */
-    .text-slate { color: #94a3b8 !important; }
-    .text-glow { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-    .neon-green { color: #34d399; text-shadow: 0 0 15px rgba(52, 211, 153, 0.5); }
-    .neon-red { color: #fb7185; }
-
-    /* Main Typography */
-    .display-custom {
-        font-size: 3rem;
-        font-weight: 800;
-        letter-spacing: -1px;
-        line-height: 1.2;
-        background: linear-gradient(135deg, #ffffff 0%, #6ee7b7 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
-    }
-
-    /* Glass Components */
-    .glass-card {
-        background: rgba(20, 25, 40, 0.5);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 1.5rem;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Top Accent Line for Card */
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #10b981, #3b82f6);
-        z-index: 1;
-    }
-
-    /* Glass Form Inputs */
-    .form-control-glass {
-        background: rgba(15, 23, 42, 0.4) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #f8fafc !important;
-        border-radius: 0.75rem;
-        transition: all 0.3s ease;
-        padding-left: 2.75rem; /* Space for icons */
-    }
-    .form-control-glass:focus {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border-color: rgba(52, 211, 153, 0.5) !important;
-        box-shadow: 0 0 15px rgba(52, 211, 153, 0.2) !important;
-        color: #ffffff !important;
-    }
-    .form-control-glass::placeholder {
-        color: #64748b !important;
-        opacity: 0.7;
-    }
-
-    /* Validation Errors */
-    .is-invalid {
-        border-color: rgba(244, 63, 94, 0.5) !important;
-        box-shadow: 0 0 15px rgba(244, 63, 94, 0.1) !important;
-    }
-    .invalid-feedback {
-        color: #fb7185;
-        font-weight: 500;
-        letter-spacing: 0.3px;
-        margin-top: 0.5rem;
-    }
-
-    /* Buttons & Links */
-    .btn-neon-success {
-        background: linear-gradient(135deg, #059669, #10b981);
-        border: none;
-        color: white;
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-        transition: all 0.3s ease;
-        letter-spacing: 1px;
-    }
-    .btn-neon-success:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
-        color: white;
-    }
-
-    .link-neon {
-        color: #34d399;
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
-    .link-neon:hover {
-        color: #fff;
-        text-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
-    }
-
-    /* Labels */
-    .form-label {
-        color: #cbd5e1;
-        letter-spacing: 0.5px;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-    }
-
-    /* Feature List Styling */
-    .feature-list li {
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 1rem;
-        transition: all 0.3s ease;
-    }
-    .feature-list li:hover {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(52, 211, 153, 0.3);
-        transform: translateX(10px);
-    }
-
-    /* Custom Height Utility */
-    .min-vh-75 { min-height: 85vh; }
-</style>
-@endsection
-
 @section('content')
-<div class="ambient-glow glow-1"></div>
-<div class="ambient-glow glow-2"></div>
-<div class="ambient-glow glow-3"></div>
-
-<div class="container mt-5 position-relative z-1">
-    <div class="row justify-content-center align-items-center min-vh-75 flex-column-reverse flex-md-row">
+<div class="container py-5 position-relative z-1">
+    <div class="row justify-content-center align-items-center min-vh-75 flex-column-reverse flex-md-row g-5">
         
-        <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
-            <div class="glass-card">
-                <div class="card-body p-4 p-md-5 position-relative z-1">
+        <!-- Left Column: Register Form Card -->
+        <div class="col-md-6 col-lg-5">
+            <div class="minimal-card shadow-sm">
+                <div class="card-body p-4 p-md-5">
                     
                     <div class="text-center mb-5">
-                        <h3 class="fw-bold text-white text-glow mb-2" style="letter-spacing: -0.5px;">Create Your Account 🚀</h3>
-                        <p class="text-slate small fw-medium">Mulai perjalanan belajarmu hari ini.</p>
+                        <h4 class="fw-bold text-theme-main mb-1 tracking-tight">Create Your Account 🚀</h4>
+                        <p class="text-theme-muted small fw-medium">Mulai perjalanan belajarmu hari ini.</p>
                     </div>
                     
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        <!-- Full Name Input Address Box -->
                         <div class="mb-4">
-                            <label for="name" class="form-label fw-bold">Full Name</label>
+                            <label for="name" class="form-label-minimal">Full Name</label>
                             <div class="position-relative">
-                                <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-slate fs-5"></i>
-                                <input id="name" type="text" class="form-control form-control-lg form-control-glass @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="John Doe">
+                                <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-theme-muted opacity-50"></i>
+                                <input id="name" type="text" class="form-control form-control-minimal ps-5 @error('name') is-invalid-minimal @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="John Doe">
                             </div>
                             @error('name')
-                                <span class="invalid-feedback d-block" role="alert">
+                                <span class="invalid-feedback-minimal mt-1.5 d-block" role="alert">
                                     <i class="bi bi-exclamation-circle me-1"></i> <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
 
+                        <!-- Email Input Address Box -->
                         <div class="mb-4">
-                            <label for="email" class="form-label fw-bold">Email Address</label>
+                            <label for="email" class="form-label-minimal">Email Address</label>
                             <div class="position-relative">
-                                <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-slate fs-5"></i>
-                                <input id="email" type="email" class="form-control form-control-lg form-control-glass @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="name@example.com">
+                                <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-theme-muted opacity-50"></i>
+                                <input id="email" type="email" class="form-control form-control-minimal ps-5 @error('email') is-invalid-minimal @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="name@example.com">
                             </div>
                             @error('email')
-                                <span class="invalid-feedback d-block" role="alert">
+                                <span class="invalid-feedback-minimal mt-1.5 d-block" role="alert">
                                     <i class="bi bi-exclamation-circle me-1"></i> <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
 
+                        <!-- Password Row Inputs Credentials Box -->
                         <div class="row g-3 mb-5">
                             <div class="col-md-6">
-                                <label for="password" class="form-label fw-bold">Password</label>
+                                <label for="password" class="form-label-minimal">Password</label>
                                 <div class="position-relative">
-                                    <i class="bi bi-shield-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-slate fs-5"></i>
-                                    <input id="password" type="password" class="form-control form-control-lg form-control-glass @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="••••••••">
+                                    <i class="bi bi-shield-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-theme-muted opacity-50"></i>
+                                    <input id="password" type="password" class="form-control form-control-minimal ps-5 @error('password') is-invalid-minimal @enderror" name="password" required autocomplete="new-password" placeholder="••••••••">
                                 </div>
                                 @error('password')
-                                    <span class="invalid-feedback d-block" role="alert">
+                                    <span class="invalid-feedback-minimal mt-1.5 d-block" role="alert">
                                         <i class="bi bi-exclamation-circle me-1"></i> <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
                             
                             <div class="col-md-6">
-                                <label for="password-confirm" class="form-label fw-bold">Confirm Password</label>
+                                <label for="password-confirm" class="form-label-minimal">Confirm Password</label>
                                 <div class="position-relative">
-                                    <i class="bi bi-shield-check position-absolute top-50 start-0 translate-middle-y ms-3 text-slate fs-5"></i>
-                                    <input id="password-confirm" type="password" class="form-control form-control-lg form-control-glass" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••">
+                                    <i class="bi bi-shield-check position-absolute top-50 start-0 translate-middle-y ms-3 text-theme-muted opacity-50"></i>
+                                    <input id="password-confirm" type="password" class="form-control form-control-minimal ps-5" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••">
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Submit CTA Action -->
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-neon-success btn-lg fw-bold rounded-pill py-3 d-flex justify-content-center align-items-center gap-2">
-                                Sign Up Now <i class="bi bi-arrow-right"></i>
+                            <button type="submit" class="btn btn-minimal btn-minimal-primary py-2.5">
+                                Sign Up Now &rarr;
                             </button>
                         </div>
                         
-                        <div class="text-center mt-4 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
-                            <p class="text-slate mb-0">Sudah punya akun? <a href="{{ route('login') }}" class="link-neon fw-bold">Login di sini</a></p>
+                        <!-- Anchor Login Navigation Link -->
+                        <div class="text-center mt-4 pt-4 border-top-minimal">
+                            <p class="text-theme-muted small mb-0">Sudah punya akun? <a href="{{ route('login') }}" class="link-minimal-accent fw-bold ms-1">Login di sini</a></p>
                         </div>
                         
                     </form>
@@ -236,32 +86,182 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-5 offset-lg-1 text-center text-md-start mb-5 mb-md-0">
-            <h2 class="display-custom mb-4">Tinggalkan Cara Lama.</h2>
-            <p class="fs-5 text-slate mb-5" style="line-height: 1.6;">Bergabunglah hari ini dan rasakan pengalaman belajar bahasa Inggris yang dirancang untuk memori jangka panjang.</p>
+        <!-- Right Column: Branding & Features Content -->
+        <div class="col-md-6 col-lg-5 offset-lg-1 text-center text-md-start">
+            <h1 class="display-custom mb-4 tracking-tight">Tinggalkan Cara Lama.</h1>
+            <p class="fs-6 text-theme-muted mb-5" style="line-height: 1.6;">Bergabunglah hari ini dan rasakan pengalaman belajar bahasa Inggris yang dirancang untuk memori jangka panjang.</p>
             
-            <ul class="list-unstyled feature-list text-start">
-                <li class="mb-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center p-2 me-3" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); height: 40px; width: 40px;">
-                        <i class="bi bi-check-lg neon-green fs-5"></i>
+            <!-- Minimal Reusable Feature List Rows -->
+            <ul class="list-unstyled feature-list text-start d-flex flex-column gap-3">
+                <li class="d-flex align-items-center p-3 rounded-3 border-minimal">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center p-2 me-3 bg-minimal-badge border-minimal" style="height: 38px; width: 38px; flex-shrink: 0;">
+                        <i class="bi bi-check-lg text-success fs-5"></i>
                     </div>
-                    <span class="text-white fw-medium">Kuasai Grammar tanpa pusing menghafal rumus.</span>
+                    <span class="text-theme-main small fw-medium">Kuasai Grammar tanpa pusing menghafal rumus.</span>
                 </li>
-                <li class="mb-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center p-2 me-3" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); height: 40px; width: 40px;">
-                        <i class="bi bi-check-lg neon-green fs-5"></i>
+                <li class="d-flex align-items-center p-3 rounded-3 border-minimal">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center p-2 me-3 bg-minimal-badge border-minimal" style="height: 38px; width: 38px; flex-shrink: 0;">
+                        <i class="bi bi-check-lg text-success fs-5"></i>
                     </div>
-                    <span class="text-white fw-medium">Biasakan lidah dengan frasa (<i class="text-slate">Phrases</i>) native.</span>
+                    <span class="text-theme-main small fw-medium">Biasakan lidah dengan frasa (<span class="text-theme-muted">Phrases</span>) native.</span>
                 </li>
-                <li class="mb-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center p-2 me-3" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); height: 40px; width: 40px;">
-                        <i class="bi bi-check-lg neon-green fs-5"></i>
+                <li class="d-flex align-items-center p-3 rounded-3 border-minimal">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center p-2 me-3 bg-minimal-badge border-minimal" style="height: 38px; width: 38px; flex-shrink: 0;">
+                        <i class="bi bi-check-lg text-success fs-5"></i>
                     </div>
-                    <span class="text-white fw-medium">Evaluasi progres belajarmu setiap hari.</span>
+                    <span class="text-theme-main small fw-medium">Evaluasi progres belajarmu setiap hari.</span>
                 </li>
             </ul>
         </div>
 
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+/* ======================================================== */
+/* MINIMALIST AUTH REGISTRATION DESIGN SYSTEM               */
+/* ======================================================== */
+
+[data-theme="dark"] {
+    --card-bg: #1e2530;
+    --card-border: rgba(255, 255, 255, 0.04);
+    --box-bg: rgba(255, 255, 255, 0.02);
+    --badge-bg: rgba(255, 255, 255, 0.03);
+    --input-bg: #131822;
+    --input-focus-bg: #10141d;
+    --text-gradient-end: #cbd5e1;
+    
+    --accent-primary: #3b82f6;
+    --accent-success: #10b981;
+    --accent-danger: #f43f5e;
+}
+
+[data-theme="light"] {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --box-bg: #f8fafc;
+    --badge-bg: rgba(0, 0, 0, 0.02);
+    --input-bg: #f8fafc;
+    --input-focus-bg: #ffffff;
+    --text-gradient-end: #1e293b;
+    
+    --accent-primary: #2563eb;
+    --accent-success: #059669;
+    --accent-danger: #dc2626;
+}
+
+/* Base Structural Containers Layout */
+.minimal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.08);
+}
+
+.border-top-minimal { border-top: 1px solid var(--card-border); }
+.border-minimal { border: 1px solid var(--card-border); }
+.bg-minimal-badge { background: var(--badge-bg); }
+.badge-minimal-success { background: rgba(16, 185, 129, 0.06); color: var(--accent-success); }
+
+/* Editorial Hero Header Typography */
+.display-custom {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--text-main) 30%, var(--text-gradient-end) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-label-minimal {
+    color: var(--text-main);
+    font-size: 0.775rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.link-minimal-accent {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+.link-minimal-accent:hover {
+    color: var(--text-main);
+}
+
+/* Feature Checklist Row Interaction Shifts */
+.feature-list li {
+    background: var(--card-bg);
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.feature-list li:hover {
+    background-color: var(--box-bg);
+    border-color: var(--text-muted);
+    padding-left: 1.25rem !important; /* Efek geser mikro halus */
+}
+
+/* ======================================================== */
+/* FLAT CLEAN FORM CONTROL FIELDS                           */
+/* ======================================================== */
+.form-control-minimal {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.925rem;
+    transition: all 0.2s ease-in-out;
+}
+.form-control-minimal:focus {
+    background: var(--input-focus-bg) !important;
+    border-color: var(--text-muted) !important;
+    box-shadow: none !important;
+}
+.form-control-minimal::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.4;
+}
+
+/* Validation Exceptions Handling Mapping Hooks */
+.is-invalid-minimal {
+    border-color: var(--accent-danger) !important;
+}
+.invalid-feedback-minimal {
+    color: var(--accent-danger);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Reusable Custom Button Component Architecture */
+.btn-minimal {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+.btn-minimal-primary {
+    background: var(--accent-primary);
+    color: #ffffff !important;
+    border: none;
+}
+.btn-minimal-primary:hover {
+    filter: brightness(1.08);
+}
+.btn-minimal-secondary {
+    background: transparent;
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border);
+}
+.btn-minimal-secondary:hover {
+    background: var(--input-bg);
+}
+
+.min-vh-75 { min-height: 75vh; }
+</style>
 @endsection
