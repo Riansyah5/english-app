@@ -28,62 +28,60 @@
             </div>
 
             <div id="flashcardContainer" class="fade-container mb-4">
-                <div class="flipper" id="flipperCard">
-                    
-                    <div class="front-card glass-panel rounded-4 text-center">
-                        <div class="card-body p-4 p-md-5 d-flex flex-column justify-content-between h-100">
-                            <div class="mt-2">
-                                <span class="text-uppercase tracking-wider text-theme-muted fw-bold" id="itemTypeFront" style="font-size: 0.75rem; letter-spacing: 0.05em;">...</span>
-                            </div>
-                            
-                            <div class="my-auto py-4">
-                                <h2 class="fw-bold text-theme-main mb-0 tracking-tight" id="itemContent" style="font-size: 2.25rem;">...</h2>
-                            </div>
-                            
-                            <div class="mb-2">
-                                <button id="btnShowAnswer" class="btn btn-minimal btn-minimal-primary w-100 py-3 fw-semibold">
-                                    Show Answer
-                                </button>
-                            </div>
+                
+                <div class="front-card glass-panel rounded-4 text-center active">
+                    <div class="card-body p-4 p-md-5 d-flex flex-column justify-content-between h-100">
+                        <div class="mt-2">
+                            <span class="text-uppercase tracking-wider text-theme-muted fw-bold" id="itemTypeFront" style="font-size: 0.75rem; letter-spacing: 0.05em;">...</span>
+                        </div>
+                        
+                        <div class="my-auto py-4">
+                            <h2 class="fw-bold text-theme-main mb-0 tracking-tight" id="itemContent" style="font-size: 2.25rem;">...</h2>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <button id="btnShowAnswer" class="btn btn-minimal btn-minimal-primary w-100 py-3 fw-semibold">
+                                Show Answer
+                            </button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="back-card glass-panel rounded-4 text-center">
-                        <div class="card-body p-4 d-flex flex-column h-100">
-                            <div class="mb-3 text-start">
-                                <span class="text-uppercase tracking-wider text-theme-muted fw-bold" id="itemTypeBack" style="font-size: 0.7rem; letter-spacing: 0.05em;">ANSWER</span>
-                                <h6 class="fw-medium text-theme-muted mt-2 mb-1" id="itemContentRepeat">...</h6>
-                                <h3 class="fw-bold text-theme-main tracking-tight" id="itemTranslation">...</h3>
-                            </div>
-                            
-                            <div class="minimal-box p-3 rounded-3 mb-3 text-start flex-grow-1 overflow-auto">
-                                <span class="text-theme-muted fw-bold d-block mb-1 text-uppercase letter-spacing-wide" style="font-size: 0.65rem;">Example Sentence:</span>
-                                <p class="mb-0 fst-italic text-theme-main small" id="itemExample" style="line-height: 1.5;">...</p>
-                            </div>
+                <div class="back-card glass-panel rounded-4 text-center">
+                    <div class="card-body p-4 d-flex flex-column h-100">
+                        <div class="mb-3 text-start">
+                            <span class="text-uppercase tracking-wider text-theme-muted fw-bold" id="itemTypeBack" style="font-size: 0.7rem; letter-spacing: 0.05em;">ANSWER</span>
+                            <h6 class="fw-medium text-theme-muted mt-2 mb-1" id="itemContentRepeat">...</h6>
+                            <h3 class="fw-bold text-theme-main tracking-tight" id="itemTranslation">...</h3>
+                        </div>
+                        
+                        <div class="minimal-box p-3 rounded-3 mb-3 text-start flex-grow-1 overflow-auto">
+                            <span class="text-theme-muted fw-bold d-block mb-1 text-uppercase letter-spacing-wide" style="font-size: 0.65rem;">Example Sentence:</span>
+                            <p class="mb-0 fst-italic text-theme-main small" id="itemExample" style="line-height: 1.5;">...</p>
+                        </div>
 
-                            <p class="text-theme-muted small mb-3 text-start px-1" id="itemNotes" style="font-size: 0.8rem;"></p>
+                        <p class="text-theme-muted small mb-3 text-start px-1" id="itemNotes" style="font-size: 0.8rem;"></p>
 
-                            <div class="mt-auto pt-2 border-top-minimal">
-                                <p class="mb-3 fw-medium text-theme-muted small">Seberapa mudah materi ini untukmu?</p>
-                                <div class="row g-2">
-                                    <div class="col-3">
-                                        <button class="btn btn-rate btn-rate-danger w-100" data-quality="1">Lupa</button>
-                                    </div>
-                                    <div class="col-3">
-                                        <button class="btn btn-rate btn-rate-warning w-100" data-quality="3">Sulit</button>
-                                    </div>
-                                    <div class="col-3">
-                                        <button class="btn btn-rate btn-rate-info w-100" data-quality="4">Bagus</button>
-                                    </div>
-                                    <div class="col-3">
-                                        <button class="btn btn-rate btn-rate-success w-100" data-quality="5">Mudah</button>
-                                    </div>
+                        <div class="mt-auto pt-2 border-top-minimal">
+                            <p class="mb-3 fw-medium text-theme-muted small">Seberapa mudah materi ini untukmu?</p>
+                            <div class="row g-2">
+                                <div class="col-3">
+                                    <button class="btn btn-rate btn-rate-danger w-100" data-quality="1">Lupa</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-rate btn-rate-warning w-100" data-quality="3">Sulit</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-rate btn-rate-info w-100" data-quality="4">Bagus</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-rate btn-rate-success w-100" data-quality="5">Mudah</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div> 
             
         </div>
@@ -195,20 +193,12 @@
 .btn-rate-success:hover { background: var(--accent-success); color: #fff; }
 
 /* ======================================================== */
-/* SMOOTH FADE GLASSMORPHISM MECHANICS                      */
+/* FLAT FADE GLASSMORPHISM TRANSITION ENGINE                */
 /* ======================================================== */
 .fade-container {
     position: relative;
-    height: 440px; /* Adjusted from 520px to match original layout */
+    height: 440px; 
     width: 100%;
-}
-
-.flipper {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    /* The parent flipper needs perspective for 3D-like transitions if ever needed */
-    perspective: 1200px;
 }
 
 .glass-panel {
@@ -222,20 +212,21 @@
     border: 1px solid var(--panel-border);
     box-shadow: 0 16px 40px var(--panel-shadow), inset 0 1px 0 var(--panel-inner-shadow);
     
+    /* Code 2 Transition Logic */
     opacity: 0; visibility: hidden;
-    transform: scale(0.95); filter: blur(5px);
-    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    transform: scale(0.98);
+    transition: opacity 0.25s ease-in-out, 
+                transform 0.25s ease-in-out,
+                visibility 0.25s ease-in-out,
                 background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    z-index: 1;
 }
 
-.front-card { opacity: 1; visibility: visible; transform: scale(1); filter: blur(0); z-index: 2; }
-.back-card  { z-index: 1; }
-
-.flipper.flipped .front-card { opacity: 0; visibility: hidden; transform: scale(0.95); filter: blur(5px); z-index: 1; }
-.flipper.flipped .back-card  { opacity: 1; visibility: visible; transform: scale(1); filter: blur(0); z-index: 2; }
+.glass-panel.active {
+    opacity: 1; visibility: visible;
+    transform: scale(1);
+    z-index: 2;
+}
 
 /* Scrollbar Customization */
 .minimal-box::-webkit-scrollbar { width: 4px; }
@@ -251,9 +242,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentIndex = 0;
 
     const container = document.getElementById('flashcardContainer');
-    const flipper = document.getElementById('flipperCard'); 
     const completionMsg = document.getElementById('completionMessage');
     const counter = document.getElementById('cardCounter');
+    
+    // Selector untuk transisi front dan back (tanpa wrapper .flipper)
+    const frontCard = document.querySelector('.front-card');
+    const backCard = document.querySelector('.back-card');
     
     const contentEl = document.getElementById('itemContent');
     const typeElFront = document.getElementById('itemTypeFront');
@@ -305,26 +299,20 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // 1. Fade out the current card
-        flipper.style.opacity = '0';
-        flipper.style.transition = 'opacity 0.2s ease-out';
-
-        // 2. Wait for the fade-out to complete
+        // Hilangkan back card saat mau load kartu baru
+        backCard.classList.remove('active');
+        
+        // Timer disamakan dengan 0.25s pada CSS transition Code 2
         setTimeout(() => {
-            // 3. Update content and reset card state while it's invisible
             populateCardData(currentIndex);
-            flipper.classList.remove('flipped');
-            
-            // Remove inline transition to use the CSS class transition for the next flip
-            flipper.style.transition = ''; 
-
-            // 4. Fade in the new card
-            flipper.style.opacity = '1';
-        }, 200); // This duration should match the transition time above
+            frontCard.classList.add('active');
+        }, 200); 
     }
 
+    // Toggle kelas .active untuk menampilkan jawaban
     btnShowAnswer.addEventListener('click', function() {
-        flipper.classList.add('flipped');
+        frontCard.classList.remove('active');
+        backCard.classList.add('active');
     });
 
     rateBtns.forEach(btn => {
@@ -359,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (flashcards.length > 0) {
-        loadCard();
+        populateCardData(currentIndex);
     } else {
         container.classList.add('d-none');
         completionMsg.classList.remove('d-none');
