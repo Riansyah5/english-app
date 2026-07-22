@@ -66,13 +66,18 @@
                             </a>
                         </td>
                         <td class="text-end pe-4">
-                            <form action="{{ route('admin.videos.destroy', $video->id) }}" method="POST" class="d-inline">
-                                @csrf 
-                                @method('DELETE')
-                                <button type="submit" class="btn-action-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus video ini beserta seluruh transkripnya?')">
-                                    <i class="bi bi-trash3 me-1"></i> Hapus
-                                </button>
-                            </form>
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ route('admin.videos.edit', $video->id) }}" class="btn-action-edit">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit
+                                </a>
+                                <form action="{{ route('admin.videos.destroy', $video->id) }}" method="POST" class="d-inline">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus video ini beserta seluruh transkripnya?')">
+                                        <i class="bi bi-trash3 me-1"></i> Hapus
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -157,6 +162,21 @@
 .btn-minimal-primary { background: var(--accent-primary); color: #ffffff !important; border: none; }
 .btn-minimal-primary:hover { filter: brightness(1.08); }
 
+.btn-action-edit {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35rem 0.85rem;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease;
+    text-decoration: none;
+}
+.btn-action-edit:hover {
+    background: var(--box-bg);
+    color: var(--accent-primary);
+}
 .btn-action-delete {
     background: transparent;
     border: 1px solid var(--card-border);
