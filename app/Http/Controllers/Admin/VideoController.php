@@ -113,6 +113,7 @@ class VideoController extends Controller
                     'start_time' => trim($parts[0]),
                     'end_time'   => trim($parts[1]),
                     'text'       => trim($parts[2]),
+                    'translation' => isset($parts[3]) ? trim($parts[3]) : null, // Tangkap terjemahan jika ada
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
