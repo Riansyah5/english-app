@@ -205,6 +205,9 @@
                             <a class="nav-link {{ request()->routeIs('videos.user.index') ? 'active' : '' }}" href="{{ route('videos.user.index') }}">Video Learning</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('shadowing.user.index') ? 'active' : '' }}" href="{{ route('shadowing.user.index') }}">Shadowing</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('exams.*') ? 'active' : '' }}" href="{{ route('exams.index') }}">Evaluasi (CBT)</a>
                         </li>
                         @endauth
@@ -222,6 +225,8 @@
                                 <li><h6 class="dropdown-header">Buku & Materi</h6></li>
                                 <li><a class="dropdown-item" href="{{ route('admin.lesson-categories.index') }}">Kelola Kategori</a></li>
                                 <li><a class="dropdown-item" href="{{ route('admin.lessons.index') }}">Tulis Materi</a></li>
+                                <li><h6 class="dropdown-header">Shadowing</h6></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.shadowing.index') }}">Kelola Naskah</a></li>
                             </ul>
                         </li>
                         @endif

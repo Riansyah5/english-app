@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LessonCategoryController;
 use App\Http\Controllers\Admin\LessonController;    
-use App\Http\Controllers\LessonLearningController;
+use App\Http\Controllers\LessonLearningController;    
+use App\Http\Controllers\Admin\ShadowingController;
+use App\Http\Controllers\ShadowingLearningController;
+
 
 
 Route::get('/', function () {
@@ -51,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lessons/{slug}', [LessonLearningController::class, 'show'])->name('lessons.user.show');
     Route::post('/lessons/{id}/complete', [LessonLearningController::class, 'markAsDone'])->name('lessons.user.complete');
     Route::post('/lessons/{id}/save-note', [LessonLearningController::class, 'saveNote'])->name('lessons.user.save-note');
+
+    // Rute Modul Shadowing (Sisi Pengguna)
+    Route::get('/shadowing', [ShadowingLearningController::class, 'index'])->name('shadowing.user.index');
+    Route::get('/shadowing/{slug}', [ShadowingLearningController::class, 'show'])->name('shadowing.user.show');
 });
 
 
@@ -67,5 +74,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Rute Materi Pelajaran (Buku Digital)
     Route::resource('lesson-categories', LessonCategoryController::class);
     Route::resource('lessons', LessonController::class);
+
+
+    // Admin: Modul Shadowing
+    Route::resource('shadowing', ShadowingController::class);
+    // Rute khusus untuk memanipulasi baris naskah
+    Route::post('shadowing/{shadowing}/lines', [ShadowingController::class, 'storeLine'])->name('shadowing.lines.store');
+    Route::delete('shadowing/lines/{line}', [ShadowingController::class, 'destroyLine'])->name('shadowing.lines.destroy');
     
 });
