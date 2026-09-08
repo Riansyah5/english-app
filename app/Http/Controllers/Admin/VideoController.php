@@ -13,13 +13,17 @@ class VideoController extends Controller
     public function index()
     {
         $videos = Video::with('folder')->latest()->paginate(10);
-        return view('admin.videos.index', compact('videos'));
+        return \Inertia\Inertia::render('Admin/Videos/Index', [
+            'videos' => $videos
+        ]);
     }
 
     public function create()
     {
         $folders = VideoFolder::all();
-        return view('admin.videos.create', compact('folders'));
+        return \Inertia\Inertia::render('Admin/Videos/Create', [
+            'folders' => $folders
+        ]);
     }
 
     public function store(Request $request)
@@ -70,7 +74,11 @@ class VideoController extends Controller
             return $transcript->start_time . '|' . $transcript->end_time . '|' . $transcript->text;
         })->implode("\n");
 
-        return view('admin.videos.edit', compact('video', 'folders', 'formattedTranscripts'));
+        return \Inertia\Inertia::render('Admin/Videos/Edit', [
+            'video' => $video,
+            'folders' => $folders,
+            'formattedTranscripts' => $formattedTranscripts
+        ]);
     }
 
     /**

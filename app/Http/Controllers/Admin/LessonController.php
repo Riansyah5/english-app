@@ -12,20 +12,22 @@ class LessonController extends Controller
 {
     public function index()
     {
-        // Menampilkan daftar materi, diurutkan berdasarkan kategori dan urutan bab
         $lessons = Lesson::with('category')
             ->orderBy('lesson_category_id')
             ->orderBy('order_number')
             ->paginate(15);
             
-        return view('admin.lessons.index', compact('lessons'));
+        return \Inertia\Inertia::render('Admin/Lessons/Index', [
+            'lessons' => $lessons
+        ]);
     }
 
     public function create()
     {
-        // Mengirim data kategori ke dropdown di halaman Create
         $categories = LessonCategory::all();
-        return view('admin.lessons.create', compact('categories'));
+        return \Inertia\Inertia::render('Admin/Lessons/Create', [
+            'categories' => $categories
+        ]);
     }
 
     public function store(Request $request)
@@ -58,11 +60,11 @@ class LessonController extends Controller
 
     public function edit(Lesson $lesson)
     {
-        // Mengambil semua kategori untuk pilihan dropdown
         $categories = LessonCategory::all();
-        
-        // Menampilkan halaman edit dengan membawa data materi lama
-        return view('admin.lessons.edit', compact('lesson', 'categories'));
+        return \Inertia\Inertia::render('Admin/Lessons/Edit', [
+            'lesson' => $lesson,
+            'categories' => $categories
+        ]);
     }
 
     public function update(Request $request, Lesson $lesson)

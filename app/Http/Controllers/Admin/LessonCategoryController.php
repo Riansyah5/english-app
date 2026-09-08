@@ -12,12 +12,14 @@ class LessonCategoryController extends Controller
     {
         // Menampilkan daftar kategori beserta jumlah materi di dalamnya
         $categories = LessonCategory::withCount('lessons')->latest()->paginate(10);
-        return view('admin.lesson_categories.index', compact('categories'));
+        return \Inertia\Inertia::render('Admin/LessonCategories/Index', [
+            'categories' => $categories
+        ]);
     }
 
     public function create()
     {
-        return view('admin.lesson_categories.create');
+        return \Inertia\Inertia::render('Admin/LessonCategories/Create');
     }
 
     public function store(Request $request)
@@ -39,7 +41,9 @@ class LessonCategoryController extends Controller
 
     public function edit(LessonCategory $lessonCategory)
     {
-        return view('admin.lesson_categories.edit', compact('lessonCategory'));
+        return \Inertia\Inertia::render('Admin/LessonCategories/Edit', [
+            'lessonCategory' => $lessonCategory
+        ]);
     }
 
     public function update(Request $request, LessonCategory $lessonCategory)

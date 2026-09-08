@@ -18,7 +18,11 @@ use App\Http\Controllers\ShadowingLearningController;
 
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return \Inertia\Inertia::render('Welcome', [
+        'auth' => [
+            'user' => Auth::user()
+        ]
+    ]);
 });
 
 Auth::routes();

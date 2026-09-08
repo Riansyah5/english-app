@@ -18,7 +18,9 @@ class ExamController extends Controller
     public function index()
     {
         $exams = Exam::all();
-        return view('exams.index', compact('exams'));
+        return \Inertia\Inertia::render('Exams/Index', [
+            'exams' => $exams
+        ]);
     }
 
     // Menampilkan lembar soal CBT
@@ -29,7 +31,9 @@ class ExamController extends Controller
             $query->inRandomOrder();
         }])->findOrFail($id);
 
-        return view('exams.show', compact('exam'));
+        return \Inertia\Inertia::render('Exams/Show', [
+            'exam' => $exam
+        ]);
     }
 
     // Memproses jawaban dan menghitung skor
@@ -74,6 +78,9 @@ class ExamController extends Controller
                     ->latest()
                     ->firstOrFail();
 
-        return view('exams.result', compact('exam', 'attempt'));
+        return \Inertia\Inertia::render('Exams/Result', [
+            'exam' => $exam->load('questions'),
+            'attempt' => $attempt
+        ]);
     }
 }

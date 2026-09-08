@@ -20,9 +20,10 @@ class VideoLearningController extends Controller
     // Menampilkan daftar folder video
     public function index()
     {
-        // Mengambil folder beserta video di dalamnya
         $folders = VideoFolder::with('videos')->get();
-        return view('video_learning.index', compact('folders'));
+        return \Inertia\Inertia::render('VideoLearning/Index', [
+            'folders' => $folders
+        ]);
     }
 
     // Menampilkan halaman Player Video & Transkrip
@@ -49,7 +50,7 @@ class VideoLearningController extends Controller
             ->toArray();
 
         // Kirim $savedFlashcards untuk UI HTML, dan $savedVocabsArray untuk JavaScript
-        return view('video_learning.show', [
+        return \Inertia\Inertia::render('VideoLearning/Show', [
             'video' => $video,
             'savedFlashcards' => $savedFlashcards,
             'savedVocabs' => $savedVocabsArray 

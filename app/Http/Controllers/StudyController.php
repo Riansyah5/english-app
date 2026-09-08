@@ -41,7 +41,9 @@ class StudyController extends Controller
                 ->get();
         }
 
-        return view('study.index', compact('dueFlashcards'));
+        return \Inertia\Inertia::render('Study/Index', [
+            'dueFlashcards' => $dueFlashcards
+        ]);
     }
 
     // Memproses jawaban user dan menghitung jadwal review berikutnya (Algoritma SRS)
@@ -132,6 +134,11 @@ class StudyController extends Controller
             $practiceCards = $query->get();
         }
 
-        return view('study.practice', compact('practiceCards', 'selectedType', 'source', 'limit'));
+        return \Inertia\Inertia::render('Study/Practice', [
+            'practiceCards' => $practiceCards,
+            'selectedType' => $selectedType,
+            'source' => $source,
+            'limit' => $limit
+        ]);
     }
 }

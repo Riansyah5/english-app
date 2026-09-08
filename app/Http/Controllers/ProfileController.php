@@ -15,7 +15,9 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        return view('profile.edit', compact('user'));
+        return \Inertia\Inertia::render('Profile/Edit', [
+            'user' => $user
+        ]);
     }
 
     public function update(Request $request)
@@ -32,6 +34,6 @@ class ProfileController extends Controller
             'daily_goal' => $request->daily_goal,
         ]);
 
-        return redirect()->route('profile.edit')->with('success', 'Profil dan Target Belajar berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Profil dan Target Belajar berhasil diperbarui!');
     }
 }

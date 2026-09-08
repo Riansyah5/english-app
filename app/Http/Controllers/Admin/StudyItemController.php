@@ -14,12 +14,14 @@ class StudyItemController extends Controller
     public function index()
     {
         $items = StudyItem::latest()->paginate(10);
-        return view('admin.study_items.index', compact('items'));
+        return \Inertia\Inertia::render('Admin/StudyItems/Index', [
+            'items' => $items
+        ]);
     }
 
     public function create()
     {
-        return view('admin.study_items.create');
+        return \Inertia\Inertia::render('Admin/StudyItems/Create');
     }
 
     // UPDATE: Fungsi Store dengan Logika Distribusi
@@ -66,7 +68,9 @@ class StudyItemController extends Controller
     // FUNGSI BARU: Menampilkan Form Edit
     public function edit(StudyItem $studyItem)
     {
-        return view('admin.study_items.edit', compact('studyItem'));
+        return \Inertia\Inertia::render('Admin/StudyItems/Edit', [
+            'studyItem' => $studyItem
+        ]);
     }
 
     // FUNGSI BARU: Menyimpan Perubahan Edit

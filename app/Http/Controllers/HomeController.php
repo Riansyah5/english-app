@@ -114,19 +114,19 @@ class HomeController extends Controller
         }
     }
 
-        return view('home', compact(
-            'cardsToStudyToday', 
-            'reviewedToday', 
-            'dueCardsCount', 
-            'totalCardsCount', 
-            'user', 
-            'chartLabels', 
-            'chartData', 
-            'streak', 
-            'dailyVideo',
-            'randomCategory',
-            'categoryProgress',
-            'nextLessonToRead'
-        ));
+        return \Inertia\Inertia::render('Home', [
+            'cardsToStudyToday' => $cardsToStudyToday,
+            'reviewedToday' => $reviewedToday,
+            'dueCardsCount' => $dueCardsCount,
+            'totalCardsCount' => $totalCardsCount,
+            'user' => $user,
+            'chartLabels' => $chartLabels,
+            'chartData' => $chartData,
+            'streak' => $streak,
+            'dailyVideo' => $dailyVideo,
+            'randomCategory' => $randomCategory,
+            'categoryProgress' => $categoryProgress,
+            'nextLessonToRead' => $nextLessonToRead
+        ]);
     }
 }

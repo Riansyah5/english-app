@@ -30,7 +30,10 @@ class LessonLearningController extends Controller
                                 ->pluck('lesson_id')
                                 ->toArray();
 
-        return view('lessons.index', compact('categories', 'completedLessonIds'));
+        return \Inertia\Inertia::render('Lessons/Index', [
+            'categories' => $categories,
+            'completedLessonIds' => $completedLessonIds
+        ]);
     }
 
     // 2. Halaman Mode Baca
@@ -54,7 +57,12 @@ class LessonLearningController extends Controller
                             ->orderBy('order_number', 'asc')
                             ->first();
 
-        return view('lessons.show', compact('lesson', 'isCompleted', 'nextLesson', 'personalNote'));
+        return \Inertia\Inertia::render('Lessons/Show', [
+            'lesson' => $lesson->load('category'),
+            'isCompleted' => $isCompleted,
+            'nextLesson' => $nextLesson,
+            'personalNote' => $personalNote
+        ]);
     }
 
     // Fungsi Baru: Simpan Catatan

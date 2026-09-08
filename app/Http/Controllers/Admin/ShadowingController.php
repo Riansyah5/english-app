@@ -16,12 +16,14 @@ class ShadowingController extends Controller
     public function index()
     {
         $topics = ShadowingTopic::withCount('lines')->latest()->paginate(10);
-        return view('admin.shadowing.index', compact('topics'));
+        return \Inertia\Inertia::render('Admin/Shadowing/Index', [
+            'topics' => $topics
+        ]);
     }
 
     public function create()
     {
-        return view('admin.shadowing.create');
+        return \Inertia\Inertia::render('Admin/Shadowing/Create');
     }
 
     public function store(Request $request)
@@ -58,7 +60,9 @@ class ShadowingController extends Controller
     {
         // Memuat topik beserta seluruh baris dialognya
         $shadowing->load('lines');
-        return view('admin.shadowing.show', compact('shadowing'));
+        return \Inertia\Inertia::render('Admin/Shadowing/Show', [
+            'shadowing' => $shadowing
+        ]);
     }
 
     public function storeLine(Request $request, ShadowingTopic $shadowing)

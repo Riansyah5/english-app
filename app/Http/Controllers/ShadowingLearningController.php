@@ -20,7 +20,9 @@ class ShadowingLearningController extends Controller
             ->latest()
             ->get();
 
-        return view('shadowing.index', compact('topics'));
+        return \Inertia\Inertia::render('Shadowing/Index', [
+            'topics' => $topics
+        ]);
     }
 
     public function show($slug)
@@ -31,6 +33,8 @@ class ShadowingLearningController extends Controller
             ->with('lines')
             ->firstOrFail();
 
-        return view('shadowing.show', compact('topic'));
+        return \Inertia\Inertia::render('Shadowing/Show', [
+            'topic' => $topic
+        ]);
     }
 }

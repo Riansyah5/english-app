@@ -12,12 +12,14 @@ class VideoFolderController extends Controller
     {
         // Ambil data folder beserta jumlah video di dalamnya
         $folders = VideoFolder::withCount('videos')->latest()->paginate(10);
-        return view('admin.video_folders.index', compact('folders'));
+        return \Inertia\Inertia::render('Admin/VideoFolders/Index', [
+            'folders' => $folders
+        ]);
     }
 
     public function create()
     {
-        return view('admin.video_folders.create');
+        return \Inertia\Inertia::render('Admin/VideoFolders/Create');
     }
 
     public function store(Request $request)
