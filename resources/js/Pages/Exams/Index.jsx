@@ -2,59 +2,128 @@ import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 
-export default function ExamIndex({ auth, exams }) {
+export default function ExamIndex({ auth, exams = [] }) {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Modul Evaluasi (CBT)" />
 
-            <div className="container mx-auto px-4 py-8 max-w-6xl relative z-10">
-                <div className="mb-10">
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">Modul Evaluasi (CBT) 📝</h2>
-                    <p className="text-slate-500 dark:text-slate-400">Uji pemahaman tata bahasa dan kosakata Anda secara berkala.</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {exams.length > 0 ? (
-                        exams.map((exam) => (
-                            <div key={exam.id} className="glass dark:glass-dark rounded-3xl p-6 flex flex-col h-full border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                                <div className="mb-6">
-                                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 mb-5">
-                                        <i className="bi bi-file-earmark-text text-2xl text-blue-500"></i>
-                                    </div>
-                                    <h5 className="font-bold text-xl text-slate-900 dark:text-white leading-snug mb-3">
-                                        {exam.title}
-                                    </h5>
-                                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm m-0 line-clamp-2 leading-relaxed h-[2.5rem]">
-                                            {exam.description || 'Tidak ada deskripsi untuk paket ujian ini.'}
-                                        </p>
-                                    </div>
-                                </div>
-                                
-                                <div className="mt-auto flex justify-between items-center pt-2">
-                                    <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700">
-                                        <i className="bi bi-stopwatch text-slate-400"></i> {exam.duration_minutes} Menit
-                                    </span>
-                                    
-                                    <Link 
-                                        href={`/exams/${exam.id}`}
-                                        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm"
-                                    >
-                                        Mulai Ujian
-                                    </Link>
-                                </div>
+            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
+                <div className="max-w-7xl mx-auto space-y-8">
+                    
+                    {/* Top Bar Header */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                                    Modul Evaluasi (CBT) 📝
+                                </h1>
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                    Assessments
+                                </span>
                             </div>
-                        ))
-                    ) : (
-                        <div className="col-span-full glass dark:glass-dark rounded-3xl text-center py-20 px-8 flex flex-col items-center justify-center shadow-sm border border-slate-200 dark:border-slate-800">
-                            <i className="bi bi-inbox text-7xl text-slate-300 dark:text-slate-700 mb-6 opacity-50 block"></i>
-                            <h5 className="font-bold text-2xl text-slate-900 dark:text-white mb-2">Belum Ada Ujian</h5>
-                            <p className="text-slate-500 dark:text-slate-400">Belum ada paket ujian yang dijadwalkan atau tersedia saat ini.</p>
+                            <p className="text-sm text-slate-500 mt-1">
+                                Uji pemahaman tata bahasa, kosakata, dan struktur kalimat Anda secara terukur.
+                            </p>
                         </div>
-                    )}
+
+                        {/* Quick Stats Pill */}
+                        <div className="flex items-center gap-3">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-semibold text-slate-600">
+                                <span className="w-2 h-2 rounded-full bg-[#ff822d] animate-pulse"></span>
+                                Tersedia: <span className="font-bold text-slate-900">{exams.length} Paket Ujian</span>
+                            </div>
+                            <Link 
+                                href="/dashboard" 
+                                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
+                            >
+                                Ke Dashboard
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Feature Card Banner */}
+                    <div className="rounded-3xl p-6 relative overflow-hidden bg-gradient-to-br from-[#ff822d] via-[#fcbf49] to-[#60f2ce] text-slate-950 shadow-[0_12px_32px_-8px_rgba(255,130,45,0.25)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div className="absolute top-0 right-0 w-44 h-44 bg-[#fefc7c]/40 rounded-full blur-2xl pointer-events-none" />
+                        <div className="relative z-10 max-w-2xl">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-white/50 backdrop-blur-md text-slate-900 mb-2.5 border border-white/40">
+                                Tips Evaluasi ⏱️
+                            </span>
+                            <h2 className="text-xl font-black leading-snug tracking-tight text-slate-950 mb-1">
+                                Persiapkan Diri Sebelum Menekan Mulai
+                            </h2>
+                            <p className="text-slate-800 text-xs font-medium leading-relaxed">
+                                Timer ujian akan langsung berjalan begitu sesi dimulai. Pastikan koneksi internet stabil dan cari tempat belajar yang kondusif.
+                            </p>
+                        </div>
+                        <div className="relative z-10 shrink-0">
+                            <span className="px-4 py-2 rounded-2xl bg-white/90 text-slate-900 text-xs font-bold shadow-sm inline-block">
+                                Standar Waktu Nyata
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Grid Exams */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {exams.length > 0 ? (
+                            exams.map((exam) => (
+                                <div 
+                                    key={exam.id} 
+                                    className="group bg-white rounded-3xl border border-slate-100 p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1"
+                                >
+                                    <div>
+                                        {/* Icon Header */}
+                                        <div className="flex items-center justify-between mb-5">
+                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center text-xl shadow-sm shadow-[#ff822d]/25">
+                                                <i className="bi bi-file-earmark-text"></i>
+                                            </div>
+                                            <span className="flex items-center gap-1 px-3 py-1 bg-[#60f2ce]/20 text-[#0d9488] rounded-full text-xs font-bold border border-[#60f2ce]/50">
+                                                <i className="bi bi-stopwatch text-xs"></i>
+                                                {exam.duration_minutes} Menit
+                                            </span>
+                                        </div>
+
+                                        {/* Exam Info */}
+                                        <h3 className="font-bold text-lg text-slate-900 group-hover:text-[#ff822d] transition-colors leading-snug mb-2">
+                                            {exam.title}
+                                        </h3>
+
+                                        <div className="bg-[#fafcfb] p-3.5 rounded-2xl border border-slate-100 mb-6">
+                                            <p className="text-slate-500 text-xs leading-relaxed line-clamp-2 font-medium">
+                                                {exam.description || 'Tidak ada deskripsi khusus untuk paket ujian ini.'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Action Button */}
+                                    <div className="pt-2 border-t border-slate-100">
+                                        <Link 
+                                            href={`/exams/${exam.id}`}
+                                            className="w-full py-2.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            <span>Mulai Ujian</span>
+                                            <svg className="w-3.5 h-3.5 text-[#60f2ce]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                            </svg>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            /* Empty State */
+                            <div className="col-span-full p-12 text-center text-slate-400 border border-dashed border-slate-200 rounded-3xl bg-white flex flex-col items-center justify-center min-h-[320px]">
+                                <div className="w-16 h-16 rounded-3xl bg-[#fcbf49]/20 text-[#ff822d] flex items-center justify-center text-3xl mb-3">
+                                    <i className="bi bi-inbox"></i>
+                                </div>
+                                <h4 className="font-bold text-slate-900 text-lg mb-1">Belum Ada Paket Ujian</h4>
+                                <p className="text-xs text-slate-400 max-w-sm">
+                                    Belum ada paket CBT yang dijadwalkan atau tersedia untuk Anda saat ini.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
                 </div>
             </div>
         </AuthenticatedLayout>
     );
 }
-

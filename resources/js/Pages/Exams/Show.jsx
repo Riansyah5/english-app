@@ -4,7 +4,7 @@ import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 
 export default function ExamShow({ auth, exam }) {
     const [answers, setAnswers] = useState({});
-    const [timeLeft, setTimeLeft] = useState(exam.duration_minutes * 60);
+    const [timeLeft, setTimeLeft] = useState((exam?.duration_minutes || 30) * 60);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -42,104 +42,234 @@ export default function ExamShow({ auth, exam }) {
         router.post(`/exams/${exam.id}/submit`, { answers });
     };
 
+    const answeredCount = Object.keys(answers).length;
+    const totalQuestions = exam.questions?.length || 0;
+    const progressPercent = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+    const isCriticalTime = timeLeft < 300; // di bawah 5 menit
+
+    const scrollToQuestion = (idx) => {
+        const el = document.getElementById(`question-${idx}`);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    };
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title={`CBT - ${exam.title}`} />
 
-            {/* Sticky Header */}
-            <div className="sticky top-[64px] z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 py-4 shadow-sm">
-                <div className="container mx-auto px-4 max-w-4xl">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <h4 className="font-bold text-lg text-slate-900 dark:text-white leading-tight mb-1">{exam.title}</h4>
-                            <p className="text-slate-500 text-xs m-0">Pastikan koneksi internet stabil sebelum mengirimkan jawaban.</p>
+            {/* Sticky Header Bar */}
+            <div className="sticky top-[64px] z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 py-3.5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="truncate">
+                            <div className="flex items-center gap-2">
+                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                    CBT Active
+                                </span>
+                                <h1 className="font-extrabold text-base sm:text-lg text-slate-900 truncate">
+                                    {exam.title}
+                                </h1>
+                            </div>
+                            <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
+                                <span>Terjawab: <strong className="text-slate-800 font-bold">{answeredCount}</strong> / {totalQuestions} Soal</span>
+                                <span>&bull;</span>
+                                <div className="w-24 bg-slate-100 rounded-full h-1.5 overflow-hidden hidden sm:block">
+                                    <div 
+                                        className="bg-gradient-to-r from-[#60f2ce] via-[#fcbf49] to-[#ff822d] h-1.5 rounded-full transition-all duration-300"
+                                        style={{ width: `${progressPercent}%` }}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className="shrink-0">
-                            <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border ${
-                                timeLeft < 300 
-                                ? 'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 animate-pulse' 
-                                : 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
+
+                        {/* Sisa Waktu Pill */}
+                        <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
+                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl font-bold text-xs shadow-xs border transition-all ${
+                                isCriticalTime 
+                                    ? 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse' 
+                                    : 'bg-[#ff822d]/10 text-[#c2410c] border-[#ff822d]/30'
                             }`}>
-                                <i className="bi bi-stopwatch text-lg"></i>
-                                Sisa Waktu: {formatTime(timeLeft)}
+                                <i className="bi bi-stopwatch text-sm"></i>
+                                <span>Sisa Waktu:</span>
+                                <span className="font-mono text-sm tracking-wider font-extrabold">
+                                    {formatTime(timeLeft)}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl relative z-10">
-                <form onSubmit={handleSubmit}>
-                    <div className="flex flex-col gap-6">
-                        {exam.questions.map((question, index) => (
-                            <div key={question.id} className="glass dark:glass-dark rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
-                                <div className="flex items-start gap-4 mb-6 pb-4 border-b border-slate-100 dark:border-slate-700/50">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0">
-                                        <span className="font-bold text-slate-700 dark:text-slate-300">{index + 1}</span>
-                                    </div>
-                                    <h5 className="font-bold text-lg text-slate-900 dark:text-white leading-relaxed pt-1.5 m-0">
-                                        {question.question_text}
-                                    </h5>
-                                </div>
+            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-4 sm:p-6 md:p-8 font-sans">
+                <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-7">
+                    
+                    {/* Main Questions List */}
+                    <div className="lg:col-span-8">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {exam.questions && exam.questions.length > 0 ? (
+                                exam.questions.map((question, index) => {
+                                    const isAnswered = answers[question.id] !== undefined;
 
-                                <div className="flex flex-col gap-3">
-                                    {Object.entries(question.options).map(([key, text]) => {
-                                        const isSelected = answers[question.id] === key;
-                                        return (
-                                            <label 
-                                                key={key} 
-                                                className={`flex items-center p-4 rounded-xl border transition-all cursor-pointer group ${
-                                                    isSelected 
-                                                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 shadow-sm' 
-                                                    : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                                                }`}
-                                            >
-                                                <input 
-                                                    type="radio" 
-                                                    name={`q_${question.id}`} 
-                                                    value={key}
-                                                    checked={isSelected}
-                                                    onChange={() => handleOptionChange(question.id, key)}
-                                                    className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600"
-                                                />
-                                                <div className="ml-3 flex-grow">
-                                                    <span className={`font-bold mr-2 ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'}`}>
-                                                        {key.toUpperCase()}.
-                                                    </span>
-                                                    <span className={`text-sm ${isSelected ? 'text-slate-900 dark:text-white font-medium' : 'text-slate-600 dark:text-slate-400'}`}>
-                                                        {text}
-                                                    </span>
+                                    return (
+                                        <div 
+                                            key={question.id} 
+                                            id={`question-${index}`}
+                                            className={`bg-white rounded-3xl border p-6 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] transition-all ${
+                                                isAnswered ? 'border-[#60f2ce]/60' : 'border-slate-100'
+                                            }`}
+                                        >
+                                            {/* Question Header */}
+                                            <div className="flex items-start gap-3.5 mb-5 pb-4 border-b border-slate-100">
+                                                <div className={`w-9 h-9 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs transition-colors ${
+                                                    isAnswered 
+                                                        ? 'bg-gradient-to-br from-[#60f2ce] to-[#0d9488] text-white' 
+                                                        : 'bg-slate-100 text-slate-600'
+                                                }`}>
+                                                    {index + 1}
                                                 </div>
-                                            </label>
-                                        );
-                                    })}
+                                                <h2 className="font-bold text-base sm:text-[17px] text-slate-900 leading-relaxed pt-1">
+                                                    {question.question_text}
+                                                </h2>
+                                            </div>
+
+                                            {/* Options Choices */}
+                                            <div className="space-y-2.5">
+                                                {Object.entries(question.options || {}).map(([key, text]) => {
+                                                    const isSelected = answers[question.id] === key;
+
+                                                    return (
+                                                        <label 
+                                                            key={key} 
+                                                            className={`flex items-center p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 cursor-pointer group ${
+                                                                isSelected 
+                                                                    ? 'bg-gradient-to-r from-[#60f2ce]/15 via-[#fefc7c]/10 to-white border-[#60f2ce] shadow-2xs' 
+                                                                    : 'bg-[#fafcfb] border-slate-100 hover:bg-slate-50 hover:border-slate-200'
+                                                            }`}
+                                                        >
+                                                            <input 
+                                                                type="radio" 
+                                                                name={`q_${question.id}`} 
+                                                                value={key} 
+                                                                checked={isSelected}
+                                                                onChange={() => handleOptionChange(question.id, key)}
+                                                                className="sr-only" 
+                                                            />
+
+                                                            {/* Custom Indicator Pill */}
+                                                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs uppercase shrink-0 transition-all ${
+                                                                isSelected 
+                                                                    ? 'bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white shadow-xs' 
+                                                                    : 'bg-white border border-slate-200 text-slate-500 group-hover:border-slate-300'
+                                                            }`}>
+                                                                {key}
+                                                            </div>
+
+                                                            <span className={`ml-3.5 text-xs sm:text-sm leading-relaxed transition-colors ${
+                                                                isSelected ? 'font-bold text-slate-900' : 'font-medium text-slate-600'
+                                                            }`}>
+                                                                {text}
+                                                            </span>
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-3xl bg-white">
+                                    Daftar soal belum tersedia untuk paket ujian ini.
+                                </div>
+                            )}
+
+                            {/* Submit Card Box */}
+                            <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 text-center shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+                                <div className="w-13 h-13 mx-auto rounded-2xl bg-[#60f2ce]/20 text-[#0d9488] flex items-center justify-center text-2xl mb-3">
+                                    <i className="bi bi-shield-check"></i>
+                                </div>
+                                <h3 className="font-extrabold text-lg text-slate-900 mb-1">Sudah Yakin dengan Jawaban Anda?</h3>
+                                <p className="text-xs text-slate-400 max-w-sm mx-auto mb-6 leading-relaxed">
+                                    Periksa nomor soal melalui navigasi cepat di samping sebelum mengakhiri sesi ujian ini.
+                                </p>
+                                
+                                <button 
+                                    type="submit" 
+                                    disabled={isSubmitting}
+                                    className={`inline-flex items-center justify-center gap-2 px-8 py-3 rounded-2xl bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-xs shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition-all ${
+                                        isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                                    }`}
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <span className="animate-spin rounded-full h-4 w-4 border-2 border-slate-900 border-t-transparent mr-1"></span>
+                                            <span>Mengumpulkan...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>Selesai & Kumpulkan Ujian</span>
+                                            <svg className="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                            </svg>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Right Column: Question Number Grid Navigator */}
+                    <div className="lg:col-span-4">
+                        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] sticky top-[150px]">
+                            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                                <div>
+                                    <h3 className="font-extrabold text-sm text-slate-900 leading-tight">Navigasi Soal</h3>
+                                    <p className="text-[11px] text-slate-400">Klik nomor untuk menuju ke soal</p>
+                                </div>
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#fcbf49]/20 text-[#b45309] border border-[#fcbf49]/40">
+                                    {answeredCount}/{totalQuestions}
+                                </span>
+                            </div>
+
+                            {/* Numbers Grid */}
+                            <div className="grid grid-cols-5 gap-2 max-h-[300px] overflow-y-auto pr-1">
+                                {exam.questions?.map((q, idx) => {
+                                    const isAnswered = answers[q.id] !== undefined;
+
+                                    return (
+                                        <button 
+                                            key={q.id}
+                                            type="button"
+                                            onClick={() => scrollToQuestion(idx)}
+                                            className={`h-10 rounded-xl font-bold text-xs transition-all flex items-center justify-center border ${
+                                                isAnswered 
+                                                    ? 'bg-[#60f2ce] text-slate-950 border-[#60f2ce] shadow-xs' 
+                                                    : 'bg-[#fafcfb] text-slate-500 border-slate-200/80 hover:bg-slate-100 hover:border-slate-300'
+                                            }`}
+                                            title={`Menuju nomor ${idx + 1}`}
+                                        >
+                                            {idx + 1}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Legend Information */}
+                            <div className="pt-5 mt-5 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px] font-semibold text-slate-500">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-3 h-3 rounded bg-[#60f2ce] border border-[#60f2ce]"></span>
+                                    <span>Sudah Diisi</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-3 h-3 rounded bg-[#fafcfb] border border-slate-200"></span>
+                                    <span>Belum Diisi</span>
                                 </div>
                             </div>
-                        ))}
+                        </div>
                     </div>
 
-                    <div className="glass dark:glass-dark rounded-3xl p-8 sm:p-10 text-center mt-8 border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <i className="bi bi-shield-check text-5xl text-blue-500 block mb-4"></i>
-                        <h5 className="font-bold text-xl text-slate-900 dark:text-white mb-2">Selesai Mengerjakan?</h5>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6 max-w-md mx-auto">
-                            Pastikan Anda telah meninjau kembali seluruh jawaban sebelum mengirimkan hasil ujian ini.
-                        </p>
-                        
-                        <button 
-                            type="submit" 
-                            disabled={isSubmitting}
-                            className={`inline-flex items-center justify-center px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all shadow-sm ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-                        >
-                            {isSubmitting ? (
-                                <><span className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></span> Memproses...</>
-                            ) : (
-                                <><i className="bi bi-send-check text-xl mr-2"></i> Selesai & Kumpulkan Ujian</>
-                            )}
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </AuthenticatedLayout>
     );
 }
-

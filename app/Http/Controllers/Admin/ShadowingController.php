@@ -47,6 +47,34 @@ class ShadowingController extends Controller
                          ->with('success', 'Topik berhasil dibuat! Silakan mulai susun naskah percakapan.');
     }
 
+    public function edit(ShadowingTopic $shadowing)
+    {
+        return \Inertia\Inertia::render('Admin/Shadowing/Edit', [
+            'shadowing' => $shadowing
+        ]);
+    }
+
+    public function update(Request $request, ShadowingTopic $shadowing)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'level' => 'required|in:Beginner,Intermediate,Advanced',
+            'description' => 'nullable|string'
+        ]);
+
+        $shadowing->update([
+            'title' => $request->title,
+            // Jika Anda mau slug otomatis digenerate ulang bila title berubah, hilangkan komen baris bawah:
+            // 'slug' => Str::slug($request->title) . '-' . Str::random(4),
+            'level' => $request->level,
+            'description' => $request->description,
+            'is_published' => $request->boolean('is_published')
+        ]);
+
+        return redirect()->route('admin.shadowing.index')
+                         ->with('success', 'Topik shadowing berhasil diperbarui!');
+    }
+
     public function destroy(ShadowingTopic $shadowing)
     {
         $shadowing->delete(); // Baris dialog otomatis terhapus karena cascadeOnDelete di migrasi

@@ -39,6 +39,30 @@ class VideoFolderController extends Controller
         return redirect()->route('admin.video-folders.index')->with('success', 'Folder video berhasil dibuat!');
     }
 
+    public function edit(VideoFolder $videoFolder)
+    {
+        return \Inertia\Inertia::render('Admin/VideoFolders/Edit', [
+            'folder' => $videoFolder
+        ]);
+    }
+
+    public function update(Request $request, VideoFolder $videoFolder)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'icon' => 'nullable|string|max:50',
+        ]);
+
+        $videoFolder->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'icon' => $request->icon ?? 'bi-folder-fill',
+        ]);
+
+        return redirect()->route('admin.video-folders.index')->with('success', 'Folder video berhasil diperbarui!');
+    }
+
     public function destroy(VideoFolder $videoFolder)
     {
         // Karena kita pakai cascadeOnDelete di migration, menghapus folder 

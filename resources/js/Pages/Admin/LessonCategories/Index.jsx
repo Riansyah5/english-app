@@ -2,7 +2,7 @@ import React from 'react';
 import { Head, Link, usePage, router } from '@inertiajs/react';
 import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
 
-export default function LessonCategoryIndex({ auth, categories }) {
+export default function LessonCategoryIndex({ auth, categories = { data: [], links: [] } }) {
     const { flash } = usePage().props;
 
     const handleDelete = (id) => {
@@ -15,109 +15,155 @@ export default function LessonCategoryIndex({ auth, categories }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Kelola Kategori Materi" />
 
-            <div className="container mx-auto px-4 py-8 relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Kelola Kategori Buku 📚</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm m-0">Manajemen kategori untuk buku dan materi digital.</p>
-                    </div>
-                    <Link 
-                        href="/admin/lesson-categories/create" 
-                        className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl text-sm transition-colors shadow-sm"
-                    >
-                        <i className="bi bi-plus-circle-fill mr-2"></i> Tambah Kategori Baru
-                    </Link>
-                </div>
+            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
+                <div className="max-w-7xl mx-auto space-y-7">
+                    
+                    {/* Top Bar Header */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                                    Kelola Kategori Buku 📚
+                                </h1>
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                    Curriculum Admin
+                                </span>
+                            </div>
+                            <p className="text-sm text-slate-500 mt-1">
+                                Manajemen kategori untuk pengelompokan buku bacaan, modul grammar, dan materi digital.
+                            </p>
+                        </div>
 
-                {flash?.success && (
-                    <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl mb-6 flex items-center text-sm font-medium">
-                        <i className="bi bi-check-circle-fill mr-2 text-lg"></i>
-                        {flash.success}
-                    </div>
-                )}
-
-                <div className="glass dark:glass-dark rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mb-6">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm whitespace-nowrap">
-                            <thead>
-                                <tr className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 uppercase tracking-wider text-xs border-b border-slate-200 dark:border-slate-800">
-                                    <th className="px-6 py-4 font-semibold w-1/4">Kategori</th>
-                                    <th className="px-6 py-4 font-semibold w-1/2">Deskripsi</th>
-                                    <th className="px-6 py-4 font-semibold text-center w-1/12">Jml Materi</th>
-                                    <th className="px-6 py-4 font-semibold text-right w-1/6">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-200 dark:divide-slate-800/50">
-                                {categories.data.length > 0 ? categories.data.map((category) => (
-                                    <tr key={category.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 flex items-center justify-center border border-emerald-100 dark:border-emerald-500/20">
-                                                    <i className={`bi ${category.icon || 'bi-book-half'} text-lg`}></i>
-                                                </div>
-                                                <span className="font-bold text-slate-900 dark:text-white">{category.name}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium whitespace-normal">
-                                            {category.description || '-'}
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                                                {category.lessons_count} Materi
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <Link 
-                                                    href={`/admin/lesson-categories/${category.id}/edit`}
-                                                    className="w-8 h-8 inline-flex items-center justify-center rounded text-cyan-600 border border-slate-200 dark:border-slate-700 hover:bg-cyan-600 hover:text-white hover:border-transparent transition-colors"
-                                                    title="Edit Kategori"
-                                                >
-                                                    <i className="bi bi-pencil-square"></i>
-                                                </Link>
-                                                <button 
-                                                    onClick={() => handleDelete(category.id)}
-                                                    className="w-8 h-8 inline-flex items-center justify-center rounded text-rose-500 border border-slate-200 dark:border-slate-700 hover:bg-rose-500 hover:text-white hover:border-transparent transition-colors"
-                                                    title="Hapus Kategori"
-                                                >
-                                                    <i className="bi bi-trash3"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )) : (
-                                    <tr>
-                                        <td colSpan="4" className="px-6 py-12 text-center bg-slate-50/50 dark:bg-slate-900/20">
-                                            <i className="bi bi-journal-album text-5xl text-slate-300 dark:text-slate-700 block mb-3"></i>
-                                            <span className="text-slate-500 text-sm font-medium">Belum ada kategori materi.</span>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {categories.links && categories.links.length > 3 && (
-                    <div className="flex justify-center md:justify-end gap-1">
-                        {categories.links.map((link, i) => (
+                        <div className="flex items-center gap-3">
                             <Link 
-                                key={i}
-                                href={link.url || '#'}
-                                className={`px-3 py-1.5 text-sm rounded-md transition-colors border ${
-                                    link.active 
-                                    ? 'bg-blue-600 text-white border-blue-600' 
-                                    : !link.url 
-                                        ? 'text-slate-400 border-slate-200 dark:border-slate-700 opacity-50 cursor-not-allowed' 
-                                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
-                                }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
-                        ))}
+                                href="/dashboard" 
+                                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
+                            >
+                                Dashboard
+                            </Link>
+
+                            <Link 
+                                href="/admin/lesson-categories/create" 
+                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-xs rounded-full shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition"
+                            >
+                                <i className="bi bi-plus-circle-fill text-sm"></i>
+                                <span>Tambah Kategori Baru</span>
+                            </Link>
+                        </div>
                     </div>
-                )}
+
+                    {/* Flash Notification */}
+                    {flash?.success && (
+                        <div className="flex items-center gap-2.5 p-4 bg-[#60f2ce]/20 border border-[#60f2ce]/50 text-[#0d9488] rounded-2xl text-xs font-bold shadow-xs">
+                            <i className="bi bi-check-circle-fill text-base"></i>
+                            <span>{flash.success}</span>
+                        </div>
+                    )}
+
+                    {/* Table Container Card */}
+                    <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-xs whitespace-nowrap">
+                                <thead>
+                                    <tr className="bg-[#fafcfb] text-slate-400 font-bold uppercase tracking-wider text-[11px] border-b border-slate-100">
+                                        <th className="px-6 py-4 w-1/4">Kategori Buku</th>
+                                        <th className="px-6 py-4 w-1/2">Deskripsi</th>
+                                        <th className="px-6 py-4 text-center w-1/12">Jml Materi</th>
+                                        <th className="px-6 py-4 text-right w-1/6">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {categories.data && categories.data.length > 0 ? (
+                                        categories.data.map((category) => (
+                                            <tr key={category.id} className="hover:bg-[#fafcfb] transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3.5">
+                                                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center text-lg shadow-sm shadow-[#ff822d]/20 shrink-0">
+                                                            <i className={`bi ${category.icon || 'bi-book-half'}`}></i>
+                                                        </div>
+                                                        <div>
+                                                            <span className="font-extrabold text-sm text-slate-900 block leading-tight">
+                                                                {category.name}
+                                                            </span>
+                                                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                                                                Kategori ID #{category.id}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 font-medium text-slate-600 whitespace-normal max-w-md">
+                                                    {category.description || (
+                                                        <span className="text-slate-300 italic">Tidak ada deskripsi</span>
+                                                    )}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <span className="px-3 py-1 text-xs font-bold rounded-full bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                                        {category.lessons_count || 0} Materi
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <div className="flex items-center justify-end gap-1.5">
+                                                        <Link 
+                                                            href={`/admin/lesson-categories/${category.id}/edit`}
+                                                            className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/80 text-[#0d9488] hover:bg-[#60f2ce]/20 hover:border-[#60f2ce] transition-all shadow-2xs"
+                                                            title="Edit Kategori"
+                                                        >
+                                                            <i className="bi bi-pencil-square"></i>
+                                                        </Link>
+                                                        <button 
+                                                            onClick={() => handleDelete(category.id)}
+                                                            className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/80 text-rose-500 hover:bg-rose-50 hover:border-rose-300 transition-all shadow-2xs"
+                                                            title="Hapus Kategori"
+                                                        >
+                                                            <i className="bi bi-trash3"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="px-6 py-14 text-center">
+                                                <div className="w-14 h-14 mx-auto rounded-3xl bg-[#fcbf49]/20 text-[#ff822d] flex items-center justify-center text-2xl mb-3">
+                                                    <i className="bi bi-journal-album"></i>
+                                                </div>
+                                                <h3 className="font-bold text-slate-900 text-base mb-1">Belum Ada Kategori Buku</h3>
+                                                <p className="text-xs text-slate-400">Silakan tambahkan kategori buku baru untuk mulai menyusun materi pembelajaran.</p>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Pagination Section */}
+                    {categories.links && categories.links.length > 3 && (
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                            <span className="text-xs text-slate-400">
+                                Menampilkan kategori buku pada halaman saat ini
+                            </span>
+                            <div className="flex flex-wrap justify-center gap-1.5">
+                                {categories.links.map((link, i) => (
+                                    <Link 
+                                        key={i}
+                                        href={link.url || '#'}
+                                        className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all border ${
+                                            link.active 
+                                                ? 'bg-slate-900 text-white border-slate-900 shadow-xs' 
+                                                : !link.url 
+                                                    ? 'text-slate-300 border-slate-100 bg-white cursor-not-allowed pointer-events-none' 
+                                                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                                        }`}
+                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                </div>
             </div>
         </AuthenticatedLayout>
     );
 }
-

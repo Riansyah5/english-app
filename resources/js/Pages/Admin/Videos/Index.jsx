@@ -2,12 +2,25 @@ import React from 'react';
 import { Head, Link, usePage, router } from '@inertiajs/react';
 import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
 
-export default function VideoIndex({ auth, videos }) {
+export default function VideoIndex({ auth, videos = { data: [], links: [] } }) {
     const { flash } = usePage().props;
 
     const handleDelete = (id) => {
-        if (confirm('Hapus video ini secara permanen?')) {
+        if (confirm('Hapus video ini beserta seluruh data transkripnya secara permanen?')) {
             router.delete(`/admin/videos/${id}`);
+        }
+    };
+
+    const getDifficultyBadge = (difficulty) => {
+        switch (difficulty?.toLowerCase()) {
+            case 'beginner':
+                return 'bg-[#60f2ce]/20 text-[#0d9488] border-[#60f2ce]/50';
+            case 'intermediate':
+                return 'bg-[#fefc7c]/80 text-[#854d0e] border-[#fcbf49]/50';
+            case 'advanced':
+                return 'bg-[#ff822d]/15 text-[#c2410c] border-[#ff822d]/40';
+            default:
+                return 'bg-slate-100 text-slate-600 border-slate-200';
         }
     };
 
@@ -15,124 +28,184 @@ export default function VideoIndex({ auth, videos }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Kelola Video Learning" />
 
-            <div className="container mx-auto px-4 py-8 relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Kelola Video Learning 🎬</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm m-0">Manajemen video YouTube dan transkrip terjemahan.</p>
-                    </div>
-                    <Link 
-                        href="/admin/videos/create" 
-                        className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl text-sm transition-colors shadow-sm"
-                    >
-                        <i className="bi bi-plus-circle-fill mr-2"></i> Tambah Video Baru
-                    </Link>
-                </div>
+            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
+                <div className="max-w-7xl mx-auto space-y-7">
+                    
+                    {/* Top Bar Header */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                                    Kelola Video Learning 🎬
+                                </h1>
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                    Admin Panel
+                                </span>
+                            </div>
+                            <p className="text-sm text-slate-500 mt-1">
+                                Manajemen video YouTube, folder materi, dan sinkronisasi transkrip interaktif.
+                            </p>
+                        </div>
 
-                {flash?.success && (
-                    <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl mb-6 flex items-center text-sm font-medium">
-                        <i className="bi bi-check-circle-fill mr-2 text-lg"></i>
-                        {flash.success}
-                    </div>
-                )}
-
-                <div className="glass dark:glass-dark rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mb-6">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm whitespace-nowrap">
-                            <thead>
-                                <tr className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 uppercase tracking-wider text-xs border-b border-slate-200 dark:border-slate-800">
-                                    <th className="px-6 py-4 font-semibold w-2/5">Informasi Video</th>
-                                    <th className="px-6 py-4 font-semibold w-1/5">Folder</th>
-                                    <th className="px-6 py-4 font-semibold w-1/5">Tingkat Kesulitan</th>
-                                    <th className="px-6 py-4 font-semibold text-right w-1/5">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-200 dark:divide-slate-800/50">
-                                {videos.data.length > 0 ? videos.data.map((video) => (
-                                    <tr key={video.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="shrink-0 w-24 h-14 rounded-lg overflow-hidden relative shadow-sm border border-slate-200 dark:border-slate-700">
-                                                    <img src={`https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg`} alt="Thumbnail" className="w-full h-full object-cover" />
-                                                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                                                        <i className="bi bi-play-circle-fill text-white opacity-80 text-xl"></i>
-                                                    </div>
-                                                </div>
-                                                <div className="truncate max-w-[200px] md:max-w-xs">
-                                                    <h6 className="font-bold text-slate-900 dark:text-white m-0 text-sm truncate">{video.title}</h6>
-                                                    <a href={`https://youtube.com/watch?v=${video.youtube_id}`} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">
-                                                        <i className="bi bi-youtube text-rose-500 mr-1"></i> {video.youtube_id}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700">
-                                                <i className={`bi ${video.folder?.icon || 'bi-folder'} text-slate-400`}></i> 
-                                                {video.folder?.name || 'Folder Dihapus'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded ${
-                                                video.difficulty === 'beginner' ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' :
-                                                video.difficulty === 'intermediate' ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30' :
-                                                'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30'
-                                            }`}>
-                                                {video.difficulty}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <Link 
-                                                    href={`/admin/videos/${video.id}/edit`}
-                                                    className="w-8 h-8 rounded flex items-center justify-center text-cyan-600 border border-slate-200 dark:border-slate-700 hover:bg-cyan-600 hover:text-white hover:border-transparent transition-colors"
-                                                    title="Edit Video"
-                                                >
-                                                    <i className="bi bi-pencil-square"></i>
-                                                </Link>
-                                                <button 
-                                                    onClick={() => handleDelete(video.id)}
-                                                    className="w-8 h-8 rounded flex items-center justify-center text-rose-500 border border-slate-200 dark:border-slate-700 hover:bg-rose-500 hover:text-white hover:border-transparent transition-colors"
-                                                    title="Hapus Video"
-                                                >
-                                                    <i className="bi bi-trash3"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )) : (
-                                    <tr>
-                                        <td colSpan="4" className="px-6 py-12 text-center bg-slate-50/50 dark:bg-slate-900/20">
-                                            <i className="bi bi-film text-5xl text-slate-300 dark:text-slate-700 block mb-3"></i>
-                                            <span className="text-slate-500 text-sm font-medium">Belum ada video di dalam database saat ini.</span>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {videos.links && videos.links.length > 3 && (
-                    <div className="flex justify-center md:justify-end gap-1">
-                        {videos.links.map((link, i) => (
+                        <div className="flex items-center gap-3">
                             <Link 
-                                key={i}
-                                href={link.url || '#'}
-                                className={`px-3 py-1.5 text-sm rounded-md transition-colors border ${
-                                    link.active 
-                                    ? 'bg-blue-600 text-white border-blue-600' 
-                                    : !link.url 
-                                        ? 'text-slate-400 border-slate-200 dark:border-slate-700 opacity-50 cursor-not-allowed' 
-                                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
-                                }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
-                        ))}
+                                href="/dashboard" 
+                                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
+                            >
+                                Dashboard
+                            </Link>
+
+                            <Link 
+                                href="/admin/videos/create" 
+                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-xs rounded-full shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition"
+                            >
+                                <i className="bi bi-plus-circle-fill text-sm"></i>
+                                <span>Tambah Video Baru</span>
+                            </Link>
+                        </div>
                     </div>
-                )}
+
+                    {/* Flash Notification */}
+                    {flash?.success && (
+                        <div className="flex items-center gap-2.5 p-4 bg-[#60f2ce]/20 border border-[#60f2ce]/50 text-[#0d9488] rounded-2xl text-xs font-bold shadow-xs">
+                            <i className="bi bi-check-circle-fill text-base"></i>
+                            <span>{flash.success}</span>
+                        </div>
+                    )}
+
+                    {/* Table Container Card */}
+                    <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-xs whitespace-nowrap">
+                                <thead>
+                                    <tr className="bg-[#fafcfb] text-slate-400 font-bold uppercase tracking-wider text-[11px] border-b border-slate-100">
+                                        <th className="px-6 py-4 w-2/5">Informasi Video</th>
+                                        <th className="px-6 py-4 w-1/5">Folder Kategori</th>
+                                        <th className="px-6 py-4 w-1/5">Tingkat Kesulitan</th>
+                                        <th className="px-6 py-4 text-right w-1/5">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {videos.data && videos.data.length > 0 ? (
+                                        videos.data.map((video) => (
+                                            <tr key={video.id} className="hover:bg-[#fafcfb] transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3.5">
+                                                        {/* Thumbnail Preview with YouTube Play Indicator */}
+                                                        <div className="shrink-0 w-24 h-14 rounded-2xl overflow-hidden relative shadow-2xs border border-slate-100 bg-slate-900">
+                                                            <img 
+                                                                src={`https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg`} 
+                                                                alt={video.title} 
+                                                                className="w-full h-full object-cover" 
+                                                                loading="lazy"
+                                                            />
+                                                            <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+                                                                <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center shadow-xs">
+                                                                    <svg className="w-3 h-3 text-slate-900 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                                                        <path d="M8 5v14l11-7z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="truncate max-w-[220px] md:max-w-xs">
+                                                            <h2 className="font-extrabold text-sm text-slate-900 truncate leading-snug">
+                                                                {video.title}
+                                                            </h2>
+                                                            <a 
+                                                                href={`https://youtube.com/watch?v=${video.youtube_id}`} 
+                                                                target="_blank" 
+                                                                rel="noreferrer" 
+                                                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-[#ff822d] transition-colors mt-0.5"
+                                                            >
+                                                                <i className="bi bi-youtube text-rose-500"></i> 
+                                                                <span>{video.youtube_id}</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-700 text-xs font-semibold shadow-2xs">
+                                                        <i className={`bi ${video.folder?.icon || 'bi-folder'} text-[#ff822d]`}></i> 
+                                                        <span>{video.folder?.name || 'Tanpa Kategori'}</span>
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded-lg border ${getDifficultyBadge(video.difficulty)}`}>
+                                                        {video.difficulty || 'General'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <div className="flex items-center justify-end gap-1.5">
+                                                        <Link 
+                                                            href={`/video-learning/${video.id}`}
+                                                            target="_blank"
+                                                            className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/80 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-2xs"
+                                                            title="Pratinjau Video"
+                                                        >
+                                                            <i className="bi bi-eye"></i>
+                                                        </Link>
+                                                        <Link 
+                                                            href={`/admin/videos/${video.id}/edit`}
+                                                            className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/80 text-[#0d9488] hover:bg-[#60f2ce]/20 hover:border-[#60f2ce] transition-all shadow-2xs"
+                                                            title="Edit Video"
+                                                        >
+                                                            <i className="bi bi-pencil-square"></i>
+                                                        </Link>
+                                                        <button 
+                                                            onClick={() => handleDelete(video.id)}
+                                                            className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/80 text-rose-500 hover:bg-rose-50 hover:border-rose-300 transition-all shadow-2xs"
+                                                            title="Hapus Video"
+                                                        >
+                                                            <i className="bi bi-trash3"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="px-6 py-14 text-center">
+                                                <div className="w-14 h-14 mx-auto rounded-3xl bg-[#fcbf49]/20 text-[#ff822d] flex items-center justify-center text-2xl mb-3">
+                                                    <i className="bi bi-camera-video-off"></i>
+                                                </div>
+                                                <h3 className="font-bold text-slate-900 text-base mb-1">Belum Ada Video Learning</h3>
+                                                <p className="text-xs text-slate-400">Silakan tambahkan video YouTube baru untuk mulai menyediakan materi belajar.</p>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Pagination Section */}
+                    {videos.links && videos.links.length > 3 && (
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                            <span className="text-xs text-slate-400">
+                                Menampilkan video pada halaman saat ini
+                            </span>
+                            <div className="flex flex-wrap justify-center gap-1.5">
+                                {videos.links.map((link, i) => (
+                                    <Link 
+                                        key={i}
+                                        href={link.url || '#'}
+                                        className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all border ${
+                                            link.active 
+                                                ? 'bg-slate-900 text-white border-slate-900 shadow-xs' 
+                                                : !link.url 
+                                                    ? 'text-slate-300 border-slate-100 bg-white cursor-not-allowed pointer-events-none' 
+                                                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                                        }`}
+                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                </div>
             </div>
         </AuthenticatedLayout>
     );
 }
-
