@@ -1,6 +1,6 @@
 {
-  "_AuthenticatedLayout-DQ4zjwy4.js": {
-    "file": "assets/AuthenticatedLayout-DQ4zjwy4.js",
+  "_AuthenticatedLayout-ErTDhyMT.js": {
+    "file": "assets/AuthenticatedLayout-ErTDhyMT.js",
     "name": "AuthenticatedLayout",
     "imports": [
       "_chunk-DPI0Y_ll.js",
@@ -50,275 +50,275 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Br-EwCE-.css",
+    "file": "assets/app-CDgi8jSd.css",
     "src": "resources/css/app.css"
   },
   "resources/js/Pages/Admin/LessonCategories/Create.jsx": {
-    "file": "assets/Create-yU_uxBpn.js",
+    "file": "assets/Create-CdylEHNv.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/LessonCategories/Create.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/LessonCategories/Edit.jsx": {
-    "file": "assets/Edit-W8V07kk8.js",
+    "file": "assets/Edit-CCVFjnWP.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/LessonCategories/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/LessonCategories/Index.jsx": {
-    "file": "assets/Index-E-wabD1V.js",
+    "file": "assets/Index-BhQ1Dd1J.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/LessonCategories/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Lessons/Create.jsx": {
-    "file": "assets/Create-DQGZGMD2.js",
+    "file": "assets/Create-3w5939cJ.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/Lessons/Create.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Lessons/Edit.jsx": {
-    "file": "assets/Edit-BnLP-SQo.js",
+    "file": "assets/Edit-BbwyLhN0.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/Lessons/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Lessons/Index.jsx": {
-    "file": "assets/Index-DBpSf_HA.js",
+    "file": "assets/Index-Bdsr0EBB.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Lessons/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Shadowing/Create.jsx": {
-    "file": "assets/Create-BOOw1qU5.js",
+    "file": "assets/Create-BdNoDTrz.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/Shadowing/Create.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Shadowing/Edit.jsx": {
-    "file": "assets/Edit-D7sJkiQo.js",
+    "file": "assets/Edit-CE78w1ro.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/Shadowing/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Shadowing/Index.jsx": {
-    "file": "assets/Index-D5KJ6puG.js",
+    "file": "assets/Index-C8Cg4stF.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Shadowing/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Shadowing/Show.jsx": {
-    "file": "assets/Show-DBdtiOUP.js",
+    "file": "assets/Show-CbxcrvUP.js",
     "name": "Show",
     "src": "resources/js/Pages/Admin/Shadowing/Show.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/StudyItems/Create.jsx": {
-    "file": "assets/Create-lk1A3bE0.js",
+    "file": "assets/Create-BIdFbfIq.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/StudyItems/Create.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/StudyItems/Edit.jsx": {
-    "file": "assets/Edit-CHgPkHm9.js",
+    "file": "assets/Edit-k6ftvvMc.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/StudyItems/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/StudyItems/Index.jsx": {
-    "file": "assets/Index-C-PbQOrb.js",
+    "file": "assets/Index-B4QtXB6e.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/StudyItems/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/VideoFolders/Create.jsx": {
-    "file": "assets/Create-BP2UmabL.js",
+    "file": "assets/Create-BcLKlDf9.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/VideoFolders/Create.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/VideoFolders/Edit.jsx": {
-    "file": "assets/Edit-DrxigIIA.js",
+    "file": "assets/Edit-DVf8k4sM.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/VideoFolders/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/VideoFolders/Index.jsx": {
-    "file": "assets/Index-6nz5d6YP.js",
+    "file": "assets/Index-CvwexKGz.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/VideoFolders/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Videos/Create.jsx": {
-    "file": "assets/Create-Dmv2Wino.js",
+    "file": "assets/Create-Bs1adylT.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/Videos/Create.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Videos/Edit.jsx": {
-    "file": "assets/Edit-BSgn1OQh.js",
+    "file": "assets/Edit-Brdq6sfH.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/Videos/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Admin/Videos/Index.jsx": {
-    "file": "assets/Index-CgtVQj6P.js",
+    "file": "assets/Index-8YcujPwk.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Videos/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Exams/Index.jsx": {
-    "file": "assets/Index-CMLvHKaA.js",
+    "file": "assets/Index-BguXZ8tV.js",
     "name": "Index",
     "src": "resources/js/Pages/Exams/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Exams/Result.jsx": {
-    "file": "assets/Result-ChDyBDw3.js",
+    "file": "assets/Result-jbb5GmYt.js",
     "name": "Result",
     "src": "resources/js/Pages/Exams/Result.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Exams/Show.jsx": {
-    "file": "assets/Show-F76uBo6b.js",
+    "file": "assets/Show-Ba3HHvEO.js",
     "name": "Show",
     "src": "resources/js/Pages/Exams/Show.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Home.jsx": {
-    "file": "assets/Home-CC6eubZ7.js",
+    "file": "assets/Home-8IWyuQKg.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Lessons/Index.jsx": {
-    "file": "assets/Index-BvsEgstU.js",
+    "file": "assets/Index-TsBY-vBB.js",
     "name": "Index",
     "src": "resources/js/Pages/Lessons/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Lessons/Show.jsx": {
-    "file": "assets/Show-C9YHnZcX.js",
+    "file": "assets/Show-CFrKvuMZ.js",
     "name": "Show",
     "src": "resources/js/Pages/Lessons/Show.jsx",
     "isDynamicEntry": true,
@@ -327,33 +327,33 @@
       "resources/js/app.jsx",
       "_axios-DGWwXTkP.js",
       "_confetti.module-DnkayJdC.js",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Profile/Edit.jsx": {
-    "file": "assets/Edit-KwfxCoiU.js",
+    "file": "assets/Edit-DPLYYkH2.js",
     "name": "Edit",
     "src": "resources/js/Pages/Profile/Edit.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Shadowing/Index.jsx": {
-    "file": "assets/Index-yBqn1qHC.js",
+    "file": "assets/Index-C-AV2-5f.js",
     "name": "Index",
     "src": "resources/js/Pages/Shadowing/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Shadowing/Show.jsx": {
-    "file": "assets/Show-Bl1opqh6.js",
+    "file": "assets/Show-BKMEmfGd.js",
     "name": "Show",
     "src": "resources/js/Pages/Shadowing/Show.jsx",
     "isDynamicEntry": true,
@@ -361,11 +361,11 @@
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
       "_confetti.module-DnkayJdC.js",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Study/Index.jsx": {
-    "file": "assets/Index-CYllycHA.js",
+    "file": "assets/Index-DOG18HvS.js",
     "name": "Index",
     "src": "resources/js/Pages/Study/Index.jsx",
     "isDynamicEntry": true,
@@ -373,33 +373,33 @@
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
       "_axios-DGWwXTkP.js",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Study/Practice.jsx": {
-    "file": "assets/Practice-h4mLg3ck.js",
+    "file": "assets/Practice-BFULYsct.js",
     "name": "Practice",
     "src": "resources/js/Pages/Study/Practice.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/VideoLearning/Index.jsx": {
-    "file": "assets/Index-b-ENZ3TW2.js",
+    "file": "assets/Index-UC5_JtVB2.js",
     "name": "Index",
     "src": "resources/js/Pages/VideoLearning/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_chunk-DPI0Y_ll.js",
       "resources/js/app.jsx",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/VideoLearning/Show.jsx": {
-    "file": "assets/Show-kmsLA3XL.js",
+    "file": "assets/Show-BQC7MsfR.js",
     "name": "Show",
     "src": "resources/js/Pages/VideoLearning/Show.jsx",
     "isDynamicEntry": true,
@@ -408,11 +408,11 @@
       "resources/js/app.jsx",
       "_axios-DGWwXTkP.js",
       "_confetti.module-DnkayJdC.js",
-      "_AuthenticatedLayout-DQ4zjwy4.js"
+      "_AuthenticatedLayout-ErTDhyMT.js"
     ]
   },
   "resources/js/Pages/Welcome.jsx": {
-    "file": "assets/Welcome-C-JhdrmR.js",
+    "file": "assets/Welcome-DoLJtHSy.js",
     "name": "Welcome",
     "src": "resources/js/Pages/Welcome.jsx",
     "isDynamicEntry": true,
@@ -431,7 +431,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DnY0hdFv.js",
+    "file": "assets/app-DQtkj_6j.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -475,7 +475,7 @@
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app-Br-EwCE-.css"
+      "assets/app-CDgi8jSd.css"
     ]
   },
   "resources/sass/app.scss": {
@@ -487,7 +487,7 @@
     "src": "resources/sass/app.scss",
     "isEntry": true,
     "css": [
-      "assets/app-Br-EwCE-.css"
+      "assets/app-CDgi8jSd.css"
     ]
   }
 }
