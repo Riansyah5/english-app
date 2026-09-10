@@ -33,7 +33,7 @@ export default function ExamIndex({ auth, exams = [] }) {
                                 Tersedia: <span className="font-bold text-slate-900">{exams.length} Paket Ujian</span>
                             </div>
                             <Link 
-                                href="/dashboard" 
+                                href="/home" 
                                 className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
                             >
                                 Ke Dashboard

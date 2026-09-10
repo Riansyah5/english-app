@@ -39,7 +39,7 @@ export default function LessonIndex({ auth, categories = [], completedLessonIds 
                                 Progres: <strong className="text-slate-900">{totalAllCompleted}</strong> / {totalAllLessons} Bab Selesai
                             </div>
                             <Link 
-                                href="/dashboard" 
+                                href="/home" 
                                 className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
                             >
                                 Ke Dashboard

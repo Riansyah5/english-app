@@ -42,18 +42,30 @@ export default function AuthenticatedLayout({ user, children }) {
             {/* Top Navigation Bar */}
             <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
+                    <div className="flex justify-between items-center h-16 gap-3">
                         
                         {/* Left Side: Logo & Main Navigation */}
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                            
+                            {/* Global Back Button */}
+                            {url !== '/home' && url !== '/' && (
+                                <button
+                                    onClick={() => window.history.back()}
+                                    className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all shrink-0"
+                                    title="Kembali ke halaman sebelumnya"
+                                >
+                                    <i className="bi bi-arrow-left text-lg"></i>
+                                </button>
+                            )}
+
                             {/* Brand Logo */}
-                            <Link href="/home" className="flex items-center gap-2.5 group">
-                                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-lg shadow-sm shadow-[#ff822d]/20 group-hover:scale-105 transition-transform duration-200">
+                            <Link href="/home" className="flex items-center gap-2.5 group shrink-0">
+                                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-lg shadow-sm shadow-[#ff822d]/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
                                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                                     </svg>
                                 </div>
-                                <div className="flex flex-col">
+                                <div className="flex flex-col whitespace-nowrap">
                                     <span className="font-black text-base tracking-tight text-slate-900 leading-tight">
                                         English<span className="text-[#ff822d]">App</span>
                                     </span>
@@ -64,14 +76,14 @@ export default function AuthenticatedLayout({ user, children }) {
                             </Link>
 
                             {/* Desktop Nav Items */}
-                            <div className="hidden xl:flex items-center gap-1 ml-4">
+                            <div className="hidden xl:flex items-center gap-0.5 2xl:gap-1 ml-1 2xl:ml-2 shrink-0">
                                 {navLinks.map((item) => {
                                     const isActive = item.match(url);
                                     return (
                                         <Link
                                             key={item.name}
                                             href={item.href}
-                                            className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all duration-200 ${
+                                            className={`px-2.5 2xl:px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
                                                 isActive
                                                     ? 'bg-slate-900 text-white shadow-xs'
                                                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
@@ -84,10 +96,10 @@ export default function AuthenticatedLayout({ user, children }) {
 
                                 {/* Admin Menu Dropdown (Desktop) */}
                                 {currentUser?.is_admin && (
-                                    <div className="relative" ref={adminMenuRef}>
+                                    <div className="relative shrink-0 ml-1" ref={adminMenuRef}>
                                         <button
                                             onClick={() => setAdminDropdownOpen(!adminDropdownOpen)}
-                                            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold transition-all duration-200 ${
+                                            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
                                                 url.startsWith('/admin')
                                                     ? 'bg-[#ff822d] text-white shadow-xs'
                                                     : 'text-[#c2410c] bg-[#ff822d]/10 hover:bg-[#ff822d]/20 border border-[#ff822d]/25'
@@ -107,7 +119,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link 
                                                     href="/admin/study-items" 
                                                     onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors"
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-card-text text-sm"></i>
                                                     <span>Bank Flashcard</span>
@@ -115,7 +127,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link 
                                                     href="/admin/lesson-categories" 
                                                     onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors"
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-bookmark text-sm"></i>
                                                     <span>Kategori Buku</span>
@@ -123,7 +135,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link 
                                                     href="/admin/lessons" 
                                                     onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors"
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-journal-text text-sm"></i>
                                                     <span>Tulis Bab Buku</span>
@@ -136,7 +148,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link 
                                                     href="/admin/video-folders" 
                                                     onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors"
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-folder-fill text-sm"></i>
                                                     <span>Folder Video</span>
@@ -144,7 +156,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link 
                                                     href="/admin/videos" 
                                                     onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors"
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-film text-sm"></i>
                                                     <span>Kelola Video</span>
@@ -152,7 +164,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link 
                                                     href="/admin/shadowing" 
                                                     onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#ff822d]/20 hover:text-[#c2410c] rounded-2xl transition-colors"
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#ff822d]/20 hover:text-[#c2410c] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-mic-fill text-sm"></i>
                                                     <span>Naskah Shadowing</span>
@@ -165,26 +177,26 @@ export default function AuthenticatedLayout({ user, children }) {
                         </div>
 
                         {/* Right Side: User Profile & Actions */}
-                        <div className="hidden sm:flex items-center gap-3">
-                            {/* Pro Learner Chip */}
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 flex items-center gap-1.5">
+                        <div className="hidden sm:flex items-center gap-2.5 shrink-0 ml-auto">
+                            {/* Pro Learner Chip (Hanya tampil di layar 2xl ke atas agar tidak berebut tempat dengan Admin Panel) */}
+                            <span className="hidden 2xl:inline-flex px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 items-center gap-1.5 whitespace-nowrap select-none">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] animate-pulse"></span>
                                 Pro Learner
                             </span>
 
                             {/* User Profile Dropdown Button */}
-                            <div className="relative" ref={profileMenuRef}>
+                            <div className="relative shrink-0" ref={profileMenuRef}>
                                 <button
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="flex items-center gap-2.5 p-1.5 pr-3 rounded-full bg-white border border-slate-200 shadow-2xs hover:bg-slate-50 transition-colors focus:outline-none"
+                                    className="flex items-center gap-2 p-1.5 pr-2.5 2xl:pr-3 rounded-full bg-white border border-slate-200 shadow-2xs hover:bg-slate-50 transition-colors focus:outline-none"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-xs shadow-xs">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-xs shadow-xs shrink-0">
                                         {userInitial}
                                     </div>
-                                    <span className="text-xs font-bold text-slate-800 max-w-[120px] truncate">
+                                    <span className="text-xs font-bold text-slate-800 max-w-[90px] 2xl:max-w-[130px] truncate">
                                         {currentUser?.name || 'User'}
                                     </span>
-                                    <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
@@ -201,26 +213,21 @@ export default function AuthenticatedLayout({ user, children }) {
                                             <Link
                                                 href="/profile"
                                                 onClick={() => setDropdownOpen(false)}
-                                                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-2xl transition-colors"
+                                                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-2xl transition-colors whitespace-nowrap"
                                             >
                                                 <i className="bi bi-person-gear text-sm text-slate-400"></i>
                                                 <span>Pengaturan Target & Akun</span>
                                             </Link>
 
-                                            <form method="POST" action="/logout">
-                                                <input
-                                                    type="hidden"
-                                                    name="_token"
-                                                    value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''}
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-2xl transition-colors text-left"
-                                                >
-                                                    <i className="bi bi-box-arrow-right text-sm"></i>
-                                                    <span>Keluar (Log Out)</span>
-                                                </button>
-                                            </form>
+                                            <Link 
+                                                href="/logout" 
+                                                method="post" 
+                                                as="button"
+                                                className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-2xl transition-colors text-left whitespace-nowrap"
+                                            >
+                                                <i className="bi bi-box-arrow-right text-sm"></i>
+                                                <span>Keluar (Log Out)</span>
+                                            </Link>
                                         </div>
                                     </div>
                                 )}
@@ -228,7 +235,7 @@ export default function AuthenticatedLayout({ user, children }) {
                         </div>
 
                         {/* Hamburger Button for Mobile */}
-                        <div className="flex items-center sm:hidden">
+                        <div className="flex items-center sm:hidden shrink-0">
                             <button
                                 onClick={() => setShowingNavigationDropdown(!showingNavigationDropdown)}
                                 className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-slate-900 focus:outline-none transition-colors"
@@ -288,41 +295,36 @@ export default function AuthenticatedLayout({ user, children }) {
                                     Admin Menu
                                 </div>
                                 <div className="grid grid-cols-2 gap-1 pt-1">
-                                    <Link href="/admin/study-items" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Bank Flashcard</Link>
-                                    <Link href="/admin/lesson-categories" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Kategori Buku</Link>
-                                    <Link href="/admin/lessons" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Tulis Bab</Link>
-                                    <Link href="/admin/video-folders" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Folder Video</Link>
-                                    <Link href="/admin/videos" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Kelola Video</Link>
-                                    <Link href="/admin/shadowing" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Naskah Shadowing</Link>
+                                    <Link href="/admin/study-items" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Bank Flashcard</Link>
+                                    <Link href="/admin/lesson-categories" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Kategori Buku</Link>
+                                    <Link href="/admin/lessons" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Tulis Bab</Link>
+                                    <Link href="/admin/video-folders" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Folder Video</Link>
+                                    <Link href="/admin/videos" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Kelola Video</Link>
+                                    <Link href="/admin/shadowing" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Naskah Shadowing</Link>
                                 </div>
                             </div>
                         )}
 
                         {/* User Account Info (Mobile) */}
                         <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-xs">
+                            <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-xs shrink-0">
                                     {userInitial}
                                 </div>
-                                <div className="truncate max-w-[180px]">
+                                <div className="truncate">
                                     <p className="text-xs font-bold text-slate-900 truncate">{currentUser?.name}</p>
                                     <p className="text-[10px] text-slate-400 truncate">{currentUser?.email}</p>
                                 </div>
                             </div>
 
-                            <form method="POST" action="/logout">
-                                <input
-                                    type="hidden"
-                                    name="_token"
-                                    value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''}
-                                />
-                                <button
-                                    type="submit"
-                                    className="px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors"
-                                >
-                                    Log Out
-                                </button>
-                            </form>
+                            <Link 
+                                href="/logout" 
+                                method="post" 
+                                as="button"
+                                className="px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors shrink-0 whitespace-nowrap"
+                            >
+                                Log Out
+                            </Link>
                         </div>
                     </div>
                 )}

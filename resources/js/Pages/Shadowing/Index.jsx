@@ -76,7 +76,7 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                                 Tersedia: <span className="font-bold text-slate-900">{topics.length} Topik</span> ({totalDialogues} Dialog)
                             </div>
                             <Link 
-                                href="/dashboard" 
+                                href="/home" 
                                 className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
                             >
                                 Ke Dashboard
