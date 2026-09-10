@@ -28,7 +28,7 @@ class StudyItemController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'content' => 'required|string|max:255',
+            'content' => 'required|string|max:255|unique:study_items,content',
             'type' => 'required|in:word,phrase,idiom,grammar_rule,speaking_prompt',
             'translation' => 'required|string|max:255',
             'example_sentence' => 'nullable|string',
@@ -77,7 +77,7 @@ class StudyItemController extends Controller
     public function update(Request $request, StudyItem $studyItem)
     {
         $request->validate([
-            'content' => 'required|string|max:255',
+            'content' => 'required|string|max:255|unique:study_items,content',
             'type' => 'required|in:word,phrase,idiom,grammar_rule,speaking_prompt',
             'translation' => 'required|string|max:255',
             'example_sentence' => 'nullable|string',
@@ -97,4 +97,65 @@ class StudyItemController extends Controller
         // menghapus StudyItem otomatis menghapus data user_flashcards yang terkait.
         return redirect()->route('admin.study-items.index')->with('success', 'Materi berhasil dihapus!');
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'items' => 'required|array',
+            'items.*.content' => 'required|string|max:255',
+            'items.*.type' => 'required|in:word,phrase,idiom,grammar_rule,speaking_prompt',
+            'items.*.translation' => 'required|string|max:255',
+            'items.*.example_sentence' => 'nullable|string',
+            'items.*.notes' => 'nullable|string',
+        ]);
+
+        $items = $request->items;
+        $skipped = 0;
+        $added = 0;
+        
+        $users = User::all();
+        $today = Carbon::today();
+        $now = Carbon::now();
+
+        foreach ($items as $itemData) {
+            // Cek duplikasi
+            if (StudyItem::where('content', $itemData['content'])->exists()) {
+                $skipped++;
+                continue;
+            }
+
+            // Insert study item
+            $studyItem = StudyItem::create([
+                'content' => $itemData['content'],
+                'type' => $itemData['type'],
+                'translation' => $itemData['translation'],
+                'example_sentence' => $itemData['example_sentence'] ?? null,
+                'notes' => $itemData['notes'] ?? null,
+            ]);
+
+            // Distribusikan
+            $flashcards = [];
+            foreach ($users as $user) {
+                $flashcards[] = [
+                    'user_id' => $user->id,
+                    'study_item_id' => $studyItem->id,
+                    'repetition_count' => 0,
+                    'ease_factor' => 2.5,
+                    'interval' => 0,
+                    'next_review_date' => $today,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            if (!empty($flashcards)) {
+                UserFlashcard::insert($flashcards);
+            }
+
+            $added++;
+        }
+
+        return redirect()->route('admin.study-items.index')->with('success', "Berhasil menambahkan {$added} materi baru. {$skipped} materi dilewati karena duplikat.");
+    }
+
 }

@@ -1,8 +1,81 @@
 import React from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
+import { useState, useRef, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
 
 export default function StudyItemCreate({ auth }) {
+    const [importing, setImporting] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const downloadTemplate = () => {
+        const ws = XLSX.utils.json_to_sheet([
+            { content: 'Apple', type: 'word', translation: 'Apel', example_sentence: 'I ate a red apple.', notes: 'Kata benda dasar' },
+            { content: 'Make up your mind', type: 'idiom', translation: 'Buat keputusan', example_sentence: 'You need to make up your mind soon.', notes: 'Sering dipakai dalam percakapan informal' }
+        ]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Template Materi");
+        XLSX.writeFile(wb, "Template_Import_Materi.xlsx");
+        setDropdownOpen(false);
+    };
+
+    const handleImportExcel = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setImporting(true);
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            try {
+                const bstr = evt.target.result;
+                const wb = XLSX.read(bstr, { type: 'binary' });
+                const wsname = wb.SheetNames[0];
+                const ws = wb.Sheets[wsname];
+                const data = XLSX.utils.sheet_to_json(ws);
+                
+                const mappedData = data.map(row => ({
+                    content: row.content || row.Content || row.CONTENT || '',
+                    type: row.type || row.Type || row.TYPE || 'word',
+                    translation: row.translation || row.Translation || row.TRANSLATION || '',
+                    example_sentence: row.example_sentence || row.Example_Sentence || row['Example Sentence'] || '',
+                    notes: row.notes || row.Notes || row.NOTES || ''
+                })).filter(item => item.content && item.translation);
+
+                if (mappedData.length === 0) {
+                    alert('Tidak ada data valid yang bisa diimpor. Pastikan format kolom Excel adalah: content, type, translation, example_sentence, notes.');
+                    setImporting(false);
+                    return;
+                }
+
+                router.post('/admin/study-items/import', { items: mappedData }, {
+                    onSuccess: () => {
+                        setImporting(false);
+                    },
+                    onError: (err) => {
+                        setImporting(false);
+                        alert('Terjadi kesalahan saat mengimpor data.');
+                        console.error(err);
+                    }
+                });
+            } catch (error) {
+                setImporting(false);
+                alert('Gagal membaca file Excel. Pastikan format file benar.');
+            }
+        };
+        reader.readAsBinaryString(file);
+    };
+
     const { data, setData, post, processing, errors } = useForm({
         content: '',
         type: 'word',
@@ -50,12 +123,60 @@ export default function StudyItemCreate({ auth }) {
                             </div>
                         </div>
 
-                        <Link 
-                            href="/admin/study-items" 
-                            className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
-                        >
-                            Batal & Kembali
-                        </Link>
+                        <div className="flex items-center gap-2">
+                            <div className="relative" ref={dropdownRef}>
+                                <button 
+                                    type="button"
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="px-4 py-2 bg-white border border-[#fcbf49] text-[#ff822d] hover:bg-[#fff9f2] font-bold text-xs rounded-2xl shadow-sm transition flex items-center gap-2"
+                                >
+                                    <i className="bi bi-file-earmark-excel-fill text-sm"></i>
+                                    <span className="hidden sm:inline">Import Excel</span>
+                                    <i className={`bi bi-chevron-down text-[10px] transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}></i>
+                                </button>
+                                
+                                {dropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-lg border border-slate-100 p-1 z-10 overflow-hidden">
+                                        <button 
+                                            type="button"
+                                            onClick={downloadTemplate}
+                                            className="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition flex items-center gap-2"
+                                        >
+                                            <i className="bi bi-download text-[#0d9488] text-sm"></i>
+                                            Download Template
+                                        </button>
+                                        <div className="h-px bg-slate-100 my-1 mx-2"></div>
+                                        <input 
+                                            type="file" 
+                                            accept=".xlsx, .xls, .csv" 
+                                            className="hidden" 
+                                            id="excel-upload"
+                                            onChange={(e) => {
+                                                setDropdownOpen(false);
+                                                handleImportExcel(e);
+                                            }}
+                                        />
+                                        <label 
+                                            htmlFor="excel-upload" 
+                                            className={`w-full cursor-pointer px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition flex items-center gap-2 ${importing ? 'opacity-50 pointer-events-none' : ''}`}
+                                        >
+                                            {importing ? (
+                                                <span className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-[#ff822d] border-t-transparent"></span>
+                                            ) : (
+                                                <i className="bi bi-upload text-[#ff822d] text-sm"></i>
+                                            )}
+                                            <span>Upload File Excel</span>
+                                        </label>
+                                    </div>
+                                )}
+                            </div>
+                            <Link 
+                                href="/admin/study-items" 
+                                className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-2xl shadow-sm hover:bg-slate-50 transition"
+                            >
+                                Batal
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Form Container Card */}
