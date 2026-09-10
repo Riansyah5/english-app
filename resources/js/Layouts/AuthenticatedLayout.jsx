@@ -3,9 +3,9 @@ import { Link, usePage } from '@inertiajs/react';
 
 export default function AuthenticatedLayout({ user, children }) {
     const { url } = usePage();
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
+    const [mobileAdminOpen, setMobileAdminOpen] = useState(false);
 
     const profileMenuRef = useRef(null);
     const adminMenuRef = useRef(null);
@@ -28,31 +28,31 @@ export default function AuthenticatedLayout({ user, children }) {
     const currentUser = user || {};
     const userInitial = currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
 
+    // Item navigasi desktop & mobile
     const navLinks = [
-        { name: 'Dashboard', href: '/home', match: (p) => p === '/home' || p === '/' },
-        { name: 'Flashcard', href: '/study', match: (p) => p.startsWith('/study') },
-        { name: 'Buku Digital', href: '/lessons', match: (p) => p.startsWith('/lessons') },
-        { name: 'Video Learning', href: '/video-learning', match: (p) => p.startsWith('/video-learning') },
-        { name: 'Shadowing', href: '/shadowing', match: (p) => p.startsWith('/shadowing') },
-        { name: 'Evaluasi (CBT)', href: '/exams', match: (p) => p.startsWith('/exams') },
+        { name: 'Home', href: '/home', icon: 'bi-house-door-fill', match: (p) => p === '/home' || p === '/' },
+        { name: 'Flashcard', href: '/study', icon: 'bi-card-text', match: (p) => p.startsWith('/study') },
+        { name: 'Buku', href: '/lessons', icon: 'bi-journal-bookmark-fill', match: (p) => p.startsWith('/lessons') },
+        { name: 'Video', href: '/video-learning', icon: 'bi-play-circle-fill', match: (p) => p.startsWith('/video-learning') },
+        { name: 'Shadowing', href: '/shadowing', icon: 'bi-mic-fill', match: (p) => p.startsWith('/shadowing') },
+        { name: 'CBT', href: '/exams', icon: 'bi-pencil-square', match: (p) => p.startsWith('/exams') },
     ];
 
     return (
         <div className="min-h-screen bg-[#fafcfb] text-slate-800 font-sans antialiased selection:bg-[#60f2ce]/40 selection:text-slate-900">
-            {/* Top Navigation Bar */}
-            <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+            
+            {/* Top Navigation Bar (Header Ringkas di Mobile, Lengkap di Desktop) */}
+            <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16 gap-3">
                         
-                        {/* Left Side: Logo & Main Navigation */}
+                        {/* Left Side: Back Button & Logo */}
                         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                            
-                            {/* Global Back Button */}
                             {url !== '/home' && url !== '/' && (
                                 <button
                                     onClick={() => window.history.back()}
-                                    className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all shrink-0"
-                                    title="Kembali ke halaman sebelumnya"
+                                    className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all shrink-0 active:scale-95"
+                                    title="Kembali"
                                 >
                                     <i className="bi bi-arrow-left text-lg"></i>
                                 </button>
@@ -75,7 +75,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                 </div>
                             </Link>
 
-                            {/* Desktop Nav Items */}
+                            {/* Desktop Nav Items (Hanya tampil di XL ke atas) */}
                             <div className="hidden xl:flex items-center gap-0.5 2xl:gap-1 ml-1 2xl:ml-2 shrink-0">
                                 {navLinks.map((item) => {
                                     const isActive = item.match(url);
@@ -116,56 +116,31 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                     Materi & Kursus
                                                 </div>
-                                                <Link 
-                                                    href="/admin/study-items" 
-                                                    onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
-                                                >
+                                                <Link href="/admin/study-items" onClick={() => setAdminDropdownOpen(false)} className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap">
                                                     <i className="bi bi-card-text text-sm"></i>
                                                     <span>Bank Flashcard</span>
                                                 </Link>
-                                                <Link 
-                                                    href="/admin/lesson-categories" 
-                                                    onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
-                                                >
+                                                <Link href="/admin/lesson-categories" onClick={() => setAdminDropdownOpen(false)} className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap">
                                                     <i className="bi bi-bookmark text-sm"></i>
                                                     <span>Kategori Buku</span>
                                                 </Link>
-                                                <Link 
-                                                    href="/admin/lessons" 
-                                                    onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
-                                                >
+                                                <Link href="/admin/lessons" onClick={() => setAdminDropdownOpen(false)} className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap">
                                                     <i className="bi bi-journal-text text-sm"></i>
                                                     <span>Tulis Bab Buku</span>
                                                 </Link>
-
                                                 <div className="border-t border-slate-100 my-1.5"></div>
                                                 <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                     Media & Evaluasi
                                                 </div>
-                                                <Link 
-                                                    href="/admin/video-folders" 
-                                                    onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap"
-                                                >
+                                                <Link href="/admin/video-folders" onClick={() => setAdminDropdownOpen(false)} className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap">
                                                     <i className="bi bi-folder-fill text-sm"></i>
                                                     <span>Folder Video</span>
                                                 </Link>
-                                                <Link 
-                                                    href="/admin/videos" 
-                                                    onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap"
-                                                >
+                                                <Link href="/admin/videos" onClick={() => setAdminDropdownOpen(false)} className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap">
                                                     <i className="bi bi-film text-sm"></i>
                                                     <span>Kelola Video</span>
                                                 </Link>
-                                                <Link 
-                                                    href="/admin/shadowing" 
-                                                    onClick={() => setAdminDropdownOpen(false)}
-                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#ff822d]/20 hover:text-[#c2410c] rounded-2xl transition-colors whitespace-nowrap"
-                                                >
+                                                <Link href="/admin/shadowing" onClick={() => setAdminDropdownOpen(false)} className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#ff822d]/20 hover:text-[#c2410c] rounded-2xl transition-colors whitespace-nowrap">
                                                     <i className="bi bi-mic-fill text-sm"></i>
                                                     <span>Naskah Shadowing</span>
                                                 </Link>
@@ -176,9 +151,21 @@ export default function AuthenticatedLayout({ user, children }) {
                             </div>
                         </div>
 
-                        {/* Right Side: User Profile & Actions */}
-                        <div className="hidden sm:flex items-center gap-2.5 shrink-0 ml-auto">
-                            {/* Pro Learner Chip (Hanya tampil di layar 2xl ke atas agar tidak berebut tempat dengan Admin Panel) */}
+                        {/* Right Side: Quick Admin (Mobile) & User Profile */}
+                        <div className="flex items-center gap-2 shrink-0 ml-auto">
+                            
+                            {/* Tombol Cepat Admin Khusus Layar Mobile */}
+                            {currentUser?.is_admin && (
+                                <button
+                                    onClick={() => setMobileAdminOpen(!mobileAdminOpen)}
+                                    className="xl:hidden w-9 h-9 rounded-full bg-[#ff822d]/10 text-[#c2410c] border border-[#ff822d]/30 flex items-center justify-center text-sm font-bold active:scale-95"
+                                    title="Menu Admin"
+                                >
+                                    <i className="bi bi-gear-wide-connected"></i>
+                                </button>
+                            )}
+
+                            {/* Pro Learner Chip (Desktop Lebar) */}
                             <span className="hidden 2xl:inline-flex px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 items-center gap-1.5 whitespace-nowrap select-none">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] animate-pulse"></span>
                                 Pro Learner
@@ -188,12 +175,12 @@ export default function AuthenticatedLayout({ user, children }) {
                             <div className="relative shrink-0" ref={profileMenuRef}>
                                 <button
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="flex items-center gap-2 p-1.5 pr-2.5 2xl:pr-3 rounded-full bg-white border border-slate-200 shadow-2xs hover:bg-slate-50 transition-colors focus:outline-none"
+                                    className="flex items-center gap-2 p-1.5 pr-2.5 sm:pr-3 rounded-full bg-white border border-slate-200 shadow-2xs hover:bg-slate-50 transition-colors focus:outline-none active:scale-95"
                                 >
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-xs shadow-xs shrink-0">
                                         {userInitial}
                                     </div>
-                                    <span className="text-xs font-bold text-slate-800 max-w-[90px] 2xl:max-w-[130px] truncate">
+                                    <span className="hidden sm:inline text-xs font-bold text-slate-800 max-w-[100px] truncate">
                                         {currentUser?.name || 'User'}
                                     </span>
                                     <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +203,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-2xl transition-colors whitespace-nowrap"
                                             >
                                                 <i className="bi bi-person-gear text-sm text-slate-400"></i>
-                                                <span>Pengaturan Target & Akun</span>
+                                                <span>Pengaturan Akun</span>
                                             </Link>
 
                                             <Link 
@@ -234,104 +221,66 @@ export default function AuthenticatedLayout({ user, children }) {
                             </div>
                         </div>
 
-                        {/* Hamburger Button for Mobile */}
-                        <div className="flex items-center sm:hidden shrink-0">
-                            <button
-                                onClick={() => setShowingNavigationDropdown(!showingNavigationDropdown)}
-                                className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-slate-900 focus:outline-none transition-colors"
-                                aria-label="Toggle navigation menu"
-                            >
-                                <svg className="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                    <path
-                                        className={!showingNavigationDropdown ? 'inline-flex' : 'hidden'}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2.5"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={showingNavigationDropdown ? 'inline-flex' : 'hidden'}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2.5"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-
                     </div>
                 </div>
 
-                {/* Mobile Responsive Navigation Menu */}
-                {showingNavigationDropdown && (
-                    <div className="sm:hidden border-b border-slate-100 bg-white/95 backdrop-blur-md px-4 pt-2 pb-5 space-y-3 animate-in slide-in-from-top-2 duration-150">
-                        {/* Nav Links */}
-                        <div className="space-y-1">
-                            {navLinks.map((item) => {
-                                const isActive = item.match(url);
-                                return (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        onClick={() => setShowingNavigationDropdown(false)}
-                                        className={`flex items-center justify-between px-4 py-2.5 rounded-2xl text-xs font-bold transition-colors ${
-                                            isActive
-                                                ? 'bg-slate-900 text-white'
-                                                : 'text-slate-700 hover:bg-slate-50'
-                                        }`}
-                                    >
-                                        <span>{item.name}</span>
-                                        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#60f2ce]"></span>}
-                                    </Link>
-                                );
-                            })}
+                {/* Popover Admin Khusus Mobile saat icon gear diklik */}
+                {mobileAdminOpen && currentUser?.is_admin && (
+                    <div className="xl:hidden border-t border-slate-100 bg-white/95 backdrop-blur-md px-4 py-3 animate-in slide-in-from-top-2 duration-150">
+                        <div className="text-[10px] font-bold text-[#c2410c] uppercase tracking-wider mb-2">
+                            Menu Admin Panel
                         </div>
-
-                        {/* Admin Group (Mobile) */}
-                        {currentUser?.is_admin && (
-                            <div className="pt-2 border-t border-slate-100">
-                                <div className="px-4 py-1 text-[10px] font-bold text-[#c2410c] uppercase tracking-wider">
-                                    Admin Menu
-                                </div>
-                                <div className="grid grid-cols-2 gap-1 pt-1">
-                                    <Link href="/admin/study-items" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Bank Flashcard</Link>
-                                    <Link href="/admin/lesson-categories" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Kategori Buku</Link>
-                                    <Link href="/admin/lessons" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Tulis Bab</Link>
-                                    <Link href="/admin/video-folders" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Folder Video</Link>
-                                    <Link href="/admin/videos" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Kelola Video</Link>
-                                    <Link href="/admin/shadowing" onClick={() => setShowingNavigationDropdown(false)} className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl truncate">Naskah Shadowing</Link>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* User Account Info (Mobile) */}
-                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                            <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-xs shrink-0">
-                                    {userInitial}
-                                </div>
-                                <div className="truncate">
-                                    <p className="text-xs font-bold text-slate-900 truncate">{currentUser?.name}</p>
-                                    <p className="text-[10px] text-slate-400 truncate">{currentUser?.email}</p>
-                                </div>
-                            </div>
-
-                            <Link 
-                                href="/logout" 
-                                method="post" 
-                                as="button"
-                                className="px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors shrink-0 whitespace-nowrap"
-                            >
-                                Log Out
-                            </Link>
+                        <div className="grid grid-cols-2 gap-1.5">
+                            <Link href="/admin/study-items" onClick={() => setMobileAdminOpen(false)} className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate">Bank Flashcard</Link>
+                            <Link href="/admin/lesson-categories" onClick={() => setMobileAdminOpen(false)} className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate">Kategori Buku</Link>
+                            <Link href="/admin/lessons" onClick={() => setMobileAdminOpen(false)} className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate">Tulis Bab</Link>
+                            <Link href="/admin/video-folders" onClick={() => setMobileAdminOpen(false)} className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate">Folder Video</Link>
+                            <Link href="/admin/videos" onClick={() => setMobileAdminOpen(false)} className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate">Kelola Video</Link>
+                            <Link href="/admin/shadowing" onClick={() => setMobileAdminOpen(false)} className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate">Naskah Shadowing</Link>
                         </div>
                     </div>
                 )}
             </nav>
 
-            {/* Page Content Container */}
-            <main>{children}</main>
+            {/* Page Content: Diberi pb-24 agar konten bawah tidak tertutup Bottom Bar di mobile */}
+            <main className="pb-24 xl:pb-6">{children}</main>
+
+            {/* ========================================================= */}
+            {/* MOBILE & PWA BOTTOM NAVIGATION BAR                        */}
+            {/* ========================================================= */}
+            <nav className="xl:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-t border-slate-200/80 shadow-[0_-4px_25px_rgba(0,0,0,0.06)] px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+                <div className="flex justify-around items-center max-w-lg mx-auto">
+                    {navLinks.map((item) => {
+                        const isActive = item.match(url);
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className={`flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all duration-150 active:scale-90 ${
+                                    isActive
+                                        ? 'text-[#ff822d]'
+                                        : 'text-slate-400 hover:text-slate-600'
+                                }`}
+                            >
+                                <div className={`relative flex items-center justify-center w-8 h-8 rounded-xl transition-all ${
+                                    isActive ? 'bg-[#ff822d]/10' : ''
+                                }`}>
+                                    <i className={`bi ${item.icon} text-lg leading-none`}></i>
+                                    {isActive && (
+                                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#ff822d]"></span>
+                                    )}
+                                </div>
+                                <span className={`text-[10px] font-bold tracking-tight mt-0.5 ${
+                                    isActive ? 'text-slate-900 font-extrabold' : 'text-slate-500'
+                                }`}>
+                                    {item.name}
+                                </span>
+                            </Link>
+                        );
+                    })}
+                </div>
+            </nav>
+
         </div>
     );
 }
