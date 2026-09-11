@@ -71,8 +71,27 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
         if (foundIndex !== -1 && foundIndex !== activeLine) {
             setActiveLine(foundIndex);
             const lineEl = document.getElementById(`line-${foundIndex}`);
-            if (lineEl && containerRef.current) {
-                lineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            const container = containerRef.current;
+
+            if (lineEl && container) {
+                const containerRect = container.getBoundingClientRect();
+                const lineRect = lineEl.getBoundingClientRect();
+                const isMobile = window.innerWidth < 1024;
+
+                let targetScrollTop;
+
+                if (isMobile) {
+                    // Mobile: Posisi baris aktif tepat berada di paling atas kontainer (tepat di bawah header) dengan padding 8px
+                    targetScrollTop = container.scrollTop + (lineRect.top - containerRect.top) - 8;
+                } else {
+                    // Desktop: Tetap di tengah layar kontainer
+                    targetScrollTop = container.scrollTop + (lineRect.top - containerRect.top) - (container.clientHeight / 2) + (lineEl.clientHeight / 2);
+                }
+
+                container.scrollTo({
+                    top: Math.max(0, targetScrollTop),
+                    behavior: 'smooth'
+                });
             }
         }
     };
@@ -253,7 +272,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
 
                         {/* 2. Interactive Transcript (Urutan 2 di Mobile -> TEPAT di bawah Video, Kolom Kanan di Desktop) */}
                         <div className="order-2 lg:col-span-5 lg:row-span-2">
-                            <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] flex flex-col h-[520px] sm:h-[600px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-6 overflow-hidden">
+                            <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] flex flex-col h-[420px] sm:h-[600px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-6 overflow-hidden">
                                 
                                 {/* Transcript Header */}
                                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-white z-10">
@@ -269,8 +288,8 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                     <span className="w-2.5 h-2.5 rounded-full bg-[#60f2ce] animate-ping"></span>
                                 </div>
 
-                                {/* Transcript Content */}
-                                <div className="flex-grow overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3" ref={containerRef} id="transcript-container">
+                                {/* Transcript Content (relative agar scroll terisolasi di dalam container ini) */}
+                                <div className="relative flex-grow overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3" ref={containerRef} id="transcript-container">
                                     {video?.transcripts && video?.transcripts.length > 0 ? (
                                         video?.transcripts.map((transcript, idx) => {
                                             const isActive = activeLine === idx;

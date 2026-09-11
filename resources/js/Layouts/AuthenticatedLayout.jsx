@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import { motion } from "framer-motion";
 
 export default function AuthenticatedLayout({ user, children }) {
@@ -7,6 +7,12 @@ export default function AuthenticatedLayout({ user, children }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
     const [mobileAdminOpen, setMobileAdminOpen] = useState(false);
+
+    // State & Ref untuk Pull-to-Refresh
+    const [isPulling, setIsPulling] = useState(false);
+    const [pullDistance, setPullDistance] = useState(0);
+    const touchStartY = useRef(0);
+    const isDragging = useRef(false);
 
     const profileMenuRef = useRef(null);
     const adminMenuRef = useRef(null);
@@ -32,6 +38,68 @@ export default function AuthenticatedLayout({ user, children }) {
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    // Listener Touch Event untuk Gesture Pull-to-Refresh
+    useEffect(() => {
+        const handleTouchStart = (e) => {
+            // Hanya aktif jika posisi scroll halaman berada tepat di paling atas
+            if (window.scrollY === 0) {
+                touchStartY.current = e.touches[0].clientY;
+                isDragging.current = true;
+            }
+        };
+
+        const handleTouchMove = (e) => {
+            if (!isDragging.current) return;
+
+            const currentY = e.touches[0].clientY;
+            const diff = currentY - touchStartY.current;
+
+            // Jika ditarik ke bawah saat di puncak halaman
+            if (diff > 0 && window.scrollY === 0) {
+                // Efek resistensi redaman elastis (maksimum geser 72px)
+                const distance = Math.min(diff * 0.4, 72);
+                setPullDistance(distance);
+            } else {
+                setPullDistance(0);
+            }
+        };
+
+        const handleTouchEnd = () => {
+            if (!isDragging.current) return;
+            isDragging.current = false;
+
+            // Threshold jarak tarikan untuk memicu reload (>= 48px)
+            if (pullDistance >= 48) {
+                setIsPulling(true);
+                setPullDistance(52); // Posisi holding saat loading
+
+                router.reload({
+                    onFinish: () => {
+                        setIsPulling(false);
+                        setPullDistance(0);
+                    },
+                    onError: () => {
+                        setIsPulling(false);
+                        setPullDistance(0);
+                    },
+                });
+            } else {
+                setPullDistance(0);
+            }
+            touchStartY.current = 0;
+        };
+
+        window.addEventListener("touchstart", handleTouchStart, { passive: true });
+        window.addEventListener("touchmove", handleTouchMove, { passive: true });
+        window.addEventListener("touchend", handleTouchEnd);
+
+        return () => {
+            window.removeEventListener("touchstart", handleTouchStart);
+            window.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("touchend", handleTouchEnd);
+        };
+    }, [pullDistance]);
 
     const currentUser = user || {};
     const userInitial = currentUser?.name
@@ -80,7 +148,29 @@ export default function AuthenticatedLayout({ user, children }) {
 
     return (
         <div className="min-h-screen bg-[#fafcfb] text-slate-800 font-sans antialiased selection:bg-[#60f2ce]/40 selection:text-slate-900">
-            {/* Top Navigation Bar (Header Ringkas di Mobile, Lengkap di Desktop) */}
+            {/* Indikator Animasi Pull-to-Refresh */}
+            <div
+                style={{
+                    transform: `translate3d(0, ${pullDistance}px, 0)`,
+                    transition: isDragging.current ? "none" : "transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    opacity: pullDistance > 10 || isPulling ? 1 : 0,
+                }}
+                className="fixed top-14 left-0 right-0 z-30 flex justify-center pointer-events-none"
+            >
+                <div className="w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-[0_8px_20px_rgba(0,0,0,0.12)] flex items-center justify-center text-[#ff822d]">
+                    <i
+                        className={`bi bi-arrow-clockwise text-xl ${
+                            isPulling ? "animate-spin" : ""
+                        }`}
+                        style={{
+                            transform: isPulling ? "none" : `rotate(${pullDistance * 6}deg)`,
+                            transition: isPulling ? "none" : "transform 0.1s linear",
+                        }}
+                    />
+                </div>
+            </div>
+
+            {/* Top Navigation Bar */}
             <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16 gap-3">
@@ -101,14 +191,12 @@ export default function AuthenticatedLayout({ user, children }) {
                                 href="/home"
                                 className="flex items-center gap-2.5 group shrink-0"
                             >
-                                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-lg shadow-sm shadow-[#ff822d]/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
-                                    <svg
-                                        className="w-5 h-5"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                                    </svg>
+                                <div className="w-10 h-10 rounded-2xl text-white flex items-center justify-center font-black text-lg shadow-sm shadow-[#ff822d]/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
+                                    <img
+                                        src="/icons/icon-512x512.png"
+                                        alt="Logo"
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
                                 <div className="flex flex-col whitespace-nowrap">
                                     <span className="font-black text-base tracking-tight text-slate-900 leading-tight">
@@ -123,7 +211,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                 </div>
                             </Link>
 
-                            {/* Desktop Nav Items (Hanya tampil di XL ke atas) */}
+                            {/* Desktop Nav Items (Tampil di XL ke atas) */}
                             <div className="hidden xl:flex items-center gap-0.5 2xl:gap-1 ml-1 2xl:ml-2 shrink-0">
                                 {navLinks.map((item) => {
                                     const isActive = item.match(url);
@@ -162,7 +250,11 @@ export default function AuthenticatedLayout({ user, children }) {
                                         >
                                             <span>Admin Panel</span>
                                             <svg
-                                                className={`w-3.5 h-3.5 transition-transform duration-200 ${adminDropdownOpen ? "rotate-180" : ""}`}
+                                                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                                                    adminDropdownOpen
+                                                        ? "rotate-180"
+                                                        : ""
+                                                }`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -184,9 +276,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link
                                                     href="/admin/study-items"
                                                     onClick={() =>
-                                                        setAdminDropdownOpen(
-                                                            false,
-                                                        )
+                                                        setAdminDropdownOpen(false)
                                                     }
                                                     className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
@@ -196,9 +286,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link
                                                     href="/admin/lesson-categories"
                                                     onClick={() =>
-                                                        setAdminDropdownOpen(
-                                                            false,
-                                                        )
+                                                        setAdminDropdownOpen(false)
                                                     }
                                                     className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
@@ -208,9 +296,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link
                                                     href="/admin/lessons"
                                                     onClick={() =>
-                                                        setAdminDropdownOpen(
-                                                            false,
-                                                        )
+                                                        setAdminDropdownOpen(false)
                                                     }
                                                     className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#60f2ce]/20 hover:text-[#0d9488] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
@@ -224,9 +310,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link
                                                     href="/admin/video-folders"
                                                     onClick={() =>
-                                                        setAdminDropdownOpen(
-                                                            false,
-                                                        )
+                                                        setAdminDropdownOpen(false)
                                                     }
                                                     className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
@@ -236,9 +320,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link
                                                     href="/admin/videos"
                                                     onClick={() =>
-                                                        setAdminDropdownOpen(
-                                                            false,
-                                                        )
+                                                        setAdminDropdownOpen(false)
                                                     }
                                                     className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#fcbf49]/20 hover:text-[#b45309] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
@@ -248,16 +330,12 @@ export default function AuthenticatedLayout({ user, children }) {
                                                 <Link
                                                     href="/admin/shadowing"
                                                     onClick={() =>
-                                                        setAdminDropdownOpen(
-                                                            false,
-                                                        )
+                                                        setAdminDropdownOpen(false)
                                                     }
                                                     className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#ff822d]/20 hover:text-[#c2410c] rounded-2xl transition-colors whitespace-nowrap"
                                                 >
                                                     <i className="bi bi-mic-fill text-sm"></i>
-                                                    <span>
-                                                        Naskah Shadowing
-                                                    </span>
+                                                    <span>Naskah Shadowing</span>
                                                 </Link>
                                             </div>
                                         )}
@@ -281,7 +359,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                 </button>
                             )}
 
-                            {/* Pro Learner Chip (Desktop Lebar) */}
+                            {/* Pro Learner Chip */}
                             <span className="hidden 2xl:inline-flex px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 items-center gap-1.5 whitespace-nowrap select-none">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] animate-pulse"></span>
                                 Pro Learner
@@ -360,7 +438,7 @@ export default function AuthenticatedLayout({ user, children }) {
                     </div>
                 </div>
 
-                {/* Popover Admin Khusus Mobile saat icon gear diklik */}
+                {/* Popover Admin Khusus Mobile */}
                 {mobileAdminOpen && currentUser?.is_admin && (
                     <div className="xl:hidden border-t border-slate-100 bg-white/95 backdrop-blur-md px-4 py-3 animate-in slide-in-from-top-2 duration-150">
                         <div className="text-[10px] font-bold text-[#c2410c] uppercase tracking-wider mb-2">
@@ -398,7 +476,7 @@ export default function AuthenticatedLayout({ user, children }) {
                             <Link
                                 href="/admin/videos"
                                 onClick={() => setMobileAdminOpen(false)}
-                                className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate"
+                                className="px-3 py-2 text-xs font-semibold bg-slate-700 text-white rounded-xl truncate"
                             >
                                 Kelola Video
                             </Link>
@@ -414,12 +492,10 @@ export default function AuthenticatedLayout({ user, children }) {
                 )}
             </nav>
 
-            {/* Page Content: Diberi pb-24 agar konten bawah tidak tertutup Bottom Bar di mobile */}
+            {/* Konten Utama */}
             <main className="pb-24 xl:pb-6">{children}</main>
 
-            {/* ========================================================= */}
-            {/* MOBILE & PWA BOTTOM NAVIGATION BAR (SMOOTH SLIDING PILL)  */}
-            {/* ========================================================= */}
+            {/* Bottom Navigation Bar Mobile */}
             <nav className="xl:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-x border-slate-200/70 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.08)] px-2 pt-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] select-none">
                 <div className="flex items-center justify-around max-w-lg mx-auto">
                     {navLinks.map((item) => {
@@ -430,7 +506,6 @@ export default function AuthenticatedLayout({ user, children }) {
                                 href={item.href}
                                 className="relative flex flex-col items-center justify-center flex-1 py-1.5 px-0.5 rounded-2xl active:scale-95 transition-transform"
                             >
-                                {/* Background Pill yang meluncur mulus */}
                                 {isActive && (
                                     <motion.div
                                         layoutId="activeTabPill"
@@ -443,7 +518,6 @@ export default function AuthenticatedLayout({ user, children }) {
                                     />
                                 )}
 
-                                {/* Ikon & Titik Indikator */}
                                 <div className="relative z-10 flex items-center justify-center w-7 h-7">
                                     <i
                                         className={`bi ${item.icon} text-lg transition-colors duration-200 ${
@@ -465,7 +539,6 @@ export default function AuthenticatedLayout({ user, children }) {
                                     )}
                                 </div>
 
-                                {/* Label Teks */}
                                 <span
                                     className={`relative z-10 text-[10px] tracking-tight mt-0.5 transition-colors duration-200 ${
                                         isActive

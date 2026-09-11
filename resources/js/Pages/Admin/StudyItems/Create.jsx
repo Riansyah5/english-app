@@ -1,8 +1,8 @@
-import React from 'react';
-import { Head, Link, useForm, router } from '@inertiajs/react';
-import { useState, useRef, useEffect } from 'react';
-import * as XLSX from 'xlsx';
-import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
+import React from "react";
+import { Head, Link, useForm, router } from "@inertiajs/react";
+import { useState, useRef, useEffect } from "react";
+import * as XLSX from "xlsx";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 
 export default function StudyItemCreate({ auth }) {
     const [importing, setImporting] = useState(false);
@@ -11,18 +11,34 @@ export default function StudyItemCreate({ auth }) {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
                 setDropdownOpen(false);
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const downloadTemplate = () => {
         const ws = XLSX.utils.json_to_sheet([
-            { content: 'Apple', type: 'word', translation: 'Apel', example_sentence: 'I ate a red apple.', notes: 'Kata benda dasar' },
-            { content: 'Make up your mind', type: 'idiom', translation: 'Buat keputusan', example_sentence: 'You need to make up your mind soon.', notes: 'Sering dipakai dalam percakapan informal' }
+            {
+                content: "Apple",
+                type: "word",
+                translation: "Apel",
+                example_sentence: "I ate a red apple.",
+                notes: "Kata benda dasar",
+            },
+            {
+                content: "Make up your mind",
+                type: "idiom",
+                translation: "Buat keputusan",
+                example_sentence: "You need to make up your mind soon.",
+                notes: "Sering dipakai dalam percakapan informal",
+            },
         ]);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Template Materi");
@@ -39,54 +55,71 @@ export default function StudyItemCreate({ auth }) {
         reader.onload = (evt) => {
             try {
                 const bstr = evt.target.result;
-                const wb = XLSX.read(bstr, { type: 'binary' });
+                const wb = XLSX.read(bstr, { type: "binary" });
                 const wsname = wb.SheetNames[0];
                 const ws = wb.Sheets[wsname];
                 const data = XLSX.utils.sheet_to_json(ws);
-                
-                const mappedData = data.map(row => ({
-                    content: row.content || row.Content || row.CONTENT || '',
-                    type: row.type || row.Type || row.TYPE || 'word',
-                    translation: row.translation || row.Translation || row.TRANSLATION || '',
-                    example_sentence: row.example_sentence || row.Example_Sentence || row['Example Sentence'] || '',
-                    notes: row.notes || row.Notes || row.NOTES || ''
-                })).filter(item => item.content && item.translation);
+
+                const mappedData = data
+                    .map((row) => ({
+                        content:
+                            row.content || row.Content || row.CONTENT || "",
+                        type: row.type || row.Type || row.TYPE || "word",
+                        translation:
+                            row.translation ||
+                            row.Translation ||
+                            row.TRANSLATION ||
+                            "",
+                        example_sentence:
+                            row.example_sentence ||
+                            row.Example_Sentence ||
+                            row["Example Sentence"] ||
+                            "",
+                        notes: row.notes || row.Notes || row.NOTES || "",
+                    }))
+                    .filter((item) => item.content && item.translation);
 
                 if (mappedData.length === 0) {
-                    alert('Tidak ada data valid yang bisa diimpor. Pastikan format kolom Excel adalah: content, type, translation, example_sentence, notes.');
+                    alert(
+                        "Tidak ada data valid yang bisa diimpor. Pastikan format kolom Excel adalah: content, type, translation, example_sentence, notes.",
+                    );
                     setImporting(false);
                     return;
                 }
 
-                router.post('/admin/study-items/import', { items: mappedData }, {
-                    onSuccess: () => {
-                        setImporting(false);
+                router.post(
+                    "/admin/study-items/import",
+                    { items: mappedData },
+                    {
+                        onSuccess: () => {
+                            setImporting(false);
+                        },
+                        onError: (err) => {
+                            setImporting(false);
+                            alert("Terjadi kesalahan saat mengimpor data.");
+                            console.error(err);
+                        },
                     },
-                    onError: (err) => {
-                        setImporting(false);
-                        alert('Terjadi kesalahan saat mengimpor data.');
-                        console.error(err);
-                    }
-                });
+                );
             } catch (error) {
                 setImporting(false);
-                alert('Gagal membaca file Excel. Pastikan format file benar.');
+                alert("Gagal membaca file Excel. Pastikan format file benar.");
             }
         };
         reader.readAsBinaryString(file);
     };
 
     const { data, setData, post, processing, errors } = useForm({
-        content: '',
-        type: 'word',
-        translation: '',
-        example_sentence: '',
-        notes: ''
+        content: "",
+        type: "word",
+        translation: "",
+        example_sentence: "",
+        notes: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post('/admin/study-items');
+        post("/admin/study-items");
     };
 
     return (
@@ -95,84 +128,110 @@ export default function StudyItemCreate({ auth }) {
 
             <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
                 <div className="max-w-3xl mx-auto space-y-7">
-                    
                     {/* Top Bar Header */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3.5">
-                            <Link 
-                                href="/admin/study-items" 
-                                className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all"
+                    <div className="flex items-center justify-between gap-3">
+                        {/* Kiri: Tombol Kembali + Judul & Badge */}
+                        <div className="flex items-center gap-2 sm:gap-3.5 min-w-0">
+                            <Link
+                                href="/admin/study-items"
+                                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all shrink-0 active:scale-95"
                                 title="Kembali ke Bank Materi"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/>
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2.5"
+                                        d="M15 19l-7-7 7-7"
+                                    />
                                 </svg>
                             </Link>
-                            <div>
-                                <div className="flex items-center gap-2">
-                                    <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-                                        Tambah Materi Baru 📝
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-1.5 sm:gap-2">
+                                    <h1 className="text-base sm:text-2xl font-extrabold tracking-tight text-slate-900 truncate">
+                                        Tambah Materi 📝
                                     </h1>
-                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                    <span className="shrink-0 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
                                         Form Entri
                                     </span>
                                 </div>
-                                <p className="text-xs text-slate-400 font-medium mt-0.5">
-                                    Masukkan kosakata, frasa, atau aturan grammar baru ke bank materi.
+                                <p className="text-[11px] sm:text-xs text-slate-400 font-medium mt-0.5 truncate hidden xs:block">
+                                    Masukkan kosakata, frasa, atau aturan
+                                    grammar baru.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        {/* Kanan: Dropdown Import & Tombol Batal */}
+                        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                             <div className="relative" ref={dropdownRef}>
-                                <button 
+                                <button
                                     type="button"
-                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="px-4 py-2 bg-white border border-[#fcbf49] text-[#ff822d] hover:bg-[#fff9f2] font-bold text-xs rounded-2xl shadow-sm transition flex items-center gap-2"
+                                    onClick={() =>
+                                        setDropdownOpen(!dropdownOpen)
+                                    }
+                                    className="px-2.5 sm:px-4 py-1.5 sm:py-2 bg-white border border-[#fcbf49] text-[#ff822d] hover:bg-[#fff9f2] font-bold text-[11px] sm:text-xs rounded-xl sm:rounded-2xl shadow-xs transition flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95"
                                 >
-                                    <i className="bi bi-file-earmark-excel-fill text-sm"></i>
-                                    <span className="hidden sm:inline">Import Excel</span>
-                                    <i className={`bi bi-chevron-down text-[10px] transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}></i>
+                                    <i className="bi bi-file-earmark-excel-fill text-xs sm:text-sm"></i>
+                                    <span className="hidden xs:inline">
+                                        Import
+                                    </span>
+                                    <span className="hidden sm:inline">
+                                        Excel
+                                    </span>
+                                    <i
+                                        className={`bi bi-chevron-down text-[9px] sm:text-[10px] transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                                    ></i>
                                 </button>
-                                
+
                                 {dropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-lg border border-slate-100 p-1 z-10 overflow-hidden">
-                                        <button 
+                                    <div className="absolute right-0 mt-2 w-48 sm:w-52 bg-white rounded-2xl shadow-xl border border-slate-100 p-1 z-30 overflow-hidden">
+                                        <button
                                             type="button"
                                             onClick={downloadTemplate}
-                                            className="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition flex items-center gap-2"
+                                            className="w-full text-left px-3 sm:px-4 py-2 sm:py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition flex items-center gap-2"
                                         >
                                             <i className="bi bi-download text-[#0d9488] text-sm"></i>
-                                            Download Template
+                                            <span className="truncate">
+                                                Download Template
+                                            </span>
                                         </button>
                                         <div className="h-px bg-slate-100 my-1 mx-2"></div>
-                                        <input 
-                                            type="file" 
-                                            accept=".xlsx, .xls, .csv" 
-                                            className="hidden" 
+                                        <input
+                                            type="file"
+                                            accept=".xlsx, .xls, .csv"
+                                            className="hidden"
                                             id="excel-upload"
                                             onChange={(e) => {
                                                 setDropdownOpen(false);
                                                 handleImportExcel(e);
                                             }}
                                         />
-                                        <label 
-                                            htmlFor="excel-upload" 
-                                            className={`w-full cursor-pointer px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition flex items-center gap-2 ${importing ? 'opacity-50 pointer-events-none' : ''}`}
+                                        <label
+                                            htmlFor="excel-upload"
+                                            className={`w-full cursor-pointer px-3 sm:px-4 py-2 sm:py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition flex items-center gap-2 ${importing ? "opacity-50 pointer-events-none" : ""}`}
                                         >
                                             {importing ? (
-                                                <span className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-[#ff822d] border-t-transparent"></span>
+                                                <span className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-[#ff822d] border-t-transparent shrink-0"></span>
                                             ) : (
-                                                <i className="bi bi-upload text-[#ff822d] text-sm"></i>
+                                                <i className="bi bi-upload text-[#ff822d] text-sm shrink-0"></i>
                                             )}
-                                            <span>Upload File Excel</span>
+                                            <span className="truncate">
+                                                Upload File Excel
+                                            </span>
                                         </label>
                                     </div>
                                 )}
                             </div>
-                            <Link 
-                                href="/admin/study-items" 
-                                className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-2xl shadow-sm hover:bg-slate-50 transition"
+
+                            <Link
+                                href="/admin/study-items"
+                                className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-2xl shadow-xs hover:bg-slate-50 transition whitespace-nowrap"
                             >
                                 Batal
                             </Link>
@@ -182,125 +241,209 @@ export default function StudyItemCreate({ auth }) {
                     {/* Form Container Card */}
                     <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-9 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
                         <form onSubmit={submit} className="space-y-6">
-                            
                             {/* Input Rows: Content & Type */}
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                                 <div className="md:col-span-8">
-                                    <label htmlFor="content" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                        Teks (Bahasa Inggris) <span className="text-[#ff822d]">*</span>
+                                    <label
+                                        htmlFor="content"
+                                        className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                    >
+                                        Teks (Bahasa Inggris){" "}
+                                        <span className="text-[#ff822d]">
+                                            *
+                                        </span>
                                     </label>
-                                    <input 
-                                        type="text" 
-                                        id="content" 
-                                        value={data.content} 
-                                        onChange={e => setData('content', e.target.value)}
+                                    <input
+                                        type="text"
+                                        id="content"
+                                        value={data.content}
+                                        onChange={(e) =>
+                                            setData("content", e.target.value)
+                                        }
                                         placeholder="Contoh: Make up your mind"
                                         className={`w-full px-4 py-3 rounded-2xl border text-sm font-semibold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
-                                            errors.content ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
+                                            errors.content
+                                                ? "border-rose-400 bg-rose-50/30"
+                                                : "border-slate-200"
                                         } text-slate-900 placeholder:text-slate-400 shadow-2xs`}
                                         required
                                         autoFocus
                                     />
-                                    {errors.content && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.content}</p>}
+                                    {errors.content && (
+                                        <p className="text-rose-500 text-xs font-semibold mt-1.5">
+                                            {errors.content}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="md:col-span-4">
-                                    <label htmlFor="type" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                        Tipe Materi <span className="text-[#ff822d]">*</span>
+                                    <label
+                                        htmlFor="type"
+                                        className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                    >
+                                        Tipe Materi{" "}
+                                        <span className="text-[#ff822d]">
+                                            *
+                                        </span>
                                     </label>
-                                    <select 
-                                        id="type" 
-                                        value={data.type} 
-                                        onChange={e => setData('type', e.target.value)}
+                                    <select
+                                        id="type"
+                                        value={data.type}
+                                        onChange={(e) =>
+                                            setData("type", e.target.value)
+                                        }
                                         className={`w-full px-4 py-3 rounded-2xl border text-xs font-bold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
-                                            errors.type ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
+                                            errors.type
+                                                ? "border-rose-400 bg-rose-50/30"
+                                                : "border-slate-200"
                                         } text-slate-800 shadow-2xs`}
                                         required
                                     >
-                                        <option value="word">Word (Kata Tunggal)</option>
-                                        <option value="phrase">Phrase (Frasa)</option>
+                                        <option value="word">
+                                            Word (Kata Tunggal)
+                                        </option>
+                                        <option value="phrase">
+                                            Phrase (Frasa)
+                                        </option>
                                         <option value="idiom">Idiom</option>
-                                        <option value="grammar_rule">Grammar Rule</option>
-                                        <option value="speaking_prompt">Speaking Prompt</option>
+                                        <option value="grammar_rule">
+                                            Grammar Rule
+                                        </option>
+                                        <option value="speaking_prompt">
+                                            Speaking Prompt
+                                        </option>
                                     </select>
-                                    {errors.type && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.type}</p>}
+                                    {errors.type && (
+                                        <p className="text-rose-500 text-xs font-semibold mt-1.5">
+                                            {errors.type}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
                             {/* Translation Input */}
                             <div>
-                                <label htmlFor="translation" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Terjemahan (Bahasa Indonesia) <span className="text-[#ff822d]">*</span>
+                                <label
+                                    htmlFor="translation"
+                                    className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                >
+                                    Terjemahan (Bahasa Indonesia){" "}
+                                    <span className="text-[#ff822d]">*</span>
                                 </label>
-                                <input 
-                                    type="text" 
-                                    id="translation" 
-                                    value={data.translation} 
-                                    onChange={e => setData('translation', e.target.value)}
+                                <input
+                                    type="text"
+                                    id="translation"
+                                    value={data.translation}
+                                    onChange={(e) =>
+                                        setData("translation", e.target.value)
+                                    }
                                     placeholder="Contoh: Buatlah keputusan / Putuskanlah"
                                     className={`w-full px-4 py-3 rounded-2xl border text-sm font-semibold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
-                                        errors.translation ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
+                                        errors.translation
+                                            ? "border-rose-400 bg-rose-50/30"
+                                            : "border-slate-200"
                                     } text-slate-900 placeholder:text-slate-400 shadow-2xs`}
                                     required
                                 />
-                                {errors.translation && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.translation}</p>}
+                                {errors.translation && (
+                                    <p className="text-rose-500 text-xs font-semibold mt-1.5">
+                                        {errors.translation}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Example Sentence Input */}
                             <div>
-                                <label htmlFor="example_sentence" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Contoh Kalimat <span className="font-medium normal-case text-slate-400">(Opsional)</span>
+                                <label
+                                    htmlFor="example_sentence"
+                                    className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                >
+                                    Contoh Kalimat{" "}
+                                    <span className="font-medium normal-case text-slate-400">
+                                        (Opsional)
+                                    </span>
                                 </label>
-                                <textarea 
-                                    id="example_sentence" 
-                                    value={data.example_sentence} 
-                                    onChange={e => setData('example_sentence', e.target.value)}
+                                <textarea
+                                    id="example_sentence"
+                                    value={data.example_sentence}
+                                    onChange={(e) =>
+                                        setData(
+                                            "example_sentence",
+                                            e.target.value,
+                                        )
+                                    }
                                     rows="3"
                                     placeholder="Contoh: You need to make up your mind before the deadline."
                                     className={`w-full p-4 rounded-2xl border text-xs sm:text-sm font-medium bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all leading-relaxed ${
-                                        errors.example_sentence ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
+                                        errors.example_sentence
+                                            ? "border-rose-400 bg-rose-50/30"
+                                            : "border-slate-200"
                                     } text-slate-900 placeholder:text-slate-400 shadow-2xs`}
                                 />
-                                
+
                                 {/* Info Banner */}
                                 <div className="mt-2 p-3 bg-[#60f2ce]/15 rounded-2xl border border-[#60f2ce]/40 flex gap-2.5 items-start text-xs text-[#0d9488]">
                                     <i className="bi bi-lightbulb-fill text-sm shrink-0"></i>
-                                    <span className="font-medium">Sangat disarankan mengisi contoh kalimat agar siswa dapat memahami konteks penggunaan nyata materi.</span>
+                                    <span className="font-medium">
+                                        Sangat disarankan mengisi contoh kalimat
+                                        agar siswa dapat memahami konteks
+                                        penggunaan nyata materi.
+                                    </span>
                                 </div>
-                                {errors.example_sentence && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.example_sentence}</p>}
+                                {errors.example_sentence && (
+                                    <p className="text-rose-500 text-xs font-semibold mt-1.5">
+                                        {errors.example_sentence}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Additional Notes Input */}
                             <div>
-                                <label htmlFor="notes" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Catatan Tambahan <span className="font-medium normal-case text-slate-400">(Opsional)</span>
+                                <label
+                                    htmlFor="notes"
+                                    className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                >
+                                    Catatan Tambahan{" "}
+                                    <span className="font-medium normal-case text-slate-400">
+                                        (Opsional)
+                                    </span>
                                 </label>
-                                <textarea 
-                                    id="notes" 
-                                    value={data.notes} 
-                                    onChange={e => setData('notes', e.target.value)}
+                                <textarea
+                                    id="notes"
+                                    value={data.notes}
+                                    onChange={(e) =>
+                                        setData("notes", e.target.value)
+                                    }
                                     rows="2"
                                     placeholder="Contoh: Sangat umum digunakan dalam percakapan informal sehari-hari."
                                     className={`w-full p-4 rounded-2xl border text-xs sm:text-sm font-medium bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all leading-relaxed ${
-                                        errors.notes ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
+                                        errors.notes
+                                            ? "border-rose-400 bg-rose-50/30"
+                                            : "border-slate-200"
                                     } text-slate-900 placeholder:text-slate-400 shadow-2xs`}
                                 />
-                                {errors.notes && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.notes}</p>}
+                                {errors.notes && (
+                                    <p className="text-rose-500 text-xs font-semibold mt-1.5">
+                                        {errors.notes}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Actions Bar */}
                             <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-                                <Link 
-                                    href="/admin/study-items" 
+                                <Link
+                                    href="/admin/study-items"
                                     className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl transition shadow-2xs"
                                 >
                                     Batal
                                 </Link>
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     disabled={processing}
                                     className={`inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-xs rounded-2xl shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition-all ${
-                                        processing ? 'opacity-70 cursor-not-allowed' : ''
+                                        processing
+                                            ? "opacity-70 cursor-not-allowed"
+                                            : ""
                                     }`}
                                 >
                                     {processing ? (
@@ -316,10 +459,8 @@ export default function StudyItemCreate({ auth }) {
                                     )}
                                 </button>
                             </div>
-
                         </form>
                     </div>
-
                 </div>
             </div>
         </AuthenticatedLayout>
