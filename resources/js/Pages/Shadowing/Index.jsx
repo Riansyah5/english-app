@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react';
-import { Head, Link } from '@inertiajs/react';
-import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
+import React, { useState, useMemo } from "react";
+import { Head, Link } from "@inertiajs/react";
+import AuthenticatedLayout from "../../Layouts/AuthenticatedLayout";
 
 export default function ShadowingIndex({ auth, topics = [] }) {
-    const [selectedLevel, setSelectedLevel] = useState('all');
-    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedLevel, setSelectedLevel] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Hitung total dialog keseluruhan
     const totalDialogues = useMemo(() => {
@@ -15,19 +15,28 @@ export default function ShadowingIndex({ auth, topics = [] }) {
     const levelCounts = useMemo(() => {
         return {
             all: topics.length,
-            beginner: topics.filter(t => t.level?.toLowerCase() === 'beginner').length,
-            intermediate: topics.filter(t => t.level?.toLowerCase() === 'intermediate').length,
-            advanced: topics.filter(t => t.level?.toLowerCase() === 'advanced').length,
+            beginner: topics.filter(
+                (t) => t.level?.toLowerCase() === "beginner",
+            ).length,
+            intermediate: topics.filter(
+                (t) => t.level?.toLowerCase() === "intermediate",
+            ).length,
+            advanced: topics.filter(
+                (t) => t.level?.toLowerCase() === "advanced",
+            ).length,
         };
     }, [topics]);
 
     // Filter topik berdasarkan level & teks pencarian
     const filteredTopics = useMemo(() => {
-        return topics.filter(topic => {
-            const matchesLevel = selectedLevel === 'all' || topic.level?.toLowerCase() === selectedLevel;
+        return topics.filter((topic) => {
+            const matchesLevel =
+                selectedLevel === "all" ||
+                topic.level?.toLowerCase() === selectedLevel;
             const query = searchQuery.toLowerCase();
-            const matchesSearch = !searchQuery || 
-                topic.title?.toLowerCase().includes(query) || 
+            const matchesSearch =
+                !searchQuery ||
+                topic.title?.toLowerCase().includes(query) ||
                 topic.description?.toLowerCase().includes(query);
             return matchesLevel && matchesSearch;
         });
@@ -35,14 +44,14 @@ export default function ShadowingIndex({ auth, topics = [] }) {
 
     const getLevelBadge = (level) => {
         switch (level?.toLowerCase()) {
-            case 'beginner':
-                return 'bg-[#60f2ce]/20 text-[#0d9488] border-[#60f2ce]/50';
-            case 'intermediate':
-                return 'bg-[#fefc7c]/80 text-[#854d0e] border-[#fcbf49]/50';
-            case 'advanced':
-                return 'bg-[#ff822d]/15 text-[#c2410c] border-[#ff822d]/40';
+            case "beginner":
+                return "bg-[#60f2ce]/20 text-[#0d9488] border-[#60f2ce]/50";
+            case "intermediate":
+                return "bg-[#fefc7c]/80 text-[#854d0e] border-[#fcbf49]/50";
+            case "advanced":
+                return "bg-[#ff822d]/15 text-[#c2410c] border-[#ff822d]/40";
             default:
-                return 'bg-slate-100 text-slate-700 border-slate-200';
+                return "bg-slate-100 text-slate-700 border-slate-200";
         }
     };
 
@@ -54,30 +63,41 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                 <div className="max-w-7xl mx-auto space-y-7">
                     
                     {/* Top Bar Header */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                        {/* Kiri: Judul, Badge Kategori, & Subjudul */}
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 truncate">
                                     Latihan Shadowing 🗣️
                                 </h1>
-                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                <span className="shrink-0 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
                                     Speaking & Fluency
                                 </span>
                             </div>
-                            <p className="text-sm text-slate-500 mt-1">
-                                Tirukan intonasi, ritme, dan pelafalan native speaker secara bertahap.
+                            <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-2 sm:line-clamp-none">
+                                Tirukan intonasi, ritme, dan pelafalan native
+                                speaker secara bertahap.
                             </p>
                         </div>
 
-                        {/* Top Action & Metrics Pill */}
-                        <div className="flex items-center gap-3">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-semibold text-slate-600">
+                        {/* Kanan: Ringkasan Metrik & Tombol Dashboard */}
+                        <div className="flex items-center gap-2 shrink-0">
+                            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-slate-200 rounded-full shadow-xs text-[11px] sm:text-xs font-semibold text-slate-600 whitespace-nowrap">
                                 <span className="w-2 h-2 rounded-full bg-[#ff822d] animate-pulse"></span>
-                                Tersedia: <span className="font-bold text-slate-900">{topics.length} Topik</span> ({totalDialogues} Dialog)
+                                <span>
+                                    Tersedia:{" "}
+                                    <strong className="font-bold text-slate-900">
+                                        {topics.length} Topik
+                                    </strong>
+                                    <span className="hidden xs:inline text-slate-400 font-normal">
+                                        {" "}
+                                        ({totalDialogues} Dialog)
+                                    </span>
+                                </span>
                             </div>
-                            <Link 
-                                href="/home" 
-                                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
+                            <Link
+                                href="/home"
+                                className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-xs hover:bg-slate-50 active:scale-95 transition whitespace-nowrap"
                             >
                                 Ke Dashboard
                             </Link>
@@ -95,7 +115,9 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                                 Teknik Shadowing: Dengarkan, Ulangi, & Sesuaikan
                             </h2>
                             <p className="text-slate-800 text-xs font-medium leading-relaxed">
-                                Latih memori motorik mulut dan intonasi alami dengan berbicara bersamaan dengan audio penutur asli.
+                                Latih memori motorik mulut dan intonasi alami
+                                dengan berbicara bersamaan dengan audio penutur
+                                asli.
                             </p>
                         </div>
                         <div className="relative z-10 shrink-0">
@@ -107,32 +129,51 @@ export default function ShadowingIndex({ auth, topics = [] }) {
 
                     {/* Filter Tabs & Search Bar Controls */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-3 rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)]">
-                        
                         {/* Difficulty Level Tabs */}
                         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
                             {[
-                                { key: 'all', label: 'Semua Level', count: levelCounts.all },
-                                { key: 'beginner', label: 'Beginner', count: levelCounts.beginner },
-                                { key: 'intermediate', label: 'Intermediate', count: levelCounts.intermediate },
-                                { key: 'advanced', label: 'Advanced', count: levelCounts.advanced }
+                                {
+                                    key: "all",
+                                    label: "Semua Level",
+                                    count: levelCounts.all,
+                                },
+                                {
+                                    key: "beginner",
+                                    label: "Beginner",
+                                    count: levelCounts.beginner,
+                                },
+                                {
+                                    key: "intermediate",
+                                    label: "Intermediate",
+                                    count: levelCounts.intermediate,
+                                },
+                                {
+                                    key: "advanced",
+                                    label: "Advanced",
+                                    count: levelCounts.advanced,
+                                },
                             ].map((tab) => {
                                 const isActive = selectedLevel === tab.key;
                                 return (
                                     <button
                                         key={tab.key}
-                                        onClick={() => setSelectedLevel(tab.key)}
+                                        onClick={() =>
+                                            setSelectedLevel(tab.key)
+                                        }
                                         className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 ${
                                             isActive
-                                                ? 'bg-slate-900 text-white shadow-xs'
-                                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                                ? "bg-slate-900 text-white shadow-xs"
+                                                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                                         }`}
                                     >
                                         <span>{tab.label}</span>
-                                        <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono ${
-                                            isActive 
-                                                ? 'bg-white/20 text-white' 
-                                                : 'bg-slate-100 text-slate-500'
-                                        }`}>
+                                        <span
+                                            className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono ${
+                                                isActive
+                                                    ? "bg-white/20 text-white"
+                                                    : "bg-slate-100 text-slate-500"
+                                            }`}
+                                        >
                                             {tab.count}
                                         </span>
                                     </button>
@@ -146,20 +187,19 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                             <input
                                 type="text"
                                 value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Cari topik shadowing..."
                                 className="w-full pl-9 pr-8 py-2 rounded-2xl border border-slate-200 bg-[#fafcfb] text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all shadow-2xs"
                             />
                             {searchQuery && (
                                 <button
-                                    onClick={() => setSearchQuery('')}
+                                    onClick={() => setSearchQuery("")}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
                                 >
                                     <i className="bi bi-x-circle-fill"></i>
                                 </button>
                             )}
                         </div>
-
                     </div>
 
                     {/* Grid Cards */}
@@ -169,19 +209,24 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                                 const badgeStyle = getLevelBadge(topic.level);
 
                                 return (
-                                    <div 
-                                        key={topic.id} 
+                                    <div
+                                        key={topic.id}
                                         className="group bg-white rounded-3xl border border-slate-100 p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1"
                                     >
                                         <div>
                                             {/* Meta Header */}
                                             <div className="flex justify-between items-center mb-4">
-                                                <span className={`px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-wider border ${badgeStyle}`}>
-                                                    {topic.level || 'General'}
+                                                <span
+                                                    className={`px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-wider border ${badgeStyle}`}
+                                                >
+                                                    {topic.level || "General"}
                                                 </span>
                                                 <span className="text-slate-400 text-xs font-semibold flex items-center gap-1 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-100">
-                                                    <i className="bi bi-chat-text text-[#ff822d]"></i> 
-                                                    <span>{topic.lines_count || 0} Dialog</span>
+                                                    <i className="bi bi-chat-text text-[#ff822d]"></i>
+                                                    <span>
+                                                        {topic.lines_count || 0}{" "}
+                                                        Dialog
+                                                    </span>
                                                 </span>
                                             </div>
 
@@ -190,19 +235,30 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                                                 {topic.title}
                                             </h3>
                                             <p className="text-slate-500 text-xs leading-relaxed line-clamp-3 mb-6 font-medium">
-                                                {topic.description || 'Tidak ada deskripsi topik.'}
+                                                {topic.description ||
+                                                    "Tidak ada deskripsi topik."}
                                             </p>
                                         </div>
 
                                         {/* Action Button */}
                                         <div className="pt-2 border-t border-slate-100">
-                                            <Link 
+                                            <Link
                                                 href={`/shadowing/${topic.slug}`}
                                                 className="w-full py-2.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-2"
                                             >
                                                 <span>Mulai Latihan</span>
-                                                <svg className="w-3.5 h-3.5 text-[#60f2ce]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                                <svg
+                                                    className="w-3.5 h-3.5 text-[#60f2ce]"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2.5"
+                                                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                    />
                                                 </svg>
                                             </Link>
                                         </div>
@@ -215,14 +271,19 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                                 <div className="w-14 h-14 rounded-2xl bg-[#fcbf49]/20 text-[#ff822d] flex items-center justify-center text-2xl mb-3">
                                     <i className="bi bi-search"></i>
                                 </div>
-                                <h4 className="font-bold text-slate-900 text-base mb-1">Tidak Ada Topik yang Cocok</h4>
+                                <h4 className="font-bold text-slate-900 text-base mb-1">
+                                    Tidak Ada Topik yang Cocok
+                                </h4>
                                 <p className="text-xs text-slate-400 max-w-sm mb-4">
-                                    {searchQuery 
-                                        ? `Tidak ditemukan materi dengan kata kunci "${searchQuery}" pada level yang dipilih.` 
-                                        : 'Belum ada materi untuk level ini.'}
+                                    {searchQuery
+                                        ? `Tidak ditemukan materi dengan kata kunci "${searchQuery}" pada level yang dipilih.`
+                                        : "Belum ada materi untuk level ini."}
                                 </p>
                                 <button
-                                    onClick={() => { setSelectedLevel('all'); setSearchQuery(''); }}
+                                    onClick={() => {
+                                        setSelectedLevel("all");
+                                        setSearchQuery("");
+                                    }}
                                     className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
                                 >
                                     Reset Filter
@@ -230,7 +291,6 @@ export default function ShadowingIndex({ auth, topics = [] }) {
                             </div>
                         )}
                     </div>
-
                 </div>
             </div>
         </AuthenticatedLayout>

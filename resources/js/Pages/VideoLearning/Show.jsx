@@ -201,114 +201,64 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
         <AuthenticatedLayout user={auth?.user}>
             <Head title={video?.title} />
 
-            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
-                <div className="max-w-7xl mx-auto space-y-7">
+            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-4 sm:p-6 md:p-8 font-sans">
+                <div className="max-w-7xl mx-auto space-y-6 sm:space-y-7">
                     
-                    {/* Breadcrumbs & Navigation */}
-                    <div className="flex items-center justify-between">
-                        <nav className="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                            <Link href="/video-learning" className="text-slate-600 hover:text-[#ff822d] transition-colors flex items-center gap-1.5">
+                    {/* Top Bar Navigation (Breadcrumbs & Back Button) */}
+                    <div className="flex items-center justify-between gap-3">
+                        <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-slate-400 min-w-0">
+                            <Link href="/video-learning" className="text-slate-600 hover:text-[#ff822d] transition-colors flex items-center gap-1 shrink-0">
                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
-                                Video Library
+                                <span>Library</span>
                             </Link>
-                            <span>/</span>
-                            <span className="text-slate-800 truncate max-w-[240px] sm:max-w-md">{video?.title}</span>
+                            <span className="shrink-0 text-slate-300">/</span>
+                            <span className="text-slate-800 truncate">{video?.title}</span>
                         </nav>
+                        
                         <Link 
-                            href="/video-learning"
-                            className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
+                            href="/video-learning" 
+                            className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-xs hover:bg-slate-50 transition shrink-0 whitespace-nowrap active:scale-95"
                         >
                             Kembali ke Daftar
                         </Link>
                     </div>
 
                     {/* Main Content Layout */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
+                    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-7">
                         
-                        {/* Left Column: Player & Study Bank */}
-                        <div className="lg:col-span-7 space-y-6">
-                            
-                            {/* Video Player Card */}
+                        {/* 1. Video Player Card (Urutan 1 di Mobile & Kiri Atas di Desktop) */}
+                        <div className="order-1 lg:col-span-7">
                             <div className="bg-white p-3 md:p-4 rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
                                 <div className="relative pt-[56.25%] bg-slate-950 rounded-2xl overflow-hidden shadow-inner">
                                     <div id="youtube-player" className="absolute top-0 left-0 w-full h-full"></div>
                                 </div>
 
-                                <div className="pt-5 pb-2 px-2">
-                                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                                <div className="pt-4 sm:pt-5 pb-2 px-1 sm:px-2">
+                                    <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
                                         {video?.difficulty && (
-                                            <span className="text-[11px] font-bold uppercase px-2.5 py-1 bg-[#fefc7c]/80 text-slate-900 rounded-lg border border-[#fefc7c]">
+                                            <span className="text-[10px] sm:text-[11px] font-bold uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#fefc7c]/80 text-slate-900 rounded-lg border border-[#fefc7c]">
                                                 {video?.difficulty}
                                             </span>
                                         )}
-                                        <span className="text-[11px] font-bold px-2.5 py-1 bg-[#60f2ce]/20 text-[#0d9488] rounded-lg border border-[#60f2ce]/40">
+                                        <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#60f2ce]/20 text-[#0d9488] rounded-lg border border-[#60f2ce]/40">
                                             {video?.transcripts?.length || 0} Baris Dialog
                                         </span>
                                     </div>
-                                    <h1 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-snug">
+                                    <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-snug break-words">
                                         {video?.title}
                                     </h1>
                                 </div>
                             </div>
-
-                            {/* Tips Card */}
-                            <div className="rounded-3xl p-5 bg-gradient-to-br from-[#ff822d]/10 via-[#fcbf49]/10 to-[#60f2ce]/20 border border-[#fcbf49]/30 flex items-start gap-3.5 shadow-xs">
-                                <div className="w-10 h-10 rounded-2xl bg-white shadow-xs text-xl flex items-center justify-center shrink-0">
-                                    💡
-                                </div>
-                                <div className="text-xs leading-relaxed text-slate-700">
-                                    <strong className="text-slate-900 font-bold block mb-0.5">Petunjuk Belajar Interaktif:</strong>
-                                    Klik kata mana pun pada transkrip sebelah kanan untuk melihat kamus cepat, pelafalan audio, dan menyimpannya ke Flashcard harian Anda.
-                                </div>
-                            </div>
-
-                            {/* Saved Vocabulary Pill Box */}
-                            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
-                                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="w-9 h-9 rounded-xl bg-[#60f2ce]/20 text-[#0d9488] flex items-center justify-center font-bold">
-                                            <i className="bi bi-bookmark-check-fill"></i>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-slate-900 text-sm">Bank Kosakatamu</h3>
-                                            <p className="text-[11px] text-slate-400">Kata yang berhasil Anda kumpulkan</p>
-                                        </div>
-                                    </div>
-                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
-                                        {savedFlashcards.length} Kata
-                                    </span>
-                                </div>
-
-                                <div className="max-h-[220px] overflow-y-auto pr-1">
-                                    {savedFlashcards.length > 0 ? (
-                                        <div className="flex flex-wrap gap-2">
-                                            {savedFlashcards.map(card => (
-                                                <div key={card.id} className="bg-slate-50 border border-slate-200/80 rounded-2xl px-3.5 py-1.5 text-xs flex items-center shadow-2xs hover:border-[#60f2ce] transition-colors">
-                                                    <span className="font-bold text-slate-900 mr-2">{card?.study_item?.content || '-'}</span>
-                                                    <span className="border-l border-slate-200 pl-2 text-slate-500 font-medium">
-                                                        {card?.study_item?.translation || '-'}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="text-center py-7 text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">
-                                            Belum ada kosakata yang disimpan dari video ini.
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
                         </div>
 
-                        {/* Right Column: Interactive Transcript */}
-                        <div className="lg:col-span-5">
-                            <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] flex flex-col h-[650px] lg:h-[calc(100vh-140px)] sticky top-6 overflow-hidden">
+                        {/* 2. Interactive Transcript (Urutan 2 di Mobile -> TEPAT di bawah Video, Kolom Kanan di Desktop) */}
+                        <div className="order-2 lg:col-span-5 lg:row-span-2">
+                            <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] flex flex-col h-[520px] sm:h-[600px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-6 overflow-hidden">
                                 
-                                {/* Header */}
-                                <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-white z-10">
+                                {/* Transcript Header */}
+                                <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-white z-10">
                                     <div className="flex items-center gap-2.5">
-                                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center text-sm shadow-xs">
+                                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center text-sm shadow-xs shrink-0">
                                             <i className="bi bi-chat-square-quote-fill"></i>
                                         </div>
                                         <div>
@@ -320,7 +270,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                 </div>
 
                                 {/* Transcript Content */}
-                                <div className="flex-grow overflow-y-auto p-4 space-y-3" ref={containerRef} id="transcript-container">
+                                <div className="flex-grow overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3" ref={containerRef} id="transcript-container">
                                     {video?.transcripts && video?.transcripts.length > 0 ? (
                                         video?.transcripts.map((transcript, idx) => {
                                             const isActive = activeLine === idx;
@@ -328,15 +278,15 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                 <div 
                                                     key={transcript.id || idx} 
                                                     id={`line-${idx}`}
-                                                    className={`p-4 rounded-2xl transition-all duration-200 border ${
+                                                    className={`p-3.5 sm:p-4 rounded-2xl transition-all duration-200 border ${
                                                         isActive 
                                                             ? 'bg-gradient-to-r from-[#60f2ce]/15 via-[#fefc7c]/10 to-transparent border-[#60f2ce] shadow-xs' 
                                                             : 'bg-white hover:bg-slate-50/80 border-slate-100'
                                                     }`}
                                                 >
-                                                    <div className="flex justify-between items-start gap-3">
-                                                        <div className="flex-grow">
-                                                            <div className="text-slate-800 font-medium leading-relaxed text-[14px]">
+                                                    <div className="flex justify-between items-start gap-2.5 sm:gap-3">
+                                                        <div className="flex-grow min-w-0">
+                                                            <div className="text-slate-800 font-medium leading-relaxed text-[13px] sm:text-[14px]">
                                                                 {transcript.text.split(" ").map((word, i) => {
                                                                     const cleanW = word.replace(/[^\w\s\']/g, "").toLowerCase();
                                                                     const isSaved = savedVocabs.includes(cleanW);
@@ -344,7 +294,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                                         <span 
                                                                             key={i} 
                                                                             onClick={() => handleWordClick(word, transcript.text)}
-                                                                            className={`cursor-pointer px-1 py-0.5 rounded-lg transition-colors hover:bg-[#60f2ce]/30 hover:text-slate-950 inline-block ${
+                                                                            className={`cursor-pointer px-1 py-0.5 rounded-lg transition-colors hover:bg-[#60f2ce]/30 hover:text-slate-900 inline-block ${
                                                                                 isSaved ? 'text-[#0d9488] font-bold bg-[#60f2ce]/20 border-b-2 border-[#0d9488]' : ''
                                                                             }`}
                                                                         >
@@ -355,7 +305,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                             </div>
                                                             
                                                             {transcript.translation && showTranslations[idx] && (
-                                                                <div className="text-slate-500 text-xs mt-2.5 border-l-2 border-[#fcbf49] pl-3 py-0.5 italic bg-[#fcbf49]/5 rounded-r-lg">
+                                                                <div className="text-slate-500 text-xs mt-2 border-l-2 border-[#fcbf49] pl-2.5 py-0.5 italic bg-[#fcbf49]/5 rounded-r-lg">
                                                                     {transcript.translation}
                                                                 </div>
                                                             )}
@@ -408,6 +358,59 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                     )}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* 3. Info Bawah: Tips & Saved Vocab (Urutan 3 di Mobile, di Bawah Video pada Desktop) */}
+                        <div className="order-3 lg:col-span-7 space-y-6">
+                            
+                            {/* Tips Card */}
+                            <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-[#ff822d]/10 via-[#fcbf49]/10 to-[#60f2ce]/20 border border-[#fcbf49]/30 flex items-start gap-3 shadow-xs">
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white shadow-xs text-lg sm:text-xl flex items-center justify-center shrink-0">
+                                    💡
+                                </div>
+                                <div className="text-xs leading-relaxed text-slate-700">
+                                    <strong className="text-slate-900 font-bold block mb-0.5">Petunjuk Belajar Interaktif:</strong>
+                                    Klik kata mana pun pada transkrip untuk membuka kamus cepat, cek arti kata, dan simpan langsung ke Flashcard harian Anda.
+                                </div>
+                            </div>
+
+                            {/* Saved Vocabulary Pill Box */}
+                            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+                                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-9 h-9 rounded-xl bg-[#60f2ce]/20 text-[#0d9488] flex items-center justify-center font-bold shrink-0">
+                                            <i className="bi bi-bookmark-check-fill"></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-slate-900 text-sm">Bank Kosakatamu</h3>
+                                            <p className="text-[11px] text-slate-400">Kata yang berhasil Anda kumpulkan</p>
+                                        </div>
+                                    </div>
+                                    <span className="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
+                                        {savedFlashcards.length} Kata
+                                    </span>
+                                </div>
+
+                                <div className="max-h-[220px] overflow-y-auto pr-1">
+                                    {savedFlashcards.length > 0 ? (
+                                        <div className="flex flex-wrap gap-2">
+                                            {savedFlashcards.map(card => (
+                                                <div key={card.id} className="bg-slate-50 border border-slate-200/80 rounded-2xl px-3 py-1.5 text-xs flex items-center shadow-2xs hover:border-[#60f2ce] transition-colors">
+                                                    <span className="font-bold text-slate-900 mr-2">{card?.study_item?.content || '-'}</span>
+                                                    <span className="border-l border-slate-200 pl-2 text-slate-500 font-medium truncate max-w-[140px] sm:max-w-xs">
+                                                        {card?.study_item?.translation || '-'}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-7 text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">
+                                            Belum ada kosakata yang disimpan dari video ini.
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>

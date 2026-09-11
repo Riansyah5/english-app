@@ -33,26 +33,30 @@ export default function StudyIndex({ auth, dueFlashcards }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Daily Review" />
 
-            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
+            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-4 sm:p-6 md:p-8 font-sans">
                 <div className="max-w-2xl mx-auto space-y-6">
 
-                    {/* Top Bar Navigation */}
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2.5">
-                            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Daily Review</h1>
-                            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                    {/* Top Bar Navigation (Responsif Mobile) */}
+                    <div className="flex items-center justify-between gap-2">
+                        {/* Kiri: Judul & Badge Mode */}
+                        <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                            <h1 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-900 truncate">
+                                Daily Review
+                            </h1>
+                            <span className="shrink-0 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
                                 Mode Sesi
                             </span>
                         </div>
                         
-                        <div className="flex gap-2.5 items-center">
+                        {/* Kanan: Tombol Tukar Bahasa & Counter Kartu */}
+                        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                             <button 
                                 onClick={() => setIsReversed(!isReversed)}
-                                className="text-xs font-bold px-3.5 py-2 bg-white border border-slate-200 text-slate-700 rounded-full shadow-xs hover:bg-slate-50 transition"
+                                className="text-[11px] sm:text-xs font-bold px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-white border border-slate-200 text-slate-700 rounded-full shadow-xs hover:bg-slate-50 active:scale-95 transition whitespace-nowrap"
                             >
                                 🔄 {isReversed ? 'EN ➔ ID' : 'ID ➔ EN'}
                             </button>
-                            <span className="px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-full text-xs font-bold shadow-xs">
+                            <span className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-white border border-slate-200 text-slate-700 rounded-full text-[11px] sm:text-xs font-bold shadow-xs whitespace-nowrap">
                                 {isComplete ? dueFlashcards.length : currentIndex + 1} / {dueFlashcards.length}
                             </span>
                         </div>
@@ -60,7 +64,7 @@ export default function StudyIndex({ auth, dueFlashcards }) {
 
                     {isComplete ? (
                         /* Complete Card */
-                        <div className="bg-white rounded-3xl border border-slate-100 p-10 text-center shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] relative overflow-hidden">
+                        <div className="bg-white rounded-3xl border border-slate-100 p-8 sm:p-10 text-center shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-36 h-36 bg-[#fefc7c]/40 rounded-full blur-2xl pointer-events-none"></div>
                             <div className="absolute bottom-0 left-0 w-36 h-36 bg-[#60f2ce]/40 rounded-full blur-2xl pointer-events-none"></div>
                             
@@ -95,7 +99,7 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                         <div className="relative h-[480px] w-full">
                             
                             {/* Front Card */}
-                            <div className={`absolute inset-0 w-full h-full bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] p-8 flex flex-col justify-between transition-all duration-300 transform ${showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+                            <div className={`absolute inset-0 w-full h-full bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 transform ${showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
                                 <div className="flex justify-between items-center">
                                     <span className="text-[11px] font-bold uppercase px-3 py-1 bg-[#60f2ce]/20 text-[#0f766e] rounded-lg border border-[#60f2ce]/50">
                                         {studyItem?.type?.replace('_', ' ') || 'Kartu Belajar'}
@@ -104,7 +108,7 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                                 </div>
 
                                 <div className="my-auto text-center py-6">
-                                    <h2 className="font-black text-4xl sm:text-5xl tracking-tight text-slate-900">
+                                    <h2 className="font-black text-3xl sm:text-5xl tracking-tight text-slate-900 break-words">
                                         {!isReversed ? studyItem?.content : studyItem?.translation}
                                     </h2>
                                 </div>
@@ -121,17 +125,17 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                             </div>
 
                             {/* Back Card */}
-                            <div className={`absolute inset-0 w-full h-full bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] p-8 flex flex-col justify-between transition-all duration-300 transform ${!showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+                            <div className={`absolute inset-0 w-full h-full bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 transform ${!showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="text-[11px] font-bold uppercase px-2.5 py-1 bg-[#ff822d]/15 text-[#ea580c] rounded-lg border border-[#ff822d]/30">
                                             Arti / Terjemahan
                                         </span>
-                                        <span className="text-xs text-slate-400 font-medium">
+                                        <span className="text-xs text-slate-400 font-medium truncate max-w-[150px] sm:max-w-none">
                                             {!isReversed ? studyItem?.content : studyItem?.translation}
                                         </span>
                                     </div>
-                                    <h3 className="font-extrabold text-3xl tracking-tight text-slate-900 mb-4">
+                                    <h3 className="font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 mb-4 break-words">
                                         {!isReversed ? studyItem?.translation : studyItem?.content}
                                     </h3>
 

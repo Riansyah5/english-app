@@ -1,6 +1,6 @@
-import React from 'react';
-import { Head, Link } from '@inertiajs/react';
-import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
+import React from "react";
+import { Head, Link } from "@inertiajs/react";
+import AuthenticatedLayout from "../../Layouts/AuthenticatedLayout";
 
 export default function ExamIndex({ auth, exams = [] }) {
     return (
@@ -9,32 +9,36 @@ export default function ExamIndex({ auth, exams = [] }) {
 
             <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-6 md:p-8 font-sans">
                 <div className="max-w-7xl mx-auto space-y-8">
-                    
                     {/* Top Bar Header */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                        {/* Kiri: Judul, Badge, & Subjudul */}
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 truncate">
                                     Modul Evaluasi (CBT) 📝
                                 </h1>
-                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                <span className="shrink-0 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
                                     Assessments
                                 </span>
                             </div>
-                            <p className="text-sm text-slate-500 mt-1">
-                                Uji pemahaman tata bahasa, kosakata, dan struktur kalimat Anda secara terukur.
+                            <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-2 sm:line-clamp-none">
+                                Uji pemahaman tata bahasa, kosakata, dan
+                                struktur kalimat Anda secara terukur.
                             </p>
                         </div>
 
-                        {/* Quick Stats Pill */}
-                        <div className="flex items-center gap-3">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-semibold text-slate-600">
+                        {/* Kanan: Pill Ringkasan & Tombol Dashboard */}
+                        <div className="flex items-center gap-2 shrink-0">
+                            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-slate-200 rounded-full shadow-xs text-[11px] sm:text-xs font-semibold text-slate-600 whitespace-nowrap">
                                 <span className="w-2 h-2 rounded-full bg-[#ff822d] animate-pulse"></span>
-                                Tersedia: <span className="font-bold text-slate-900">{exams.length} Paket Ujian</span>
+                                Tersedia:{" "}
+                                <span className="font-bold text-slate-900">
+                                    {exams.length} Paket Ujian
+                                </span>
                             </div>
-                            <Link 
-                                href="/home" 
-                                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition"
+                            <Link
+                                href="/home"
+                                className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-xs hover:bg-slate-50 active:scale-95 transition whitespace-nowrap"
                             >
                                 Ke Dashboard
                             </Link>
@@ -52,7 +56,9 @@ export default function ExamIndex({ auth, exams = [] }) {
                                 Persiapkan Diri Sebelum Menekan Mulai
                             </h2>
                             <p className="text-slate-800 text-xs font-medium leading-relaxed">
-                                Timer ujian akan langsung berjalan begitu sesi dimulai. Pastikan koneksi internet stabil dan cari tempat belajar yang kondusif.
+                                Timer ujian akan langsung berjalan begitu sesi
+                                dimulai. Pastikan koneksi internet stabil dan
+                                cari tempat belajar yang kondusif.
                             </p>
                         </div>
                         <div className="relative z-10 shrink-0">
@@ -66,8 +72,8 @@ export default function ExamIndex({ auth, exams = [] }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {exams.length > 0 ? (
                             exams.map((exam) => (
-                                <div 
-                                    key={exam.id} 
+                                <div
+                                    key={exam.id}
                                     className="group bg-white rounded-3xl border border-slate-100 p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1"
                                 >
                                     <div>
@@ -89,20 +95,31 @@ export default function ExamIndex({ auth, exams = [] }) {
 
                                         <div className="bg-[#fafcfb] p-3.5 rounded-2xl border border-slate-100 mb-6">
                                             <p className="text-slate-500 text-xs leading-relaxed line-clamp-2 font-medium">
-                                                {exam.description || 'Tidak ada deskripsi khusus untuk paket ujian ini.'}
+                                                {exam.description ||
+                                                    "Tidak ada deskripsi khusus untuk paket ujian ini."}
                                             </p>
                                         </div>
                                     </div>
 
                                     {/* Action Button */}
                                     <div className="pt-2 border-t border-slate-100">
-                                        <Link 
+                                        <Link
                                             href={`/exams/${exam.id}`}
                                             className="w-full py-2.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-2"
                                         >
                                             <span>Mulai Ujian</span>
-                                            <svg className="w-3.5 h-3.5 text-[#60f2ce]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                            <svg
+                                                className="w-3.5 h-3.5 text-[#60f2ce]"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2.5"
+                                                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                />
                                             </svg>
                                         </Link>
                                     </div>
@@ -114,14 +131,16 @@ export default function ExamIndex({ auth, exams = [] }) {
                                 <div className="w-16 h-16 rounded-3xl bg-[#fcbf49]/20 text-[#ff822d] flex items-center justify-center text-3xl mb-3">
                                     <i className="bi bi-inbox"></i>
                                 </div>
-                                <h4 className="font-bold text-slate-900 text-lg mb-1">Belum Ada Paket Ujian</h4>
+                                <h4 className="font-bold text-slate-900 text-lg mb-1">
+                                    Belum Ada Paket Ujian
+                                </h4>
                                 <p className="text-xs text-slate-400 max-w-sm">
-                                    Belum ada paket CBT yang dijadwalkan atau tersedia untuk Anda saat ini.
+                                    Belum ada paket CBT yang dijadwalkan atau
+                                    tersedia untuk Anda saat ini.
                                 </p>
                             </div>
                         )}
                     </div>
-
                 </div>
             </div>
         </AuthenticatedLayout>
