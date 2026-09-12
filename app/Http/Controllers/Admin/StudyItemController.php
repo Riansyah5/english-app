@@ -24,7 +24,6 @@ class StudyItemController extends Controller
         return \Inertia\Inertia::render('Admin/StudyItems/Create');
     }
 
-    // UPDATE: Fungsi Store dengan Logika Distribusi
     public function store(Request $request)
     {
         $request->validate([
@@ -40,34 +39,36 @@ class StudyItemController extends Controller
         // 1. Simpan materi ke Bank Materi
         $studyItem = StudyItem::create($request->all());
 
-        // 2. Distribusikan ke semua pengguna secara massal (Bulk Insert)
-        $users = User::all();
+        // 2. Ambil ID pengguna saja untuk menghemat alokasi memori
+        $userIds = User::pluck('id');
         $flashcards = [];
         $today = Carbon::today();
         $now = Carbon::now();
 
-        foreach ($users as $user) {
+        foreach ($userIds as $userId) {
             $flashcards[] = [
-                'user_id' => $user->id,
+                'user_id' => $userId,
                 'study_item_id' => $studyItem->id,
                 'repetition_count' => 0,
                 'ease_factor' => 2.5,
                 'interval' => 0,
-                'next_review_date' => $today, // Langsung ditagih hari ini
+                'next_review_date' => $today,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
         }
 
+        // Gunakan insertOrIgnore dan chunking untuk mencegah duplikasi
         if (!empty($flashcards)) {
-            UserFlashcard::insert($flashcards); // Insert massal agar super cepat
+            foreach (array_chunk($flashcards, 2000) as $chunk) {
+                UserFlashcard::insertOrIgnore($chunk);
+            }
         }
 
         return redirect()->route('admin.study-items.index')
             ->with('success', 'Materi berhasil ditambahkan dan didistribusikan ke antrean belajar semua pengguna!');
     }
 
-    // FUNGSI BARU: Menampilkan Form Edit
     public function edit(StudyItem $studyItem)
     {
         return \Inertia\Inertia::render('Admin/StudyItems/Edit', [
@@ -75,14 +76,15 @@ class StudyItemController extends Controller
         ]);
     }
 
-    // FUNGSI BARU: Menyimpan Perubahan Edit
     public function update(Request $request, StudyItem $studyItem)
     {
         $request->validate([
-            'content' => 'required|string|max:255|unique:study_items,content',
+            'content' => 'required|string|max:255|unique:study_items,content,' . $studyItem->id,
             'type' => 'required|in:word,phrase,idiom,grammar_rule,speaking_prompt',
+            'level' => 'nullable|in:A1,A2,B1,B2,C1,C2',
             'translation' => 'required|string|max:255',
             'example_sentence' => 'nullable|string',
+            'example_translation' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
 
@@ -95,8 +97,6 @@ class StudyItemController extends Controller
     public function destroy(StudyItem $studyItem)
     {
         $studyItem->delete();
-        // Catatan: Karena kita menggunakan cascadeOnDelete() di migration, 
-        // menghapus StudyItem otomatis menghapus data user_flashcards yang terkait.
         return redirect()->route('admin.study-items.index')->with('success', 'Materi berhasil dihapus!');
     }
 
@@ -142,18 +142,19 @@ class StudyItemController extends Controller
         $skipped = count($items) - count($newItemsData);
 
         if (!empty($newItemsData)) {
-            StudyItem::insert($newItemsData);
+            // Menggunakan insertOrIgnore pada batch StudyItem
+            StudyItem::insertOrIgnore($newItemsData);
             $added = count($newItemsData);
 
             $newContents = collect($newItemsData)->pluck('content')->toArray();
-            $newStudyItems = StudyItem::whereIn('content', $newContents)->get();
+            $newStudyItems = StudyItem::whereIn('content', $newContents)->get(['id']);
 
-            $users = User::pluck('id');
+            $userIds = User::pluck('id');
             $flashcards = [];
             $today = Carbon::today();
 
             foreach ($newStudyItems as $si) {
-                foreach ($users as $userId) {
+                foreach ($userIds as $userId) {
                     $flashcards[] = [
                         'user_id' => $userId,
                         'study_item_id' => $si->id,
@@ -167,8 +168,9 @@ class StudyItemController extends Controller
                 }
             }
 
-            foreach (array_chunk($flashcards, 5000) as $chunk) {
-                UserFlashcard::insert($chunk);
+            // Memasukkan data flashcard dalam chunk dan mengabaikan duplikasi
+            foreach (array_chunk($flashcards, 2000) as $chunk) {
+                UserFlashcard::insertOrIgnore($chunk);
             }
         }
 
@@ -183,5 +185,4 @@ class StudyItemController extends Controller
         return redirect()->route('admin.study-items.index')
             ->with('success', "Berhasil menambahkan {$added} materi baru. {$skipped} materi dilewati karena duplikat.");
     }
-
 }
