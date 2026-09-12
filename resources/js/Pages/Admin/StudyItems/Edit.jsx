@@ -64,7 +64,7 @@ export default function StudyItemEdit({ auth, studyItem }) {
                             
                             {/* Input Rows: Content & Type */}
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-                                <div className="md:col-span-8">
+                                <div className="md:col-span-6">
                                     <label htmlFor="content" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
                                         Teks (Bahasa Inggris) <span className="text-[#ff822d]">*</span>
                                     </label>
@@ -83,7 +83,7 @@ export default function StudyItemEdit({ auth, studyItem }) {
                                     {errors.content && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.content}</p>}
                                 </div>
 
-                                <div className="md:col-span-4">
+                                <div className="md:col-span-3">
                                     <label htmlFor="type" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
                                         Tipe Materi <span className="text-[#ff822d]">*</span>
                                     </label>
@@ -103,6 +103,27 @@ export default function StudyItemEdit({ auth, studyItem }) {
                                         <option value="speaking_prompt">Speaking Prompt</option>
                                     </select>
                                     {errors.type && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.type}</p>}
+                                </div>
+
+                                <div className="md:col-span-3">
+                                    <label htmlFor="level" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                        Level <span className="font-medium normal-case text-slate-400">(Opsional)</span>
+                                    </label>
+                                    <select
+                                        id="level"
+                                        value={data.level}
+                                        onChange={e => setData('level', e.target.value)}
+                                        className={`w-full px-4 py-3 rounded-2xl border text-xs font-bold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#ff822d] focus:border-[#ff822d] outline-none transition-all ${errors.level ? "border-rose-400 bg-rose-50/30" : "border-slate-200"} text-slate-800 shadow-2xs`}
+                                    >
+                                        <option value="">Semua Level</option>
+                                        <option value="A1">A1 (Beginner)</option>
+                                        <option value="A2">A2 (Elementary)</option>
+                                        <option value="B1">B1 (Intermediate)</option>
+                                        <option value="B2">B2 (Upper Intermediate)</option>
+                                        <option value="C1">C1 (Advanced)</option>
+                                        <option value="C2">C2 (Mastery)</option>
+                                    </select>
+                                    {errors.level && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.level}</p>}
                                 </div>
                             </div>
 

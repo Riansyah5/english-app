@@ -45,28 +45,28 @@ export default function Welcome({ auth }) {
                 <div className="absolute bottom-10 left-1/3 w-80 h-80 bg-[#ff822d]/15 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Top Navbar Header */}
-                <header className="relative z-20 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+                <header className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between gap-3">
                     {/* Brand */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-lg shadow-sm shadow-[#ff822d]/20">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center font-black text-sm sm:text-lg shadow-xs shadow-[#ff822d]/20 shrink-0">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                             </svg>
                         </div>
-                        <span className="font-black text-lg tracking-tight text-slate-900">
+                        <span className="font-black text-base sm:text-lg tracking-tight text-slate-900 truncate">
                             English<span className="text-[#ff822d]">App</span>
                         </span>
                     </div>
 
                     {/* Nav Action */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
                         {auth?.user ? (
                             <Link
                                 href="/home"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all hover:-translate-y-0.5"
+                                className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-[11px] sm:text-xs shadow-xs transition-all hover:-translate-y-0.5 active:scale-95 whitespace-nowrap"
                             >
-                                <span>Buka Dashboard</span>
-                                <svg className="w-3.5 h-3.5 text-[#60f2ce]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <span>Dashboard</span>
+                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#60f2ce]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                 </svg>
                             </Link>
@@ -74,15 +74,15 @@ export default function Welcome({ auth }) {
                             <>
                                 <a
                                     href="/login"
-                                    className="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200/80 rounded-full shadow-2xs hover:bg-slate-50 transition"
+                                    className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200/80 rounded-full shadow-2xs hover:bg-slate-50 transition whitespace-nowrap active:scale-95"
                                 >
-                                    Masuk (Log In)
+                                    Masuk
                                 </a>
                                 <a
                                     href="/register"
-                                    className="px-5 py-2 text-xs font-extrabold text-slate-950 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] rounded-full shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition-all hover:-translate-y-0.5"
+                                    className="px-3.5 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-slate-950 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] rounded-full shadow-xs shadow-[#fcbf49]/20 hover:opacity-95 transition-all hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
                                 >
-                                    Daftar Sekarang
+                                    Daftar
                                 </a>
                             </>
                         )}
@@ -90,16 +90,16 @@ export default function Welcome({ auth }) {
                 </header>
 
                 {/* Hero Section */}
-                <main className="relative z-10 max-w-7xl mx-auto px-6 py-12 md:py-20 flex flex-col items-center text-center">
+                <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-20 flex flex-col items-center text-center">
                     
                     {/* Badge Pill */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-xs mb-6 text-xs font-bold text-slate-700">
-                        <span className="w-2 h-2 rounded-full bg-[#ff822d] animate-pulse"></span>
-                        Platform Pembelajaran Bahasa Inggris Terpadu
+                    <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-xs mb-5 sm:mb-6 text-[10px] sm:text-xs font-bold text-slate-700">
+                        <span className="w-2 h-2 rounded-full bg-[#ff822d] animate-pulse shrink-0"></span>
+                        <span className="truncate">Platform Pembelajaran Bahasa Inggris Terpadu</span>
                     </div>
 
                     {/* Main Headline */}
-                    <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.1] max-w-4xl mb-6">
+                    <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.15] sm:leading-[1.1] max-w-4xl mb-4 sm:mb-6">
                         Cara Cerdas Menguasai Bahasa Inggris Secara{' '}
                         <span className="bg-gradient-to-r from-[#ff822d] via-[#fcbf49] to-[#0d9488] bg-clip-text text-transparent">
                             Alami & Konsisten
@@ -107,16 +107,16 @@ export default function Welcome({ auth }) {
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="text-slate-500 text-sm sm:text-base md:text-lg max-w-2xl font-medium leading-relaxed mb-10">
+                    <p className="text-slate-500 text-xs sm:text-base md:text-lg max-w-2xl font-medium leading-relaxed mb-8 sm:mb-10 px-2">
                         Kombinasikan metode Spaced Repetition Flashcards, latihan menirukan intonasi native speaker (Shadowing), video interaktif, dan modul bacaan digital dalam satu dashboard modern.
                     </p>
 
                     {/* Primary CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row items-center gap-3.5 mb-16">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mb-12 sm:mb-16">
                         {auth?.user ? (
                             <Link
                                 href="/home"
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-extrabold text-sm rounded-2xl shadow-lg shadow-[#fcbf49]/25 hover:opacity-95 transition-all hover:-translate-y-0.5"
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-extrabold text-xs sm:text-sm rounded-2xl shadow-lg shadow-[#fcbf49]/25 hover:opacity-95 transition-all hover:-translate-y-0.5 active:scale-95"
                             >
                                 <i className="bi bi-speedometer2 text-base"></i>
                                 <span>Lanjutkan Belajar di Dashboard</span>
@@ -125,7 +125,7 @@ export default function Welcome({ auth }) {
                             <>
                                 <a
                                     href="/register"
-                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-extrabold text-sm rounded-2xl shadow-lg shadow-[#fcbf49]/25 hover:opacity-95 transition-all hover:-translate-y-0.5"
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-extrabold text-xs sm:text-sm rounded-2xl shadow-lg shadow-[#fcbf49]/25 hover:opacity-95 transition-all hover:-translate-y-0.5 active:scale-95"
                                 >
                                     <span>Mulai Belajar Gratis</span>
                                     <svg className="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,7 +134,7 @@ export default function Welcome({ auth }) {
                                 </a>
                                 <a
                                     href="/login"
-                                    className="w-full sm:w-auto px-7 py-4 bg-white border border-slate-200 text-slate-700 font-bold text-sm rounded-2xl shadow-xs hover:bg-slate-50 transition"
+                                    className="w-full sm:w-auto px-6 py-3.5 sm:py-4 bg-white border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm rounded-2xl shadow-xs hover:bg-slate-50 transition active:scale-95"
                                 >
                                     Masuk ke Akun
                                 </a>
@@ -143,22 +143,22 @@ export default function Welcome({ auth }) {
                     </div>
 
                     {/* Feature Grid Highlights */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full text-left">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full text-left">
                         {features.map((feat, idx) => (
                             <div 
                                 key={idx}
-                                className="bg-white rounded-3xl border border-slate-100 p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+                                className="bg-white rounded-3xl border border-slate-100 p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
                             >
                                 <div>
                                     <div className="flex items-center justify-between mb-4">
-                                        <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${feat.color} text-white flex items-center justify-center text-lg shadow-sm`}>
+                                        <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br ${feat.color} text-white flex items-center justify-center text-base sm:text-lg shadow-xs shrink-0`}>
                                             <i className={`bi ${feat.icon}`}></i>
                                         </div>
-                                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-50 border border-slate-200/80 text-slate-600 uppercase tracking-wider">
+                                        <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-slate-50 border border-slate-200/80 text-slate-600 uppercase tracking-wider whitespace-nowrap">
                                             {feat.badge}
                                         </span>
                                     </div>
-                                    <h2 className="font-extrabold text-base text-slate-900 leading-snug mb-2">
+                                    <h2 className="font-extrabold text-sm sm:text-base text-slate-900 leading-snug mb-1.5 sm:mb-2">
                                         {feat.title}
                                     </h2>
                                     <p className="text-xs text-slate-500 font-medium leading-relaxed">
@@ -172,14 +172,14 @@ export default function Welcome({ auth }) {
                 </main>
 
                 {/* Footer Section */}
-                <footer className="relative z-10 border-t border-slate-100 bg-white/60 backdrop-blur-xs py-8 px-6 text-center text-xs text-slate-400">
-                    <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div className="flex items-center gap-2">
+                <footer className="relative z-10 border-t border-slate-100 bg-white/60 backdrop-blur-xs py-6 sm:py-8 px-4 sm:px-6 text-center text-xs text-slate-400">
+                    <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
                             <span className="font-bold text-slate-700">EnglishApp</span> &copy; {new Date().getFullYear()} &bull; Semua hak cipta dilindungi.
                         </div>
-                        <div className="flex items-center gap-6 font-semibold text-slate-500">
+                        <div className="flex items-center gap-3 sm:gap-6 font-semibold text-[11px] sm:text-xs text-slate-500 flex-wrap justify-center">
                             <a href="/lessons" className="hover:text-[#ff822d] transition">Buku Digital</a>
-                            <a href="/video-learning" className="hover:text-[#ff822d] transition">Video Pembelajaran</a>
+                            <a href="/video-learning" className="hover:text-[#ff822d] transition">Video Belajar</a>
                             <a href="/shadowing" className="hover:text-[#ff822d] transition">Studio Shadowing</a>
                         </div>
                     </div>

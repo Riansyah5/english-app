@@ -169,10 +169,17 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                             <div className={`absolute inset-0 w-full h-full bg-white rounded-3xl border border-slate-100 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.06)] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 transform ${
                                 showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
                             }`}>
-                                <div className="flex items-center justify-between gap-2">
-                                    <span className="shrink-0 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-[#fcbf49]/15 text-[#b45309] border border-[#fcbf49]/30 uppercase tracking-wider whitespace-nowrap">
-                                        {studyItem?.type?.replace('_', ' ') || 'Flashcard'}
-                                    </span>
+                                <div className="flex items-center justify-between gap-2 min-w-0">
+                                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                                        <span className="shrink-0 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-[#fcbf49]/15 text-[#b45309] border border-[#fcbf49]/30 uppercase tracking-wider whitespace-nowrap">
+                                            {studyItem?.type?.replace('_', ' ') || 'Flashcard'}
+                                        </span>
+                                        {studyItem?.level && (
+                                            <span className="shrink-0 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-slate-100 text-slate-500 border border-slate-200 uppercase tracking-wider whitespace-nowrap">
+                                                {studyItem.level}
+                                            </span>
+                                        )}
+                                    </div>
                                     <span className="shrink-0 text-[11px] sm:text-xs font-semibold text-slate-400 whitespace-nowrap">
                                         Pertanyaan
                                     </span>
@@ -222,9 +229,14 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                         <p className="italic text-slate-700 text-xs leading-relaxed font-medium">
                                             "{studyItem?.example_sentence || 'Tidak ada contoh kalimat.'}"
                                         </p>
+                                        {studyItem?.example_translation && (
+                                            <p className="text-slate-500 text-[11px] mt-2 border-t border-slate-200 pt-2">
+                                                <span className="font-semibold text-slate-400">Arti:</span> {studyItem.example_translation}
+                                            </p>
+                                        )}
                                         {studyItem?.notes && (
                                             <p className="text-slate-400 text-[11px] mt-2 pt-2 border-t border-slate-200">
-                                                💡 {studyItem.notes}
+                                                📝 {studyItem.notes}
                                             </p>
                                         )}
                                     </div>

@@ -2,6 +2,8 @@ import React from "react";
 import { Head, Link, useForm, router } from "@inertiajs/react";
 import { useState, useRef, useEffect } from "react";
 import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
+import axios from "axios";
 import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 
 export default function StudyItemCreate({ auth }) {
@@ -28,15 +30,19 @@ export default function StudyItemCreate({ auth }) {
             {
                 content: "Apple",
                 type: "word",
+                level: "A1",
                 translation: "Apel",
                 example_sentence: "I ate a red apple.",
+                example_translation: "Saya makan apel merah.",
                 notes: "Kata benda dasar",
             },
             {
                 content: "Make up your mind",
                 type: "idiom",
+                level: "B2",
                 translation: "Buat keputusan",
                 example_sentence: "You need to make up your mind soon.",
+                example_translation: "Kamu harus segera mengambil keputusan.",
                 notes: "Sering dipakai dalam percakapan informal",
             },
         ]);
@@ -65,6 +71,7 @@ export default function StudyItemCreate({ auth }) {
                         content:
                             row.content || row.Content || row.CONTENT || "",
                         type: row.type || row.Type || row.TYPE || "word",
+                        level: row.level || row.Level || row.LEVEL || "",
                         translation:
                             row.translation ||
                             row.Translation ||
@@ -75,35 +82,102 @@ export default function StudyItemCreate({ auth }) {
                             row.Example_Sentence ||
                             row["Example Sentence"] ||
                             "",
+                        example_translation:
+                            row.example_translation ||
+                            row.Example_Translation ||
+                            row["Example Translation"] ||
+                            "",
                         notes: row.notes || row.Notes || row.NOTES || "",
                     }))
                     .filter((item) => item.content && item.translation);
 
                 if (mappedData.length === 0) {
-                    alert(
-                        "Tidak ada data valid yang bisa diimpor. Pastikan format kolom Excel adalah: content, type, translation, example_sentence, notes.",
-                    );
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Data Kosong',
+                        text: 'Tidak ada data valid yang bisa diimpor. Pastikan format kolom Excel sesuai.',
+                        confirmButtonColor: '#0d9488'
+                    });
                     setImporting(false);
                     return;
                 }
 
-                router.post(
-                    "/admin/study-items/import",
-                    { items: mappedData },
-                    {
-                        onSuccess: () => {
-                            setImporting(false);
-                        },
-                        onError: (err) => {
-                            setImporting(false);
-                            alert("Terjadi kesalahan saat mengimpor data.");
-                            console.error(err);
-                        },
-                    },
-                );
+                const chunkSize = 100;
+                const totalChunks = Math.ceil(mappedData.length / chunkSize);
+                let totalAdded = 0;
+                let totalSkipped = 0;
+
+                Swal.fire({
+                    title: 'Mengimpor Data',
+                    html: `Memproses data...<br>Progres: 0 / ${mappedData.length} baris`,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const processChunks = async () => {
+                    try {
+                        for (let i = 0; i < totalChunks; i++) {
+                            const chunk = mappedData.slice(i * chunkSize, (i + 1) * chunkSize);
+                            const response = await axios.post('/admin/study-items/import', {
+                                items: chunk
+                            }, {
+                                headers: { 'Accept': 'application/json' }
+                            });
+
+                            if (response.data.success) {
+                                totalAdded += response.data.added;
+                                totalSkipped += response.data.skipped;
+                            }
+
+                            const currentProcessed = Math.min((i + 1) * chunkSize, mappedData.length);
+                            Swal.update({
+                                html: `Memproses data...<br>Progres: ${currentProcessed} / ${mappedData.length} baris`
+                            });
+                        }
+
+                        setImporting(false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Selesai!',
+                            text: `Berhasil menambahkan ${totalAdded} materi baru. ${totalSkipped} materi dilewati (duplikat).`,
+                            confirmButtonColor: '#0d9488'
+                        }).then(() => {
+                            router.visit('/admin/study-items');
+                        });
+                    } catch (err) {
+                        setImporting(false);
+                        
+                        // Ekstrak pesan error asli dari backend (Laravel)
+                        let errorMessage = err.response?.data?.message || err.message || 'Terjadi kesalahan tidak dikenal saat mengimpor data.';
+                        
+                        // Jika ada detail validasi dari Laravel, kita bisa tambahkan
+                        if (err.response?.data?.errors) {
+                            const firstErrorKey = Object.keys(err.response.data.errors)[0];
+                            errorMessage += `\nDetail: ${err.response.data.errors[firstErrorKey][0]}`;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            html: 'Gagal mengimpor data.' + '<br><br>' + errorMessage,
+                            confirmButtonColor: '#0d9488'
+                        });
+                        console.error(err);
+                    }
+                };
+
+                processChunks();
             } catch (error) {
                 setImporting(false);
-                alert("Gagal membaca file Excel. Pastikan format file benar.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal membaca file Excel. Pastikan format file benar.',
+                    confirmButtonColor: '#0d9488'
+                });
             }
         };
         reader.readAsBinaryString(file);
@@ -112,8 +186,10 @@ export default function StudyItemCreate({ auth }) {
     const { data, setData, post, processing, errors } = useForm({
         content: "",
         type: "word",
+        level: "",
         translation: "",
         example_sentence: "",
+        example_translation: "",
         notes: "",
     });
 
@@ -243,7 +319,7 @@ export default function StudyItemCreate({ auth }) {
                         <form onSubmit={submit} className="space-y-6">
                             {/* Input Rows: Content & Type */}
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-                                <div className="md:col-span-8">
+                                <div className="md:col-span-6">
                                     <label
                                         htmlFor="content"
                                         className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
@@ -276,7 +352,7 @@ export default function StudyItemCreate({ auth }) {
                                     )}
                                 </div>
 
-                                <div className="md:col-span-4">
+                                <div className="md:col-span-3">
                                     <label
                                         htmlFor="type"
                                         className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
@@ -300,7 +376,7 @@ export default function StudyItemCreate({ auth }) {
                                         required
                                     >
                                         <option value="word">
-                                            Word (Kata Tunggal)
+                                            Word (Kata)
                                         </option>
                                         <option value="phrase">
                                             Phrase (Frasa)
@@ -316,6 +392,40 @@ export default function StudyItemCreate({ auth }) {
                                     {errors.type && (
                                         <p className="text-rose-500 text-xs font-semibold mt-1.5">
                                             {errors.type}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="md:col-span-3">
+                                    <label
+                                        htmlFor="level"
+                                        className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                    >
+                                        Level <span className="font-medium normal-case text-slate-400">(Opsional)</span>
+                                    </label>
+                                    <select
+                                        id="level"
+                                        value={data.level}
+                                        onChange={(e) =>
+                                            setData("level", e.target.value)
+                                        }
+                                        className={`w-full px-4 py-3 rounded-2xl border text-xs font-bold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
+                                            errors.level
+                                                ? "border-rose-400 bg-rose-50/30"
+                                                : "border-slate-200"
+                                        } text-slate-800 shadow-2xs`}
+                                    >
+                                        <option value="">Semua Level</option>
+                                        <option value="A1">A1 (Beginner)</option>
+                                        <option value="A2">A2 (Elementary)</option>
+                                        <option value="B1">B1 (Intermediate)</option>
+                                        <option value="B2">B2 (Upper Intermediate)</option>
+                                        <option value="C1">C1 (Advanced)</option>
+                                        <option value="C2">C2 (Mastery)</option>
+                                    </select>
+                                    {errors.level && (
+                                        <p className="text-rose-500 text-xs font-semibold mt-1.5">
+                                            {errors.level}
                                         </p>
                                     )}
                                 </div>
@@ -372,10 +482,37 @@ export default function StudyItemCreate({ auth }) {
                                             e.target.value,
                                         )
                                     }
-                                    rows="3"
+                                    rows="2"
                                     placeholder="Contoh: You need to make up your mind before the deadline."
                                     className={`w-full p-4 rounded-2xl border text-xs sm:text-sm font-medium bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all leading-relaxed ${
                                         errors.example_sentence
+                                            ? "border-rose-400 bg-rose-50/30"
+                                            : "border-slate-200"
+                                    } text-slate-900 placeholder:text-slate-400 shadow-2xs mb-4`}
+                                />
+
+                                <label
+                                    htmlFor="example_translation"
+                                    className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                >
+                                    Terjemahan Contoh Kalimat{" "}
+                                    <span className="font-medium normal-case text-slate-400">
+                                        (Opsional)
+                                    </span>
+                                </label>
+                                <textarea
+                                    id="example_translation"
+                                    value={data.example_translation}
+                                    onChange={(e) =>
+                                        setData(
+                                            "example_translation",
+                                            e.target.value,
+                                        )
+                                    }
+                                    rows="2"
+                                    placeholder="Contoh: Kamu harus membuat keputusan sebelum tenggat waktu."
+                                    className={`w-full p-4 rounded-2xl border text-xs sm:text-sm font-medium bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all leading-relaxed ${
+                                        errors.example_translation
                                             ? "border-rose-400 bg-rose-50/30"
                                             : "border-slate-200"
                                     } text-slate-900 placeholder:text-slate-400 shadow-2xs`}

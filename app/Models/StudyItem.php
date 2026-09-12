@@ -10,7 +10,7 @@ class StudyItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content', 'type', 'translation', 'example_sentence', 'notes'
+        'content', 'type', 'level', 'translation', 'example_sentence', 'example_translation', 'notes'
     ];
 
     // Relasi: Satu materi bisa ada di banyak flashcard milik berbagai user

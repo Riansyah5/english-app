@@ -30,8 +30,10 @@ class StudyItemController extends Controller
         $request->validate([
             'content' => 'required|string|max:255|unique:study_items,content',
             'type' => 'required|in:word,phrase,idiom,grammar_rule,speaking_prompt',
+            'level' => 'nullable|in:A1,A2,B1,B2,C1,C2',
             'translation' => 'required|string|max:255',
             'example_sentence' => 'nullable|string',
+            'example_translation' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
 
@@ -104,58 +106,82 @@ class StudyItemController extends Controller
             'items' => 'required|array',
             'items.*.content' => 'required|string|max:255',
             'items.*.type' => 'required|in:word,phrase,idiom,grammar_rule,speaking_prompt',
+            'items.*.level' => 'nullable|in:A1,A2,B1,B2,C1,C2',
             'items.*.translation' => 'required|string|max:255',
             'items.*.example_sentence' => 'nullable|string',
+            'items.*.example_translation' => 'nullable|string',
             'items.*.notes' => 'nullable|string',
         ]);
 
         $items = $request->items;
-        $skipped = 0;
-        $added = 0;
         
-        $users = User::all();
-        $today = Carbon::today();
+        $contents = collect($items)->pluck('content')->toArray();
+        $existingContents = StudyItem::whereIn('content', $contents)->pluck('content')->toArray();
+        
+        $newItemsData = [];
         $now = Carbon::now();
 
         foreach ($items as $itemData) {
-            // Cek duplikasi
-            if (StudyItem::where('content', $itemData['content'])->exists()) {
-                $skipped++;
-                continue;
-            }
-
-            // Insert study item
-            $studyItem = StudyItem::create([
-                'content' => $itemData['content'],
-                'type' => $itemData['type'],
-                'translation' => $itemData['translation'],
-                'example_sentence' => $itemData['example_sentence'] ?? null,
-                'notes' => $itemData['notes'] ?? null,
-            ]);
-
-            // Distribusikan
-            $flashcards = [];
-            foreach ($users as $user) {
-                $flashcards[] = [
-                    'user_id' => $user->id,
-                    'study_item_id' => $studyItem->id,
-                    'repetition_count' => 0,
-                    'ease_factor' => 2.5,
-                    'interval' => 0,
-                    'next_review_date' => $today,
+            if (!in_array($itemData['content'], $existingContents)) {
+                $newItemsData[] = [
+                    'content' => $itemData['content'],
+                    'type' => $itemData['type'],
+                    'level' => $itemData['level'] ?? null,
+                    'translation' => $itemData['translation'],
+                    'example_sentence' => $itemData['example_sentence'] ?? null,
+                    'example_translation' => $itemData['example_translation'] ?? null,
+                    'notes' => $itemData['notes'] ?? null,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
+                $existingContents[] = $itemData['content'];
             }
-
-            if (!empty($flashcards)) {
-                UserFlashcard::insert($flashcards);
-            }
-
-            $added++;
         }
 
-        return redirect()->route('admin.study-items.index')->with('success', "Berhasil menambahkan {$added} materi baru. {$skipped} materi dilewati karena duplikat.");
+        $added = 0;
+        $skipped = count($items) - count($newItemsData);
+
+        if (!empty($newItemsData)) {
+            StudyItem::insert($newItemsData);
+            $added = count($newItemsData);
+
+            $newContents = collect($newItemsData)->pluck('content')->toArray();
+            $newStudyItems = StudyItem::whereIn('content', $newContents)->get();
+
+            $users = User::pluck('id');
+            $flashcards = [];
+            $today = Carbon::today();
+
+            foreach ($newStudyItems as $si) {
+                foreach ($users as $userId) {
+                    $flashcards[] = [
+                        'user_id' => $userId,
+                        'study_item_id' => $si->id,
+                        'repetition_count' => 0,
+                        'ease_factor' => 2.5,
+                        'interval' => 0,
+                        'next_review_date' => $today,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+            }
+
+            foreach (array_chunk($flashcards, 5000) as $chunk) {
+                UserFlashcard::insert($chunk);
+            }
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'added' => $added,
+                'skipped' => $skipped
+            ]);
+        }
+
+        return redirect()->route('admin.study-items.index')
+            ->with('success', "Berhasil menambahkan {$added} materi baru. {$skipped} materi dilewati karena duplikat.");
     }
 
 }

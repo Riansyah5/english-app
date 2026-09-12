@@ -86,13 +86,19 @@ export default function StudyItemIndex({
                             <table className="w-full text-left text-xs whitespace-nowrap">
                                 <thead>
                                     <tr className="bg-[#fafcfb] text-slate-400 font-bold uppercase tracking-wider text-[11px] border-b border-slate-100">
-                                        <th className="px-6 py-4 w-1/3">
+                                        <th className="px-6 py-4 w-12 text-center">
+                                            No.
+                                        </th>
+                                        <th className="px-6 py-4 w-1/4">
                                             Teks (Inggris)
                                         </th>
                                         <th className="px-6 py-4 w-1/6">
                                             Tipe Materi
                                         </th>
-                                        <th className="px-6 py-4 w-1/3">
+                                        <th className="px-6 py-4 w-1/12">
+                                            Level
+                                        </th>
+                                        <th className="px-6 py-4 w-1/4">
                                             Terjemahan (Indonesia)
                                         </th>
                                         <th className="px-6 py-4 w-1/6 text-right">
@@ -102,11 +108,14 @@ export default function StudyItemIndex({
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {items.data && items.data.length > 0 ? (
-                                        items.data.map((item) => (
+                                        items.data.map((item, index) => (
                                             <tr
                                                 key={item.id}
                                                 className="hover:bg-[#fafcfb] transition-colors"
                                             >
+                                                <td className="px-6 py-4 text-center font-bold text-slate-400">
+                                                    {(items.from || 1) + index}
+                                                </td>
                                                 <td className="px-6 py-4">
                                                     <span className="font-extrabold text-sm text-slate-900 block">
                                                         {item.content}
@@ -123,6 +132,15 @@ export default function StudyItemIndex({
                                                               )
                                                             : "GENERAL"}
                                                     </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {item.level ? (
+                                                        <span className="px-2 py-1 text-[10px] font-bold uppercase rounded-md bg-slate-100 text-slate-500 border border-slate-200">
+                                                            {item.level}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-slate-300">-</span>
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 font-medium text-slate-600">
                                                     {item.translation}
@@ -154,7 +172,7 @@ export default function StudyItemIndex({
                                     ) : (
                                         <tr>
                                             <td
-                                                colSpan="4"
+                                                colSpan="6"
                                                 className="px-6 py-14 text-center"
                                             >
                                                 <div className="w-14 h-14 mx-auto rounded-3xl bg-[#fcbf49]/20 text-[#ff822d] flex items-center justify-center text-2xl mb-3">

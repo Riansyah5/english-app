@@ -101,9 +101,16 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                             {/* Front Card */}
                             <div className={`absolute inset-0 w-full h-full bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 transform ${showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-[11px] font-bold uppercase px-3 py-1 bg-[#60f2ce]/20 text-[#0f766e] rounded-lg border border-[#60f2ce]/50">
-                                        {studyItem?.type?.replace('_', ' ') || 'Kartu Belajar'}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[11px] font-bold uppercase px-3 py-1 bg-[#60f2ce]/20 text-[#0f766e] rounded-lg border border-[#60f2ce]/50">
+                                            {studyItem?.type?.replace('_', ' ') || 'Kartu Belajar'}
+                                        </span>
+                                        {studyItem?.level && (
+                                            <span className="text-[11px] font-bold uppercase px-2 py-1 bg-slate-100 text-slate-500 rounded-lg border border-slate-200">
+                                                {studyItem.level}
+                                            </span>
+                                        )}
+                                    </div>
                                     <span className="text-xs font-semibold text-slate-400">Ketuk untuk cek</span>
                                 </div>
 
@@ -145,6 +152,11 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                                         <p className="italic text-slate-700 text-xs leading-relaxed">
                                             "{studyItem?.example_sentence || 'Belum ada contoh kalimat.'}"
                                         </p>
+                                        {studyItem?.example_translation && (
+                                            <p className="text-slate-500 text-[11px] mt-2 border-t border-slate-100 pt-2">
+                                                <span className="font-semibold text-slate-400">Arti:</span> {studyItem.example_translation}
+                                            </p>
+                                        )}
                                     </div>
 
                                     {studyItem?.notes && (
