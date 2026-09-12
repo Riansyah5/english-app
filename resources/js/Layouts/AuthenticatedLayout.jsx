@@ -337,6 +337,16 @@ export default function AuthenticatedLayout({ user, children }) {
                                                     <i className="bi bi-mic-fill text-sm"></i>
                                                     <span>Naskah Shadowing</span>
                                                 </Link>
+                                                <Link
+                                                    href="/admin/exams"
+                                                    onClick={() =>
+                                                        setAdminDropdownOpen(false)
+                                                    }
+                                                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-rose-500/20 hover:text-rose-700 rounded-2xl transition-colors whitespace-nowrap"
+                                                >
+                                                    <i className="bi bi-ui-checks text-sm"></i>
+                                                    <span>Ujian (Exams)</span>
+                                                </Link>
                                             </div>
                                         )}
                                     </div>
@@ -486,6 +496,13 @@ export default function AuthenticatedLayout({ user, children }) {
                                 className="px-3 py-2 text-xs font-semibold bg-slate-50 text-slate-700 rounded-xl truncate"
                             >
                                 Naskah Shadowing
+                            </Link>
+                            <Link
+                                href="/admin/exams"
+                                onClick={() => setMobileAdminOpen(false)}
+                                className="px-3 py-2 text-xs font-semibold bg-slate-50 text-rose-700 rounded-xl truncate"
+                            >
+                                Ujian (Exams)
                             </Link>
                         </div>
                     </div>

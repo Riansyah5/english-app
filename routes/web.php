@@ -87,4 +87,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('shadowing/{shadowing}/lines', [ShadowingController::class, 'storeLine'])->name('shadowing.lines.store');
     Route::delete('shadowing/lines/{line}', [ShadowingController::class, 'destroyLine'])->name('shadowing.lines.destroy');
     
+    // Admin: Modul Exams
+    Route::resource('exams', \App\Http\Controllers\Admin\ExamController::class);
+    Route::post('exams/{exam}/questions', [\App\Http\Controllers\Admin\ExamController::class, 'storeQuestion'])->name('exams.questions.store');
+    Route::delete('exams/{exam}/questions/{question}', [\App\Http\Controllers\Admin\ExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
+
 });
