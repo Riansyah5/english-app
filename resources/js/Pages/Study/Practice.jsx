@@ -11,6 +11,17 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
     const currentCard = isComplete ? null : practiceCards[currentIndex];
     const studyItem = currentCard?.study_item;
 
+    const playAudio = (text, e) => {
+        if (e) e.stopPropagation();
+        if (!text || !('speechSynthesis' in window)) return;
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+    };
+
     const handleNext = () => {
         setShowAnswer(false);
         setTimeout(() => {
@@ -94,7 +105,7 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                             </div>
                         </div>
 
-                        {/* Limit Filter (If 'all') */}
+                        {/* Limit Filter */}
                         {source === 'all' && (
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
                                 <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Batas Jumlah</span>
@@ -186,9 +197,25 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                 </div>
                                 
                                 <div className="my-auto text-center px-2 sm:px-4">
-                                    <h2 className="font-extrabold text-2xl sm:text-4xl tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                                        {!isReversed ? studyItem?.content : studyItem?.translation}
-                                    </h2>
+                                    <div className="flex items-center justify-center gap-3">
+                                        <h2 className="font-extrabold text-2xl sm:text-4xl tracking-tight text-slate-900 dark:text-white leading-tight break-words">
+                                            {!isReversed ? studyItem?.content : studyItem?.translation}
+                                        </h2>
+
+                                        {/* Speaker Front: Muncul bila teks di kartu depan adalah Bahasa Inggris */}
+                                        {isReversed && studyItem?.content && (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => playAudio(studyItem.content, e)}
+                                                className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition shrink-0"
+                                                title="Dengarkan pengucapan"
+                                            >
+                                                <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                                </svg>
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                                 
                                 <div>
@@ -216,16 +243,44 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                 </div>
 
                                 <div className="my-auto py-2 space-y-3 sm:space-y-4">
-                                    <div className="text-center">
-                                        <h3 className="font-black text-2xl sm:text-4xl tracking-tight text-[#ea580c] dark:text-[#ff822d] break-words">
+                                    <div className="flex items-center justify-center gap-2.5">
+                                        <h3 className="font-black text-2xl sm:text-4xl tracking-tight text-[#ea580c] dark:text-[#ff822d] break-words text-center">
                                             {!isReversed ? studyItem?.translation : studyItem?.content}
                                         </h3>
+
+                                        {/* Speaker Back: Muncul bila teks jawaban di belakang adalah Bahasa Inggris */}
+                                        {!isReversed && studyItem?.content && (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => playAudio(studyItem.content, e)}
+                                                className="p-2 rounded-full text-[#ea580c]/70 hover:text-[#ea580c] dark:text-[#ff822d]/70 dark:hover:text-[#ff822d] hover:bg-orange-50 dark:hover:bg-slate-800 active:scale-95 transition shrink-0"
+                                                title="Dengarkan pengucapan"
+                                            >
+                                                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                                </svg>
+                                            </button>
+                                        )}
                                     </div>
                                     
                                     <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 sm:p-4 rounded-2xl border border-slate-100 dark:border-slate-800 max-h-36 overflow-y-auto">
-                                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-400 block mb-1 uppercase tracking-wider">
-                                            Contoh Kalimat:
-                                        </span>
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
+                                                Contoh Kalimat:
+                                            </span>
+                                            {studyItem?.example_sentence && (
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => playAudio(studyItem.example_sentence, e)}
+                                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 active:scale-95 transition"
+                                                    title="Dengarkan kalimat"
+                                                >
+                                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </div>
                                         <p className="italic text-slate-700 dark:text-slate-300 text-xs leading-relaxed font-medium">
                                             "{studyItem?.example_sentence || 'Tidak ada contoh kalimat.'}"
                                         </p>

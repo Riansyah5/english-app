@@ -13,6 +13,17 @@ export default function StudyIndex({ auth, dueFlashcards }) {
     const currentCard = isComplete ? null : dueFlashcards[currentIndex];
     const studyItem = currentCard?.study_item;
 
+    const playAudio = (text, e) => {
+        if (e) e.stopPropagation();
+        if (!text || !('speechSynthesis' in window)) return;
+        
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+    };
+
     const handleRate = (quality) => {
         setIsSaving(true);
         axios.post(`/study/${currentCard.id}/review`, { quality })
@@ -36,9 +47,8 @@ export default function StudyIndex({ auth, dueFlashcards }) {
             <div className="min-h-screen bg-[#fafcfb] dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 p-4 sm:p-6 md:p-8 font-sans transition-colors duration-200">
                 <div className="max-w-2xl mx-auto space-y-6">
 
-                    {/* Top Bar Navigation (Responsif Mobile) */}
+                    {/* Top Bar Navigation */}
                     <div className="flex items-center justify-between gap-2">
-                        {/* Kiri: Judul & Badge Mode */}
                         <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                             <h1 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white truncate">
                                 Daily Review
@@ -48,7 +58,6 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                             </span>
                         </div>
                         
-                        {/* Kanan: Tombol Tukar Bahasa & Counter Kartu */}
                         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                             <button 
                                 onClick={() => setIsReversed(!isReversed)}
@@ -115,9 +124,25 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                                 </div>
 
                                 <div className="my-auto text-center py-6">
-                                    <h2 className="font-black text-3xl sm:text-5xl tracking-tight text-slate-900 dark:text-white break-words">
-                                        {!isReversed ? studyItem?.content : studyItem?.translation}
-                                    </h2>
+                                    <div className="flex items-center justify-center gap-3">
+                                        <h2 className="font-black text-3xl sm:text-5xl tracking-tight text-slate-900 dark:text-white break-words">
+                                            {!isReversed ? studyItem?.content : studyItem?.translation}
+                                        </h2>
+                                        
+                                        {/* Speaker di Front jika teks yang tampil adalah Bahasa Inggris */}
+                                        {!isReversed && studyItem?.content && (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => playAudio(studyItem.content, e)}
+                                                className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition shrink-0"
+                                                title="Dengarkan pengucapan"
+                                            >
+                                                <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                                </svg>
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div>
@@ -142,13 +167,45 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                                             {!isReversed ? studyItem?.content : studyItem?.translation}
                                         </span>
                                     </div>
-                                    <h3 className="font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white mb-4 break-words">
-                                        {!isReversed ? studyItem?.translation : studyItem?.content}
-                                    </h3>
 
-                                    {/* Example Sentence Container */}
+                                    {/* Back Card Answer + Speaker */}
+                                    <div className="flex items-center gap-2.5 mb-4">
+                                        <h3 className="font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white break-words">
+                                            {!isReversed ? studyItem?.translation : studyItem?.content}
+                                        </h3>
+                                        
+                                        {/* Speaker di Back jika jawaban/teks di sisi ini adalah Bahasa Inggris */}
+                                        {isReversed && studyItem?.content && (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => playAudio(studyItem.content, e)}
+                                                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition shrink-0"
+                                                title="Dengarkan pengucapan"
+                                            >
+                                                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                                </svg>
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Example Sentence Container with Speaker */}
                                     <div className="bg-[#fafcfb] dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                        <span className="text-[10px] font-bold block mb-1 text-slate-400 dark:text-slate-500 uppercase tracking-wider">Contoh Kalimat</span>
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Contoh Kalimat</span>
+                                            {studyItem?.example_sentence && (
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => playAudio(studyItem.example_sentence, e)}
+                                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 active:scale-95 transition"
+                                                    title="Dengarkan kalimat"
+                                                >
+                                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </div>
                                         <p className="italic text-slate-700 dark:text-slate-300 text-xs leading-relaxed">
                                             "{studyItem?.example_sentence || 'Belum ada contoh kalimat.'}"
                                         </p>
