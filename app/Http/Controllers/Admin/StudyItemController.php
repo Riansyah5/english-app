@@ -11,11 +11,32 @@ use Illuminate\Http\Request;
 
 class StudyItemController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $items = StudyItem::latest()->paginate(10);
+        $query = StudyItem::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('content', 'like', "%{$search}%")
+                  ->orWhere('translation', 'like', "%{$search}%")
+                  ->orWhere('example_sentence', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('level')) {
+            $query->where('level', $request->level);
+        }
+
+        $items = $query->latest()->paginate(10)->withQueryString();
+
         return \Inertia\Inertia::render('Admin/StudyItems/Index', [
-            'items' => $items
+            'items' => $items,
+            'filters' => $request->only(['search', 'type', 'level'])
         ]);
     }
 

@@ -5,8 +5,31 @@ import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 export default function StudyItemIndex({
     auth,
     items = { data: [], links: [] },
+    filters = {},
 }) {
     const { flash } = usePage().props;
+
+    const [search, setSearch] = React.useState(filters.search || "");
+    const [type, setType] = React.useState(filters.type || "");
+    const [level, setLevel] = React.useState(filters.level || "");
+
+    const applyFilters = (e) => {
+        e?.preventDefault();
+        router.get(
+            "/admin/study-items",
+            { search, type, level },
+            { preserveState: true, replace: true }
+        );
+    };
+
+    const handleSelectChange = (setter, value) => {
+        setter(value);
+        router.get(
+            "/admin/study-items",
+            { search, type: setter === setType ? value : type, level: setter === setLevel ? value : level },
+            { preserveState: true, replace: true }
+        );
+    };
 
     const handleDelete = (id) => {
         if (confirm("Hapus materi ini secara permanen dari database?")) {
@@ -79,6 +102,55 @@ export default function StudyItemIndex({
                             <span>{flash.success}</span>
                         </div>
                     )}
+
+                    {/* Filter & Search Bar */}
+                    <div className="bg-white dark:bg-slate-900/90 p-4 rounded-3xl shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row gap-3 items-center transition-colors">
+                        <form onSubmit={applyFilters} className="relative flex-1 w-full">
+                            <i className="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input
+                                type="text"
+                                placeholder="Cari kata, arti, atau contoh kalimat..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs sm:text-sm focus:ring-[#0d9488] focus:border-[#0d9488] dark:text-white transition-colors placeholder:text-slate-400"
+                            />
+                        </form>
+                        <div className="flex gap-2 w-full md:w-auto">
+                            <select
+                                value={type}
+                                onChange={(e) => handleSelectChange(setType, e.target.value)}
+                                className="w-full md:w-36 py-2.5 px-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs sm:text-sm focus:ring-[#0d9488] focus:border-[#0d9488] dark:text-white cursor-pointer transition-colors"
+                            >
+                                <option value="">Semua Tipe</option>
+                                <option value="word">Word</option>
+                                <option value="phrase">Phrase</option>
+                                <option value="sentence">Sentence</option>
+                                <option value="grammar">Grammar</option>
+                            </select>
+                            <select
+                                value={level}
+                                onChange={(e) => handleSelectChange(setLevel, e.target.value)}
+                                className="w-full md:w-32 py-2.5 px-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs sm:text-sm focus:ring-[#0d9488] focus:border-[#0d9488] dark:text-white cursor-pointer transition-colors"
+                            >
+                                <option value="">Semua Level</option>
+                                <option value="A1">A1</option>
+                                <option value="A2">A2</option>
+                                <option value="B1">B1</option>
+                                <option value="B2">B2</option>
+                                <option value="C1">C1</option>
+                                <option value="C2">C2</option>
+                            </select>
+                            {(search || type || level) && (
+                                <Link
+                                    href="/admin/study-items"
+                                    className="p-2.5 text-rose-500 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 rounded-xl flex items-center justify-center transition-colors"
+                                    title="Reset Filter"
+                                >
+                                    <i className="bi bi-x-circle-fill"></i>
+                                </Link>
+                            )}
+                        </div>
+                    </div>
 
                     {/* Table Container Card */}
                     <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none overflow-hidden transition-colors">
