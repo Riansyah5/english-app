@@ -199,10 +199,11 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                 <div className="my-auto text-center px-2 sm:px-4">
                                     <div className="flex items-center justify-center gap-3">
                                         <h2 className="font-extrabold text-2xl sm:text-4xl tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                                            {!isReversed ? studyItem?.content : studyItem?.translation}
+                                            {/* ID ➔ EN: Tampilkan terjemahan (ID). EN ➔ ID: Tampilkan konten (EN) */}
+                                            {!isReversed ? studyItem?.translation : studyItem?.content}
                                         </h2>
 
-                                        {/* Speaker Front: Muncul bila teks di kartu depan adalah Bahasa Inggris */}
+                                        {/* Speaker Front: Hanya tampil jika kartu depan adalah Bahasa Inggris (saat mode isReversed) */}
                                         {isReversed && studyItem?.content && (
                                             <button
                                                 type="button"
@@ -238,17 +239,19 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                         Kunci Jawaban
                                     </span>
                                     <span className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-medium truncate text-right">
-                                        {!isReversed ? studyItem?.content : studyItem?.translation}
+                                        {/* Teks pertanyaan di kartu depan */}
+                                        {!isReversed ? studyItem?.translation : studyItem?.content}
                                     </span>
                                 </div>
 
                                 <div className="my-auto py-2 space-y-3 sm:space-y-4">
                                     <div className="flex items-center justify-center gap-2.5">
                                         <h3 className="font-black text-2xl sm:text-4xl tracking-tight text-[#ea580c] dark:text-[#ff822d] break-words text-center">
-                                            {!isReversed ? studyItem?.translation : studyItem?.content}
+                                            {/* ID ➔ EN: Tampilkan konten (EN). EN ➔ ID: Tampilkan terjemahan (ID) */}
+                                            {!isReversed ? studyItem?.content : studyItem?.translation}
                                         </h3>
 
-                                        {/* Speaker Back: Muncul bila teks jawaban di belakang adalah Bahasa Inggris */}
+                                        {/* Speaker Back: Hanya tampil jika kartu belakang adalah Bahasa Inggris (saat !isReversed) */}
                                         {!isReversed && studyItem?.content && (
                                             <button
                                                 type="button"
