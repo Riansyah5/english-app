@@ -141,4 +141,38 @@ class StudyController extends Controller
             'limit' => $limit
         ]);
     }
+
+    public function listening()
+    {
+        return \Inertia\Inertia::render('Study/Listening');
+    }
+
+    public function listeningSession(Request $request)
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $mode = $request->query('mode', 'daily');
+        $limit = $request->query('limit', '50');
+
+        $query = \App\Models\UserFlashcard::with('studyItem')->where('user_id', $user->id);
+
+        if ($mode === 'daily') {
+            $today = \Carbon\Carbon::today();
+            $query->where('next_review_date', '<=', $today)->orderBy('next_review_date', 'asc');
+        } else {
+            $query->inRandomOrder();
+        }
+
+        if ($limit !== 'all') {
+            $query->limit((int)$limit);
+        }
+
+        $sessionCards = $query->get();
+        $direction = $request->query('direction', 'en-id');
+
+        return \Inertia\Inertia::render('Study/ListeningSession', [
+            'sessionCards' => $sessionCards,
+            'mode' => $mode,
+            'direction' => $direction
+        ]);
+    }
 }

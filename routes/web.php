@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     // Rute untuk halaman belajar
     Route::get('/study', [StudyController::class, 'index'])->name('study.index');
     Route::get('/study/practice', [StudyController::class, 'practice'])->name('study.practice');
+    Route::get('/study/listening', [StudyController::class, 'listening'])->name('study.listening');
+    Route::get('/study/listening/session', [StudyController::class, 'listeningSession'])->name('study.listening.session');
 
     // Rute Video Learning (User)
     Route::get('/video-learning', [VideoLearningController::class, 'index'])->name('videos.user.index');

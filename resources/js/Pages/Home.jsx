@@ -162,6 +162,13 @@ export default function Home({
                             >
                                 Atur Target
                             </Link>
+                            <Link 
+                                href="/study/listening" 
+                                className="px-4 py-2.5 text-xs font-semibold text-[#0d9488] bg-[#60f2ce]/20 hover:bg-[#60f2ce]/30 border border-[#60f2ce]/50 rounded-full shadow-xs transition flex items-center gap-1.5"
+                            >
+                                <i className="bi bi-headphones"></i>
+                                Listening
+                            </Link>
                             {cardsToStudyToday > 0 ? (
                                 <Link 
                                     href="/study" 
