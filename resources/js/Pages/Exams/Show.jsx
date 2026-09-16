@@ -59,22 +59,22 @@ export default function ExamShow({ auth, exam }) {
             <Head title={`CBT - ${exam.title}`} />
 
             {/* Sticky Header Bar */}
-            <div className="sticky top-[64px] z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 py-3.5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+            <div className="sticky top-[64px] z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 py-3.5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none transition-colors">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="truncate">
                             <div className="flex items-center gap-2">
-                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50">
+                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce] border border-[#60f2ce]/50 dark:border-[#60f2ce]/30">
                                     CBT Active
                                 </span>
-                                <h1 className="font-extrabold text-base sm:text-lg text-slate-900 truncate">
+                                <h1 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white truncate">
                                     {exam.title}
                                 </h1>
                             </div>
-                            <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
-                                <span>Terjawab: <strong className="text-slate-800 font-bold">{answeredCount}</strong> / {totalQuestions} Soal</span>
+                            <div className="flex items-center gap-3 text-xs text-slate-400 dark:text-slate-500 mt-1">
+                                <span>Terjawab: <strong className="text-slate-800 dark:text-slate-200 font-bold">{answeredCount}</strong> / {totalQuestions} Soal</span>
                                 <span>&bull;</span>
-                                <div className="w-24 bg-slate-100 rounded-full h-1.5 overflow-hidden hidden sm:block">
+                                <div className="w-24 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden hidden sm:block">
                                     <div 
                                         className="bg-gradient-to-r from-[#60f2ce] via-[#fcbf49] to-[#ff822d] h-1.5 rounded-full transition-all duration-300"
                                         style={{ width: `${progressPercent}%` }}
@@ -87,8 +87,8 @@ export default function ExamShow({ auth, exam }) {
                         <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
                             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl font-bold text-xs shadow-xs border transition-all ${
                                 isCriticalTime 
-                                    ? 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse' 
-                                    : 'bg-[#ff822d]/10 text-[#c2410c] border-[#ff822d]/30'
+                                    ? 'bg-rose-50 dark:bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-500/30 animate-pulse' 
+                                    : 'bg-[#ff822d]/10 dark:bg-[#ff822d]/20 text-[#c2410c] dark:text-[#ff822d] border-[#ff822d]/30'
                             }`}>
                                 <i className="bi bi-stopwatch text-sm"></i>
                                 <span>Sisa Waktu:</span>
@@ -101,7 +101,7 @@ export default function ExamShow({ auth, exam }) {
                 </div>
             </div>
 
-            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-4 sm:p-6 md:p-8 font-sans">
+            <div className="min-h-screen bg-[#fafcfb] dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 p-4 sm:p-6 md:p-8 font-sans transition-colors duration-200">
                 <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-7">
                     
                     {/* Main Questions List */}
@@ -115,20 +115,22 @@ export default function ExamShow({ auth, exam }) {
                                         <div 
                                             key={question.id} 
                                             id={`question-${index}`}
-                                            className={`bg-white rounded-3xl border p-6 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] transition-all ${
-                                                isAnswered ? 'border-[#60f2ce]/60' : 'border-slate-100'
+                                            className={`bg-white dark:bg-slate-900/90 rounded-3xl border p-6 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-all ${
+                                                isAnswered 
+                                                    ? 'border-[#60f2ce]/60 dark:border-[#60f2ce]/40' 
+                                                    : 'border-slate-100 dark:border-slate-800/80'
                                             }`}
                                         >
                                             {/* Question Header */}
-                                            <div className="flex items-start gap-3.5 mb-5 pb-4 border-b border-slate-100">
+                                            <div className="flex items-start gap-3.5 mb-5 pb-4 border-b border-slate-100 dark:border-slate-800">
                                                 <div className={`w-9 h-9 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs transition-colors ${
                                                     isAnswered 
                                                         ? 'bg-gradient-to-br from-[#60f2ce] to-[#0d9488] text-white' 
-                                                        : 'bg-slate-100 text-slate-600'
+                                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                                                 }`}>
                                                     {index + 1}
                                                 </div>
-                                                <h2 className="font-bold text-base sm:text-[17px] text-slate-900 leading-relaxed pt-1">
+                                                <h2 className="font-bold text-base sm:text-[17px] text-slate-900 dark:text-white leading-relaxed pt-1">
                                                     {question.question_text}
                                                 </h2>
                                             </div>
@@ -143,8 +145,8 @@ export default function ExamShow({ auth, exam }) {
                                                             key={key} 
                                                             className={`flex items-center p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 cursor-pointer group ${
                                                                 isSelected 
-                                                                    ? 'bg-gradient-to-r from-[#60f2ce]/15 via-[#fefc7c]/10 to-white border-[#60f2ce] shadow-2xs' 
-                                                                    : 'bg-[#fafcfb] border-slate-100 hover:bg-slate-50 hover:border-slate-200'
+                                                                    ? 'bg-gradient-to-r from-[#60f2ce]/15 via-[#fefc7c]/10 to-white dark:from-[#60f2ce]/20 dark:via-[#fcbf49]/10 dark:to-slate-900 border-[#60f2ce] dark:border-[#60f2ce]/60 shadow-2xs' 
+                                                                    : 'bg-[#fafcfb] dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-slate-200 dark:hover:border-slate-700'
                                                             }`}
                                                         >
                                                             <input 
@@ -160,13 +162,15 @@ export default function ExamShow({ auth, exam }) {
                                                             <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs uppercase shrink-0 transition-all ${
                                                                 isSelected 
                                                                     ? 'bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white shadow-xs' 
-                                                                    : 'bg-white border border-slate-200 text-slate-500 group-hover:border-slate-300'
+                                                                    : 'bg-white dark:bg-slate-750 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 group-hover:border-slate-300 dark:group-hover:border-slate-600'
                                                             }`}>
                                                                 {key}
                                                             </div>
 
                                                             <span className={`ml-3.5 text-xs sm:text-sm leading-relaxed transition-colors ${
-                                                                isSelected ? 'font-bold text-slate-900' : 'font-medium text-slate-600'
+                                                                isSelected 
+                                                                    ? 'font-bold text-slate-900 dark:text-white' 
+                                                                    : 'font-medium text-slate-600 dark:text-slate-300'
                                                             }`}>
                                                                 {text}
                                                             </span>
@@ -178,18 +182,18 @@ export default function ExamShow({ auth, exam }) {
                                     );
                                 })
                             ) : (
-                                <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-3xl bg-white">
+                                <div className="p-8 text-center text-xs text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-white dark:bg-slate-900/60">
                                     Daftar soal belum tersedia untuk paket ujian ini.
                                 </div>
                             )}
 
                             {/* Submit Card Box */}
-                            <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 text-center shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
-                                <div className="w-13 h-13 mx-auto rounded-2xl bg-[#60f2ce]/20 text-[#0d9488] flex items-center justify-center text-2xl mb-3">
+                            <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 p-6 sm:p-8 text-center shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors">
+                                <div className="w-13 h-13 mx-auto rounded-2xl bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce] flex items-center justify-center text-2xl mb-3">
                                     <i className="bi bi-shield-check"></i>
                                 </div>
-                                <h3 className="font-extrabold text-lg text-slate-900 mb-1">Sudah Yakin dengan Jawaban Anda?</h3>
-                                <p className="text-xs text-slate-400 max-w-sm mx-auto mb-6 leading-relaxed">
+                                <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-1">Sudah Yakin dengan Jawaban Anda?</h3>
+                                <p className="text-xs text-slate-400 dark:text-slate-400 max-w-sm mx-auto mb-6 leading-relaxed">
                                     Periksa nomor soal melalui navigasi cepat di samping sebelum mengakhiri sesi ujian ini.
                                 </p>
                                 
@@ -220,13 +224,13 @@ export default function ExamShow({ auth, exam }) {
 
                     {/* Right Column: Question Number Grid Navigator */}
                     <div className="lg:col-span-4">
-                        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] sticky top-[150px]">
-                            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                        <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none sticky top-[150px] transition-colors">
+                            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">
                                 <div>
-                                    <h3 className="font-extrabold text-sm text-slate-900 leading-tight">Navigasi Soal</h3>
-                                    <p className="text-[11px] text-slate-400">Klik nomor untuk menuju ke soal</p>
+                                    <h3 className="font-extrabold text-sm text-slate-900 dark:text-white leading-tight">Navigasi Soal</h3>
+                                    <p className="text-[11px] text-slate-400 dark:text-slate-500">Klik nomor untuk menuju ke soal</p>
                                 </div>
-                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#fcbf49]/20 text-[#b45309] border border-[#fcbf49]/40">
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#fcbf49]/20 dark:bg-[#fcbf49]/15 text-[#b45309] dark:text-[#fbbf24] border border-[#fcbf49]/40 dark:border-[#fcbf49]/30">
                                     {answeredCount}/{totalQuestions}
                                 </span>
                             </div>
@@ -244,7 +248,7 @@ export default function ExamShow({ auth, exam }) {
                                             className={`h-10 rounded-xl font-bold text-xs transition-all flex items-center justify-center border ${
                                                 isAnswered 
                                                     ? 'bg-[#60f2ce] text-slate-950 border-[#60f2ce] shadow-xs' 
-                                                    : 'bg-[#fafcfb] text-slate-500 border-slate-200/80 hover:bg-slate-100 hover:border-slate-300'
+                                                    : 'bg-[#fafcfb] dark:bg-slate-800 text-slate-500 dark:text-slate-300 border-slate-200/80 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                                             }`}
                                             title={`Menuju nomor ${idx + 1}`}
                                         >
@@ -255,13 +259,13 @@ export default function ExamShow({ auth, exam }) {
                             </div>
 
                             {/* Legend Information */}
-                            <div className="pt-5 mt-5 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px] font-semibold text-slate-500">
+                            <div className="pt-5 mt-5 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                                 <div className="flex items-center gap-2">
                                     <span className="w-3 h-3 rounded bg-[#60f2ce] border border-[#60f2ce]"></span>
                                     <span>Sudah Diisi</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="w-3 h-3 rounded bg-[#fafcfb] border border-slate-200"></span>
+                                    <span className="w-3 h-3 rounded bg-[#fafcfb] dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></span>
                                     <span>Belum Diisi</span>
                                 </div>
                             </div>

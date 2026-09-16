@@ -14,167 +14,126 @@ export default function ExamCreate({ auth }) {
         post('/admin/exams');
     };
 
-    const durationPresets = [15, 30, 45, 60, 90];
-
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Tambah Paket Ujian Baru" />
-
-            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-4 sm:p-6 md:p-8 font-sans">
-                <div className="max-w-3xl mx-auto space-y-6 sm:space-y-7">
+            <Head title="Tambah Ujian Baru" />
+            <div className="min-h-screen bg-[#fafcfb] dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 p-6 md:p-8 font-sans transition-colors duration-200">
+                <div className="max-w-2xl mx-auto space-y-7">
                     
                     {/* Top Bar Header */}
-                    <div className="flex items-center justify-between gap-3">
-                        {/* Kiri: Tombol Kembali + Judul & Badge */}
-                        <div className="flex items-center gap-2 sm:gap-3.5 min-w-0">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3.5">
                             <Link 
                                 href="/admin/exams" 
-                                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all shrink-0 active:scale-95"
+                                className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-[#ff822d] dark:hover:text-[#ff822d] hover:border-[#ff822d]/40 shadow-xs transition-all"
                                 title="Kembali ke Daftar Ujian"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </Link>
-                            <div className="min-w-0">
-                                <div className="flex items-center gap-1.5 sm:gap-2">
-                                    <h1 className="text-base sm:text-2xl font-extrabold tracking-tight text-slate-900 truncate">
-                                        Tambah Ujian 📝
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                        Tambah Ujian Baru 📝
                                     </h1>
-                                    <span className="shrink-0 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
-                                        Paket Evaluasi
+                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce] border border-[#60f2ce]/50 dark:border-[#60f2ce]/30">
+                                        CBT Package
                                     </span>
                                 </div>
-                                <p className="text-[11px] sm:text-xs text-slate-400 font-medium mt-0.5 truncate hidden xs:block">
-                                    Buat paket evaluasi sebelum menyusun butir soal pilihan ganda.
+                                <p className="text-xs text-slate-400 dark:text-slate-400 font-medium mt-0.5">
+                                    Buat paket ujian baru sebelum mulai menambahkan butir soal dan kunci jawaban.
                                 </p>
                             </div>
                         </div>
 
-                        {/* Kanan: Tombol Batal */}
-                        <div className="shrink-0">
-                            <Link 
-                                href="/admin/exams" 
-                                className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl sm:rounded-2xl shadow-xs hover:bg-slate-50 active:scale-95 transition whitespace-nowrap"
-                            >
-                                <span className="hidden xs:inline">Batal & </span>Kembali
-                            </Link>
-                        </div>
+                        <Link 
+                            href="/admin/exams" 
+                            className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/60 transition"
+                        >
+                            Batal & Kembali
+                        </Link>
                     </div>
 
                     {/* Form Container Card */}
-                    <div className="bg-white rounded-3xl border border-slate-100 p-5 sm:p-8 md:p-9 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
-                        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                    <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 p-6 sm:p-9 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors">
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             
-                            {/* Input: Judul Ujian */}
                             <div>
-                                <label htmlFor="title" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Judul Paket Ujian <span className="text-[#ff822d]">*</span>
+                                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                                    Judul Ujian <span className="text-[#ff822d]">*</span>
                                 </label>
                                 <input
                                     type="text"
-                                    id="title"
                                     value={data.title}
                                     onChange={e => setData('title', e.target.value)}
-                                    placeholder="Contoh: Evaluasi Akhir - Grammar & Tenses Level 1"
-                                    className={`w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl border text-xs sm:text-sm font-semibold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
-                                        errors.title ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
-                                    } text-slate-900 placeholder:text-slate-400 shadow-2xs`}
+                                    placeholder="Contoh: Evaluasi Tata Bahasa - Grammar Midterm"
+                                    className={`w-full px-4 py-3 rounded-2xl border text-sm font-semibold bg-[#fafcfb] dark:bg-slate-800/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
+                                        errors.title 
+                                            ? 'border-rose-400 dark:border-rose-500 bg-rose-50/30 dark:bg-rose-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700/80'
+                                    } text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs`}
                                     required
                                     autoFocus
                                 />
-                                {errors.title && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.title}</p>}
+                                {errors.title && <p className="text-rose-500 dark:text-rose-400 text-xs mt-1.5 font-semibold">{errors.title}</p>}
                             </div>
 
-                            {/* Input: Deskripsi & Petunjuk Pengerjaan */}
                             <div>
-                                <label htmlFor="description" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Petunjuk / Deskripsi Ujian <span className="font-medium normal-case text-slate-400">(Opsional)</span>
+                                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                                    Deskripsi Singkat & Petunjuk <span className="font-medium normal-case text-slate-400 dark:text-slate-500">(Opsional)</span>
                                 </label>
                                 <textarea
-                                    id="description"
                                     value={data.description}
                                     onChange={e => setData('description', e.target.value)}
                                     rows="3"
-                                    placeholder="Tuliskan petunjuk pengerjaan soal, kriteria kelulusan, atau ruang lingkup materi tes..."
-                                    className={`w-full p-3.5 sm:p-4 rounded-2xl border text-xs sm:text-sm font-medium bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all leading-relaxed ${
-                                        errors.description ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
-                                    } text-slate-900 placeholder:text-slate-400 shadow-2xs`}
+                                    placeholder="Tuliskan petunjuk umum atau batasan materi yang diujikan dalam paket ini..."
+                                    className={`w-full p-4 rounded-2xl border text-xs sm:text-sm font-medium bg-[#fafcfb] dark:bg-slate-800/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all leading-relaxed ${
+                                        errors.description 
+                                            ? 'border-rose-400 dark:border-rose-500 bg-rose-50/30 dark:bg-rose-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700/80'
+                                    } text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs`}
                                 />
-                                {errors.description && <p className="text-rose-500 text-xs font-semibold mt-1.5">{errors.description}</p>}
+                                {errors.description && <p className="text-rose-500 dark:text-rose-400 text-xs mt-1.5 font-semibold">{errors.description}</p>}
                             </div>
 
-                            {/* Input: Durasi Ujian & Preset Cepat */}
-                            <div className="space-y-2.5 sm:space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="duration_minutes" className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                        Batas Waktu Pengerjaan <span className="text-[#ff822d]">*</span>
-                                    </label>
-                                    <span className="text-xs font-extrabold text-[#ff822d]">
-                                        {data.duration_minutes} Menit
-                                    </span>
-                                </div>
-
+                            <div>
+                                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                                    Durasi Pengerjaan (Menit) <span className="text-[#ff822d]">*</span>
+                                </label>
                                 <div className="relative">
                                     <input
                                         type="number"
-                                        id="duration_minutes"
                                         value={data.duration_minutes}
-                                        onChange={e => setData('duration_minutes', parseInt(e.target.value) || 0)}
+                                        onChange={e => setData('duration_minutes', e.target.value)}
                                         min="1"
-                                        className={`w-full pl-3.5 sm:pl-4 pr-20 py-2.5 sm:py-3 rounded-2xl border text-xs sm:text-sm font-mono font-bold bg-[#fafcfb] focus:bg-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
-                                            errors.duration_minutes ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200'
-                                        } text-slate-900 shadow-2xs`}
+                                        className={`w-full px-4 py-3 rounded-2xl border text-sm font-mono font-bold bg-[#fafcfb] dark:bg-slate-800/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none transition-all ${
+                                            errors.duration_minutes 
+                                                ? 'border-rose-400 dark:border-rose-500 bg-rose-50/30 dark:bg-rose-500/10' 
+                                                : 'border-slate-200 dark:border-slate-700/80'
+                                        } text-slate-900 dark:text-white shadow-2xs`}
                                         required
                                     />
-                                    <div className="absolute right-2 top-2 bottom-2 px-2.5 sm:px-3 flex items-center bg-white border border-slate-200 rounded-xl text-slate-500 text-[11px] sm:text-xs font-bold pointer-events-none">
+                                    <div className="absolute right-2 top-2 bottom-2 px-3 flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 text-xs font-bold">
                                         Menit
                                     </div>
                                 </div>
-                                {errors.duration_minutes && <p className="text-rose-500 text-xs font-semibold mt-1">{errors.duration_minutes}</p>}
-
-                                {/* Quick Duration Presets */}
-                                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1">
-                                    <span className="text-[10px] sm:text-[11px] font-bold text-slate-400">Pilih Cepat:</span>
-                                    {durationPresets.map((preset) => (
-                                        <button
-                                            key={preset}
-                                            type="button"
-                                            onClick={() => setData('duration_minutes', preset)}
-                                            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-bold font-mono transition-all border active:scale-95 ${
-                                                Number(data.duration_minutes) === preset
-                                                    ? 'bg-[#60f2ce] text-slate-950 border-[#60f2ce] shadow-xs scale-105'
-                                                    : 'bg-[#fafcfb] text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
-                                            }`}
-                                        >
-                                            {preset}m
-                                        </button>
-                                    ))}
-                                </div>
-
-                                {/* Info Box */}
-                                <div className="mt-2.5 p-3 sm:p-3.5 bg-[#fafcfb] rounded-2xl border border-slate-100 flex gap-2 sm:gap-2.5 items-start text-[11px] sm:text-xs text-slate-600">
-                                    <div className="w-5 h-5 rounded-lg bg-[#fcbf49]/20 text-[#b45309] flex items-center justify-center shrink-0 text-xs mt-0.5 font-bold">
-                                        ⏱️
-                                    </div>
-                                    <span className="leading-relaxed">
-                                        Saat siswa memulai tes, hitung mundur akan otomatis berjalan. Setelah waktu habis, jawaban siswa akan otomatis tersubmit ke sistem.
-                                    </span>
-                                </div>
+                                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5">Timer otomatis berjalan saat siswa menekan tombol Mulai Ujian.</p>
+                                {errors.duration_minutes && <p className="text-rose-500 dark:text-rose-400 text-xs mt-1.5 font-semibold">{errors.duration_minutes}</p>}
                             </div>
 
                             {/* Actions Bar */}
-                            <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5 sm:gap-3">
-                                <Link 
-                                    href="/admin/exams" 
-                                    className="px-4 sm:px-5 py-2 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl transition shadow-2xs active:scale-95"
+                            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+                                <Link
+                                    href="/admin/exams"
+                                    className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-2xl transition shadow-2xs border border-transparent dark:border-slate-700"
                                 >
                                     Batal
                                 </Link>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className={`inline-flex items-center gap-1.5 sm:gap-2 px-5 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-xs rounded-2xl shadow-md shadow-[#fcbf49]/20 hover:opacity-95 active:scale-95 transition-all ${
+                                    className={`inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-xs rounded-2xl shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition-all ${
                                         processing ? 'opacity-70 cursor-not-allowed' : ''
                                     }`}
                                 >
@@ -186,7 +145,7 @@ export default function ExamCreate({ auth }) {
                                     ) : (
                                         <>
                                             <i className="bi bi-save2-fill text-xs"></i>
-                                            <span>Simpan Paket Ujian</span>
+                                            <span>Simpan & Lanjut ke Soal</span>
                                         </>
                                     )}
                                 </button>

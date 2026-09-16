@@ -81,10 +81,8 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                 let targetScrollTop;
 
                 if (isMobile) {
-                    // Mobile: Posisi baris aktif tepat berada di paling atas kontainer (tepat di bawah header) dengan padding 8px
                     targetScrollTop = container.scrollTop + (lineRect.top - containerRect.top) - 8;
                 } else {
-                    // Desktop: Tetap di tengah layar kontainer
                     targetScrollTop = container.scrollTop + (lineRect.top - containerRect.top) - (container.clientHeight / 2) + (lineEl.clientHeight / 2);
                 }
 
@@ -220,23 +218,23 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
         <AuthenticatedLayout user={auth?.user}>
             <Head title={video?.title} />
 
-            <div className="min-h-screen bg-[#fafcfb] text-slate-800 p-4 sm:p-6 md:p-8 font-sans">
+            <div className="min-h-screen bg-[#fafcfb] dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 p-4 sm:p-6 md:p-8 font-sans transition-colors duration-200">
                 <div className="max-w-7xl mx-auto space-y-6 sm:space-y-7">
                     
                     {/* Top Bar Navigation (Breadcrumbs & Back Button) */}
                     <div className="flex items-center justify-between gap-3">
-                        <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-slate-400 min-w-0">
-                            <Link href="/video-learning" className="text-slate-600 hover:text-[#ff822d] transition-colors flex items-center gap-1 shrink-0">
+                        <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500 min-w-0">
+                            <Link href="/video-learning" className="text-slate-600 dark:text-slate-400 hover:text-[#ff822d] dark:hover:text-[#ff822d] transition-colors flex items-center gap-1 shrink-0">
                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
                                 <span>Library</span>
                             </Link>
-                            <span className="shrink-0 text-slate-300">/</span>
-                            <span className="text-slate-800 truncate">{video?.title}</span>
+                            <span className="shrink-0 text-slate-300 dark:text-slate-700">/</span>
+                            <span className="text-slate-800 dark:text-slate-200 truncate">{video?.title}</span>
                         </nav>
                         
                         <Link 
                             href="/video-learning" 
-                            className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full shadow-xs hover:bg-slate-50 transition shrink-0 whitespace-nowrap active:scale-95"
+                            className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-xs hover:bg-slate-50 dark:hover:bg-slate-700/60 transition shrink-0 whitespace-nowrap active:scale-95"
                         >
                             Kembali ke Daftar
                         </Link>
@@ -245,9 +243,9 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                     {/* Main Content Layout */}
                     <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-7">
                         
-                        {/* 1. Video Player Card (Urutan 1 di Mobile & Kiri Atas di Desktop) */}
+                        {/* 1. Video Player Card */}
                         <div className="order-1 lg:col-span-7">
-                            <div className="bg-white p-3 md:p-4 rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+                            <div className="bg-white dark:bg-slate-900/90 p-3 md:p-4 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors">
                                 <div className="relative pt-[56.25%] bg-slate-950 rounded-2xl overflow-hidden shadow-inner">
                                     <div id="youtube-player" className="absolute top-0 left-0 w-full h-full"></div>
                                 </div>
@@ -255,40 +253,40 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                 <div className="pt-4 sm:pt-5 pb-2 px-1 sm:px-2">
                                     <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
                                         {video?.difficulty && (
-                                            <span className="text-[10px] sm:text-[11px] font-bold uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#fefc7c]/80 text-slate-900 rounded-lg border border-[#fefc7c]">
+                                            <span className="text-[10px] sm:text-[11px] font-bold uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#fefc7c]/80 dark:bg-amber-400/20 text-slate-900 dark:text-amber-300 rounded-lg border border-[#fefc7c] dark:border-amber-400/30">
                                                 {video?.difficulty}
                                             </span>
                                         )}
-                                        <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#60f2ce]/20 text-[#0d9488] rounded-lg border border-[#60f2ce]/40">
+                                        <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce] rounded-lg border border-[#60f2ce]/40 dark:border-[#60f2ce]/30">
                                             {video?.transcripts?.length || 0} Baris Dialog
                                         </span>
                                     </div>
-                                    <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-snug break-words">
+                                    <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-snug break-words">
                                         {video?.title}
                                     </h1>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 2. Interactive Transcript (Urutan 2 di Mobile -> TEPAT di bawah Video, Kolom Kanan di Desktop) */}
+                        {/* 2. Interactive Transcript */}
                         <div className="order-2 lg:col-span-5 lg:row-span-2">
-                            <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] flex flex-col h-[420px] sm:h-[600px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-6 overflow-hidden">
+                            <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none flex flex-col h-[420px] sm:h-[600px] lg:h-[calc(100vh-140px)] lg:sticky lg:top-6 overflow-hidden transition-colors">
                                 
                                 {/* Transcript Header */}
-                                <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-white z-10">
+                                <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 z-10">
                                     <div className="flex items-center gap-2.5">
-                                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-white flex items-center justify-center text-sm shadow-xs shrink-0">
+                                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#fcbf49] to-[#ff822d] text-slate-950 flex items-center justify-center text-sm shadow-xs shrink-0">
                                             <i className="bi bi-chat-square-quote-fill"></i>
                                         </div>
                                         <div>
-                                            <h2 className="font-extrabold text-slate-900 text-sm">Interactive Transcript</h2>
-                                            <p className="text-[11px] text-slate-400">Sinkronisasi otomatis dengan audio</p>
+                                            <h2 className="font-extrabold text-slate-900 dark:text-white text-sm">Interactive Transcript</h2>
+                                            <p className="text-[11px] text-slate-400 dark:text-slate-400">Sinkronisasi otomatis dengan audio</p>
                                         </div>
                                     </div>
                                     <span className="w-2.5 h-2.5 rounded-full bg-[#60f2ce] animate-ping"></span>
                                 </div>
 
-                                {/* Transcript Content (relative agar scroll terisolasi di dalam container ini) */}
+                                {/* Transcript Content */}
                                 <div className="relative flex-grow overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3" ref={containerRef} id="transcript-container">
                                     {video?.transcripts && video?.transcripts.length > 0 ? (
                                         video?.transcripts.map((transcript, idx) => {
@@ -299,13 +297,13 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                     id={`line-${idx}`}
                                                     className={`p-3.5 sm:p-4 rounded-2xl transition-all duration-200 border ${
                                                         isActive 
-                                                            ? 'bg-gradient-to-r from-[#60f2ce]/15 via-[#fefc7c]/10 to-transparent border-[#60f2ce] shadow-xs' 
-                                                            : 'bg-white hover:bg-slate-50/80 border-slate-100'
+                                                            ? 'bg-gradient-to-r from-[#60f2ce]/15 via-[#fefc7c]/10 dark:from-[#60f2ce]/20 dark:via-[#fcbf49]/10 to-transparent border-[#60f2ce] dark:border-[#60f2ce]/60 shadow-xs' 
+                                                            : 'bg-white dark:bg-slate-800/40 hover:bg-slate-50/80 dark:hover:bg-slate-800 border-slate-100 dark:border-slate-800'
                                                     }`}
                                                 >
                                                     <div className="flex justify-between items-start gap-2.5 sm:gap-3">
                                                         <div className="flex-grow min-w-0">
-                                                            <div className="text-slate-800 font-medium leading-relaxed text-[13px] sm:text-[14px]">
+                                                            <div className="text-slate-800 dark:text-slate-200 font-medium leading-relaxed text-[13px] sm:text-[14px]">
                                                                 {transcript.text.split(" ").map((word, i) => {
                                                                     const cleanW = word.replace(/[^\w\s\']/g, "").toLowerCase();
                                                                     const isSaved = savedVocabs.includes(cleanW);
@@ -313,8 +311,8 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                                         <span 
                                                                             key={i} 
                                                                             onClick={() => handleWordClick(word, transcript.text)}
-                                                                            className={`cursor-pointer px-1 py-0.5 rounded-lg transition-colors hover:bg-[#60f2ce]/30 hover:text-slate-900 inline-block ${
-                                                                                isSaved ? 'text-[#0d9488] font-bold bg-[#60f2ce]/20 border-b-2 border-[#0d9488]' : ''
+                                                                            className={`cursor-pointer px-1 py-0.5 rounded-lg transition-colors hover:bg-[#60f2ce]/30 hover:text-slate-900 dark:hover:text-white inline-block ${
+                                                                                isSaved ? 'text-[#0d9488] dark:text-[#60f2ce] font-bold bg-[#60f2ce]/20 border-b-2 border-[#0d9488] dark:border-[#60f2ce]' : ''
                                                                             }`}
                                                                         >
                                                                             {word}{' '}
@@ -324,17 +322,17 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                             </div>
                                                             
                                                             {transcript.translation && showTranslations[idx] && (
-                                                                <div className="text-slate-500 text-xs mt-2 border-l-2 border-[#fcbf49] pl-2.5 py-0.5 italic bg-[#fcbf49]/5 rounded-r-lg">
+                                                                <div className="text-slate-500 dark:text-slate-400 text-xs mt-2 border-l-2 border-[#fcbf49] pl-2.5 py-0.5 italic bg-[#fcbf49]/5 dark:bg-[#fcbf49]/10 rounded-r-lg">
                                                                     {transcript.translation}
                                                                 </div>
                                                             )}
                                                         </div>
                                                         
                                                         {/* Action Buttons */}
-                                                        <div className="flex items-center bg-slate-50 border border-slate-200/80 rounded-xl p-1 shrink-0 gap-1 shadow-2xs">
+                                                        <div className="flex items-center bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-xl p-1 shrink-0 gap-1 shadow-2xs">
                                                             <button 
                                                                 onClick={() => playLine(transcript.start_time)} 
-                                                                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white hover:text-[#ff822d] text-slate-500 transition-all" 
+                                                                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white dark:hover:bg-slate-700 hover:text-[#ff822d] dark:hover:text-[#ff822d] text-slate-500 dark:text-slate-400 transition-all" 
                                                                 title="Putar Bagian Ini"
                                                             >
                                                                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -345,8 +343,8 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                                     onClick={() => toggleTranslation(idx)} 
                                                                     className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all ${
                                                                         showTranslations[idx] 
-                                                                            ? 'bg-[#fcbf49] text-slate-900 font-bold shadow-2xs' 
-                                                                            : 'hover:bg-white text-slate-500'
+                                                                            ? 'bg-[#fcbf49] text-slate-950 font-bold shadow-2xs' 
+                                                                            : 'hover:bg-white dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'
                                                                     }`} 
                                                                     title="Terjemahan"
                                                                 >
@@ -359,7 +357,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                                                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all ${
                                                                     speechModal?.status === 'listening' && speechModal?.expectedText === transcript.text 
                                                                         ? 'bg-[#ff822d] text-white animate-pulse' 
-                                                                        : 'hover:bg-white text-[#0d9488]'
+                                                                        : 'hover:bg-white dark:hover:bg-slate-700 text-[#0d9488] dark:text-[#60f2ce]'
                                                                 }`} 
                                                                 title="Latihan Shadowing / Pelafalan"
                                                             >
@@ -371,7 +369,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                             );
                                         })
                                     ) : (
-                                        <div className="text-center py-12 text-xs text-slate-400">
+                                        <div className="text-center py-12 text-xs text-slate-400 dark:text-slate-500">
                                             Transkrip belum tersedia untuk video ini.
                                         </div>
                                     )}
@@ -379,33 +377,33 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                             </div>
                         </div>
 
-                        {/* 3. Info Bawah: Tips & Saved Vocab (Urutan 3 di Mobile, di Bawah Video pada Desktop) */}
+                        {/* 3. Info Bawah: Tips & Saved Vocab */}
                         <div className="order-3 lg:col-span-7 space-y-6">
                             
                             {/* Tips Card */}
-                            <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-[#ff822d]/10 via-[#fcbf49]/10 to-[#60f2ce]/20 border border-[#fcbf49]/30 flex items-start gap-3 shadow-xs">
-                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white shadow-xs text-lg sm:text-xl flex items-center justify-center shrink-0">
+                            <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-[#ff822d]/10 via-[#fcbf49]/10 to-[#60f2ce]/20 dark:from-[#ff822d]/15 dark:via-[#fcbf49]/10 dark:to-[#60f2ce]/15 border border-[#fcbf49]/30 dark:border-[#fcbf49]/20 flex items-start gap-3 shadow-xs">
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white dark:bg-slate-800 shadow-xs text-lg sm:text-xl flex items-center justify-center shrink-0">
                                     💡
                                 </div>
-                                <div className="text-xs leading-relaxed text-slate-700">
-                                    <strong className="text-slate-900 font-bold block mb-0.5">Petunjuk Belajar Interaktif:</strong>
+                                <div className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+                                    <strong className="text-slate-900 dark:text-white font-bold block mb-0.5">Petunjuk Belajar Interaktif:</strong>
                                     Klik kata mana pun pada transkrip untuk membuka kamus cepat, cek arti kata, dan simpan langsung ke Flashcard harian Anda.
                                 </div>
                             </div>
 
                             {/* Saved Vocabulary Pill Box */}
-                            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
-                                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                            <div className="bg-white dark:bg-slate-900/90 p-5 sm:p-6 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors">
+                                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">
                                     <div className="flex items-center gap-2.5">
-                                        <div className="w-9 h-9 rounded-xl bg-[#60f2ce]/20 text-[#0d9488] flex items-center justify-center font-bold shrink-0">
+                                        <div className="w-9 h-9 rounded-xl bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce] flex items-center justify-center font-bold shrink-0">
                                             <i className="bi bi-bookmark-check-fill"></i>
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-slate-900 text-sm">Bank Kosakatamu</h3>
-                                            <p className="text-[11px] text-slate-400">Kata yang berhasil Anda kumpulkan</p>
+                                            <h3 className="font-bold text-slate-900 dark:text-white text-sm">Bank Kosakatamu</h3>
+                                            <p className="text-[11px] text-slate-400 dark:text-slate-400">Kata yang berhasil Anda kumpulkan</p>
                                         </div>
                                     </div>
-                                    <span className="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-[#60f2ce]/20 text-[#0d9488] border border-[#60f2ce]/50 whitespace-nowrap">
+                                    <span className="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce] border border-[#60f2ce]/50 dark:border-[#60f2ce]/30 whitespace-nowrap">
                                         {savedFlashcards.length} Kata
                                     </span>
                                 </div>
@@ -414,16 +412,16 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                     {savedFlashcards.length > 0 ? (
                                         <div className="flex flex-wrap gap-2">
                                             {savedFlashcards.map(card => (
-                                                <div key={card.id} className="bg-slate-50 border border-slate-200/80 rounded-2xl px-3 py-1.5 text-xs flex items-center shadow-2xs hover:border-[#60f2ce] transition-colors">
-                                                    <span className="font-bold text-slate-900 mr-2">{card?.study_item?.content || '-'}</span>
-                                                    <span className="border-l border-slate-200 pl-2 text-slate-500 font-medium truncate max-w-[140px] sm:max-w-xs">
+                                                <div key={card.id} className="bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl px-3 py-1.5 text-xs flex items-center shadow-2xs hover:border-[#60f2ce] transition-colors">
+                                                    <span className="font-bold text-slate-900 dark:text-white mr-2">{card?.study_item?.content || '-'}</span>
+                                                    <span className="border-l border-slate-200 dark:border-slate-700 pl-2 text-slate-500 dark:text-slate-400 font-medium truncate max-w-[140px] sm:max-w-xs">
                                                         {card?.study_item?.translation || '-'}
                                                     </span>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="text-center py-7 text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">
+                                        <div className="text-center py-7 text-xs text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
                                             Belum ada kosakata yang disimpan dari video ini.
                                         </div>
                                     )}
@@ -438,23 +436,23 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
 
             {/* Dictionary Modal */}
             {dictModal && (
-                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+                <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 transition-colors">
                         {dictModal.loading ? (
                             <div className="p-8 text-center space-y-3">
-                                <div className="inline-block animate-spin rounded-full h-8 w-8 border-3 border-slate-100 border-t-[#ff822d]"></div>
-                                <p className="text-xs font-semibold text-slate-500">Mencari kosakata "{dictModal.word}"...</p>
+                                <div className="inline-block animate-spin rounded-full h-8 w-8 border-3 border-slate-200 dark:border-slate-700 border-t-[#ff822d]"></div>
+                                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Mencari kosakata "{dictModal.word}"...</p>
                             </div>
                         ) : dictModal.error ? (
                             <div className="p-6 text-center">
-                                <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-xl mx-auto mb-3">
+                                <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-500/15 text-rose-500 dark:text-rose-400 flex items-center justify-center text-xl mx-auto mb-3">
                                     <i className="bi bi-exclamation-triangle-fill"></i>
                                 </div>
-                                <h3 className="font-bold text-slate-900 mb-1">Gagal Menemukan Kata</h3>
-                                <p className="text-xs text-slate-500 mb-5">{dictModal.error}</p>
+                                <h3 className="font-bold text-slate-900 dark:text-white mb-1">Gagal Menemukan Kata</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">{dictModal.error}</p>
                                 <button 
                                     onClick={() => setDictModal(null)} 
-                                    className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs transition"
+                                    className="w-full py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl font-bold text-xs transition"
                                 >
                                     Tutup
                                 </button>
@@ -463,27 +461,27 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                             <div className="p-6">
                                 <div className="flex justify-between items-start mb-3">
                                     <div>
-                                        <h3 className="font-black text-2xl text-slate-900 capitalize tracking-tight">{dictModal.word}</h3>
-                                        <p className="text-xs text-slate-400 mt-0.5">
+                                        <h3 className="font-black text-2xl text-slate-900 dark:text-white capitalize tracking-tight">{dictModal.word}</h3>
+                                        <p className="text-xs text-slate-400 dark:text-slate-400 mt-0.5">
                                             {dictModal.phonetic} {dictModal.partOfSpeech && <span>&bull; <i className="lowercase font-medium">{dictModal.partOfSpeech}</i></span>}
                                         </p>
                                     </div>
-                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-[#60f2ce]/20 text-[#0d9488]">
+                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0d9488] dark:text-[#60f2ce]">
                                         Vocabulary
                                     </span>
                                 </div>
 
-                                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 mb-4 text-xs text-slate-600 leading-relaxed font-medium">
+                                <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 mb-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                                     {dictModal.definition}
                                 </div>
 
                                 <div className="mb-5">
-                                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-2">
                                         Terjemahan Bahasa Indonesia
                                     </label>
                                     <input 
                                         type="text" 
-                                        className="w-full text-center font-bold bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none shadow-xs" 
+                                        className="w-full text-center font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#60f2ce] focus:border-[#60f2ce] outline-none shadow-xs" 
                                         value={dictModal.translation} 
                                         onChange={(e) => setDictModal({ ...dictModal, translation: e.target.value })}
                                     />
@@ -492,7 +490,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                 <div className="flex gap-3">
                                     <button 
                                         onClick={() => setDictModal(null)} 
-                                        className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs transition"
+                                        className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl font-bold text-xs transition"
                                     >
                                         Batal
                                     </button>
@@ -511,15 +509,15 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
 
             {/* Speech Shadowing Modal */}
             {speechModal && (
-                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md overflow-hidden p-6 text-center animate-in fade-in zoom-in duration-200">
+                <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl w-full max-w-md overflow-hidden p-6 text-center animate-in fade-in zoom-in duration-200 transition-colors">
                         {speechModal.status === 'listening' && (
                             <>
-                                <div className="w-14 h-14 mx-auto rounded-3xl bg-[#ff822d]/10 text-[#ff822d] flex items-center justify-center text-2xl mb-4 animate-pulse">
+                                <div className="w-14 h-14 mx-auto rounded-3xl bg-[#ff822d]/10 dark:bg-[#ff822d]/20 text-[#ff822d] flex items-center justify-center text-2xl mb-4 animate-pulse">
                                     <i className="bi bi-mic-fill"></i>
                                 </div>
-                                <h3 className="font-extrabold text-lg text-slate-900 mb-1">Silakan Ucapkan Kalimat:</h3>
-                                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 my-4 text-xs font-semibold text-slate-800 italic leading-relaxed">
+                                <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-1">Silakan Ucapkan Kalimat:</h3>
+                                <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 my-4 text-xs font-semibold text-slate-800 dark:text-slate-200 italic leading-relaxed">
                                     "{speechModal.expectedText}"
                                 </div>
                                 <p className="text-[11px] font-bold text-[#ff822d] uppercase tracking-wider mb-6 animate-pulse">
@@ -527,7 +525,7 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                                 </p>
                                 <button 
                                     onClick={() => setSpeechModal(null)} 
-                                    className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs transition"
+                                    className="w-full py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl font-bold text-xs transition"
                                 >
                                     Batal
                                 </button>
@@ -538,32 +536,32 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
                             <>
                                 <div className="w-16 h-16 mx-auto rounded-3xl flex items-center justify-center text-3xl mb-4 shadow-sm"
                                     style={{
-                                        backgroundColor: speechModal.accuracy >= 80 ? 'rgba(96, 242, 206, 0.3)' : 'rgba(252, 191, 73, 0.3)',
-                                        color: speechModal.accuracy >= 80 ? '#0d9488' : '#b45309'
+                                        backgroundColor: speechModal.accuracy >= 80 ? 'rgba(96, 242, 206, 0.25)' : 'rgba(252, 191, 73, 0.25)',
+                                        color: speechModal.accuracy >= 80 ? '#0d9488' : '#ff822d'
                                     }}
                                 >
                                     <i className={speechModal.accuracy >= 80 ? 'bi bi-award-fill' : 'bi bi-arrow-repeat'}></i>
                                 </div>
 
-                                <h3 className="font-extrabold text-xl text-slate-900 mb-1">
+                                <h3 className="font-extrabold text-xl text-slate-900 dark:text-white mb-1">
                                     {speechModal.accuracy >= 80 ? 'Luar Biasa! 🌟' : 'Perlu Sedikit Latihan! 💪'}
                                 </h3>
                                 
                                 <div className="my-4">
-                                    <span className="text-xs text-slate-400 block mb-0.5">Tingkat Akurasi Pelafalan:</span>
-                                    <span className={`font-black text-3xl ${speechModal.accuracy >= 80 ? 'text-[#0d9488]' : 'text-[#ff822d]'}`}>
+                                    <span className="text-xs text-slate-400 dark:text-slate-400 block mb-0.5">Tingkat Akurasi Pelafalan:</span>
+                                    <span className={`font-black text-3xl ${speechModal.accuracy >= 80 ? 'text-[#0d9488] dark:text-[#60f2ce]' : 'text-[#ff822d]'}`}>
                                         {Math.round(speechModal.accuracy)}%
                                     </span>
                                 </div>
 
-                                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 text-left mb-6">
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Kalimat yang Terdengar:</p>
-                                    <p className="italic text-xs font-semibold text-slate-700">"{speechModal.spoken}"</p>
+                                <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 text-left mb-6">
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider mb-1">Kalimat yang Terdengar:</p>
+                                    <p className="italic text-xs font-semibold text-slate-700 dark:text-slate-300">"{speechModal.spoken}"</p>
                                 </div>
 
                                 <button 
                                     onClick={() => setSpeechModal(null)} 
-                                    className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold text-xs transition"
+                                    className="w-full py-2.5 bg-slate-900 dark:bg-[#60f2ce] hover:bg-slate-800 dark:hover:bg-[#4de1bc] text-white dark:text-slate-950 rounded-2xl font-bold text-xs transition"
                                 >
                                     Selesai
                                 </button>
@@ -572,18 +570,18 @@ export default function VideoShow({ auth, video, savedFlashcards = [], savedVoca
 
                         {speechModal.status === 'error' && (
                             <>
-                                <div className="w-14 h-14 mx-auto rounded-3xl bg-rose-50 text-rose-500 flex items-center justify-center text-2xl mb-4">
+                                <div className="w-14 h-14 mx-auto rounded-3xl bg-rose-50 dark:bg-rose-500/15 text-rose-500 dark:text-rose-400 flex items-center justify-center text-2xl mb-4">
                                     <i className="bi bi-mic-mute-fill"></i>
                                 </div>
-                                <h3 className="font-extrabold text-lg text-slate-900 mb-1">Suara Tidak Terdeteksi</h3>
-                                <p className="text-xs text-slate-500 mb-6">
+                                <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-1">Suara Tidak Terdeteksi</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
                                     {speechModal.error === 'not-allowed' ? 'Izin akses mikrofon ditolak pada browser Anda.' : 
                                      speechModal.error === 'no-speech' ? 'Tidak ada suara yang terdengar. Coba ulangi dengan berbicara lebih dekat.' : 
                                      'Terjadi kendala pada input mikrofon.'}
                                 </p>
                                 <button 
                                     onClick={() => setSpeechModal(null)} 
-                                    className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs transition"
+                                    className="w-full py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl font-bold text-xs transition"
                                 >
                                     Tutup
                                 </button>
