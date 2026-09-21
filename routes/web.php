@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\LessonLearningController;    
 use App\Http\Controllers\Admin\ShadowingController;
 use App\Http\Controllers\ShadowingLearningController;
+use App\Http\Controllers\Api\TtsController;
+
 
 
 
@@ -64,6 +66,9 @@ Route::middleware(['auth'])->group(function () {
     // Rute Modul Shadowing (Sisi Pengguna)
     Route::get('/shadowing', [ShadowingLearningController::class, 'index'])->name('shadowing.user.index');
     Route::get('/shadowing/{slug}', [ShadowingLearningController::class, 'show'])->name('shadowing.user.show');
+
+    // Rute untuk TTS (Text-to-Speech)
+    Route::get('/tts', [TtsController::class, 'stream'])->name('tts.stream');
 });
 
 
@@ -94,4 +99,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('exams/{exam}/questions', [\App\Http\Controllers\Admin\ExamController::class, 'storeQuestion'])->name('exams.questions.store');
     Route::delete('exams/{exam}/questions/{question}', [\App\Http\Controllers\Admin\ExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
 
+    
 });
