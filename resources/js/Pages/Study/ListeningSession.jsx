@@ -41,7 +41,7 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
 
             let voice = 'en-US-JennyNeural'; 
             if (lang === 'en-US') {
-                voice = 'en-US-AriaNeural';
+                voice = 'en-US-EmmaNeural';
             } else if (lang === 'id-ID') {
                 voice = 'id-ID-GadisNeural';
             }
