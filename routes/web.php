@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk memproses jawaban flashcard
     Route::post('/study/{flashcardId}/review', [StudyController::class, 'review'])->name('study.review');
+    // Rute untuk toggle status sudah hafal
+    Route::post('/study/{flashcardId}/mastered', [StudyController::class, 'toggleMastered'])->name('study.mastered');
 
     // Rute untuk Modul Ujian CBT
     Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');

@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
+import axios from 'axios';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 
 export default function StudyPractice({ auth, user, practiceCards = [], selectedType = '', source = 'today', limit = '50' }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isReversed, setIsReversed] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
+    const [isMastering, setIsMastering] = useState(false);
+    // Track mastered status locally (in case user toggles multiple times)
+    const [masteredIds, setMasteredIds] = useState(
+        () => new Set(practiceCards.filter(c => c.is_mastered).map(c => c.id))
+    );
 
     const isComplete = currentIndex >= practiceCards.length || practiceCards.length === 0;
     const currentCard = isComplete ? null : practiceCards[currentIndex];
     const studyItem = currentCard?.study_item;
+    const isCurrentMastered = currentCard ? masteredIds.has(currentCard.id) : false;
 
     const playAudio = (text, e) => {
         if (e) e.stopPropagation();
@@ -27,6 +34,25 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
         setTimeout(() => {
             setCurrentIndex(prev => prev + 1);
         }, 150);
+    };
+
+    const handleToggleMastered = () => {
+        if (!currentCard) return;
+        setIsMastering(true);
+        axios.post(`/study/${currentCard.id}/mastered`)
+            .then(res => {
+                setMasteredIds(prev => {
+                    const next = new Set(prev);
+                    if (res.data.is_mastered) next.add(currentCard.id);
+                    else next.delete(currentCard.id);
+                    return next;
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Gagal mengubah status hafal");
+            })
+            .finally(() => setIsMastering(false));
     };
 
     const navLinkClasses = (isActive) => 
@@ -190,6 +216,15 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                                 {studyItem.level}
                                             </span>
                                         )}
+                                        {/* Badge Sudah Hafal */}
+                                        {isCurrentMastered && (
+                                            <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 whitespace-nowrap">
+                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                Sudah Hafal
+                                            </span>
+                                        )}
                                     </div>
                                     <span className="shrink-0 text-[11px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500 whitespace-nowrap">
                                         Pertanyaan
@@ -300,10 +335,35 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                     </div>
                                 </div>
 
-                                <div className="pt-2">
+                                <div className="pt-2 space-y-2">
+                                    {/* Tombol Toggle Hafal */}
+                                    <button
+                                        disabled={isMastering}
+                                        onClick={handleToggleMastered}
+                                        className={`w-full py-2.5 rounded-2xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.99] disabled:opacity-50 ${
+                                            isCurrentMastered
+                                                ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200 dark:hover:border-rose-500/30'
+                                                : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white'
+                                        }`}
+                                        title={isCurrentMastered ? "Hapus tanda hafal" : "Tandai kata ini sebagai sudah hafal"}
+                                    >
+                                        {isMastering ? (
+                                            <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                                            </svg>
+                                        ) : (
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d={isCurrentMastered ? "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" : "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"}/>
+                                            </svg>
+                                        )}
+                                        {isCurrentMastered ? 'Hapus Tanda Hafal' : 'Tandai Sudah Hafal'}
+                                    </button>
+
+                                    {/* Tombol Lanjut */}
                                     <button 
                                         onClick={handleNext} 
-                                        className="w-full py-3.5 bg-gradient-to-r from-[#ff822d] to-[#fcbf49] text-slate-950 hover:opacity-95 font-extrabold text-xs rounded-2xl shadow-md shadow-[#ff822d]/20 transition-all flex items-center justify-center gap-1.5 active:scale-[0.99]"
+                                        className="w-full py-3 bg-gradient-to-r from-[#ff822d] to-[#fcbf49] text-slate-950 hover:opacity-95 font-extrabold text-xs rounded-2xl shadow-md shadow-[#ff822d]/20 transition-all flex items-center justify-center gap-1.5 active:scale-[0.99]"
                                     >
                                         <span>Lanjut Kartu Berikutnya</span>
                                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"/></svg>

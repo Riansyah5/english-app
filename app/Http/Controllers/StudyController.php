@@ -32,9 +32,10 @@ class StudyController extends Controller
         if ($remainingGoal == 0) {
             $dueFlashcards = collect(); // Kirim koleksi kosong agar UI memunculkan pesan "Selesai"
         } else {
-            // 3. Ambil kartu dengan limit sesuai sisa target
+            // 3. Ambil kartu dengan limit sesuai sisa target (skip kartu yang sudah hafal)
             $dueFlashcards = UserFlashcard::with('studyItem')
                 ->where('user_id', $user->id)
+                ->where('is_mastered', false)
                 ->whereDate('next_review_date', '<=', $today)
                 ->orderBy('next_review_date', 'asc') // Prioritaskan kartu yang paling lama nunggak
                 ->limit($remainingGoal) // <-- BATASI DISINI
@@ -91,6 +92,21 @@ class StudyController extends Controller
         return response()->json([
             'message' => 'Progres berhasil disimpan!',
             'next_review_date' => $flashcard->next_review_date->format('Y-m-d')
+        ]);
+    }
+
+    // Toggle status "sudah hafal" untuk sebuah kartu
+    public function toggleMastered(Request $request, $flashcardId)
+    {
+        $flashcard = UserFlashcard::where('user_id', Auth::id())
+                        ->findOrFail($flashcardId);
+
+        $flashcard->is_mastered = !$flashcard->is_mastered;
+        $flashcard->save();
+
+        return response()->json([
+            'message'     => $flashcard->is_mastered ? 'Kata ditandai sudah hafal!' : 'Tanda hafal dihapus.',
+            'is_mastered' => $flashcard->is_mastered,
         ]);
     }
 
@@ -157,7 +173,9 @@ class StudyController extends Controller
 
         if ($mode === 'daily') {
             $today = \Carbon\Carbon::today();
-            $query->where('next_review_date', '<=', $today)->orderBy('next_review_date', 'asc');
+            $query->where('is_mastered', false)
+                  ->where('next_review_date', '<=', $today)
+                  ->orderBy('next_review_date', 'asc');
         } else {
             $query->inRandomOrder();
         }

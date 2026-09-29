@@ -11,12 +11,13 @@ class UserFlashcard extends Model
 
     protected $fillable = [
         'user_id', 'study_item_id', 'repetition_count', 
-        'ease_factor', 'interval', 'next_review_date'
+        'ease_factor', 'interval', 'next_review_date', 'is_mastered'
     ];
 
     // Cast tanggal agar otomatis menjadi instance Carbon
     protected $casts = [
         'next_review_date' => 'date',
+        'is_mastered'      => 'boolean',
     ];
 
     // Relasi ke User

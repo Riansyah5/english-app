@@ -8,6 +8,7 @@ export default function StudyIndex({ auth, dueFlashcards }) {
     const [isReversed, setIsReversed] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isMastering, setIsMastering] = useState(false);
 
     const isComplete = currentIndex >= dueFlashcards.length || dueFlashcards.length === 0;
     const currentCard = isComplete ? null : dueFlashcards[currentIndex];
@@ -37,6 +38,22 @@ export default function StudyIndex({ auth, dueFlashcards }) {
             })
             .finally(() => {
                 setIsSaving(false);
+            });
+    };
+
+    const handleMarkMastered = () => {
+        setIsMastering(true);
+        axios.post(`/study/${currentCard.id}/mastered`)
+            .then(() => {
+                setCurrentIndex(prev => prev + 1);
+                setShowAnswer(false);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Gagal menandai kata hafal");
+            })
+            .finally(() => {
+                setIsMastering(false);
             });
     };
 
@@ -226,32 +243,54 @@ export default function StudyIndex({ auth, dueFlashcards }) {
                                     <p className="mb-3 font-semibold text-slate-500 dark:text-slate-400 text-xs text-center">Seberapa mudah materi ini untukmu?</p>
                                     <div className="grid grid-cols-4 gap-2">
                                         <button 
-                                            disabled={isSaving} 
+                                            disabled={isSaving || isMastering} 
                                             onClick={() => handleRate(1)} 
                                             className="py-2.5 rounded-xl font-bold text-xs bg-rose-50 dark:bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-500/30 hover:bg-rose-500 hover:text-white dark:hover:bg-rose-500 dark:hover:text-white transition shadow-xs disabled:opacity-50"
                                         >
                                             Lupa
                                         </button>
                                         <button 
-                                            disabled={isSaving} 
+                                            disabled={isSaving || isMastering} 
                                             onClick={() => handleRate(3)} 
                                             className="py-2.5 rounded-xl font-bold text-xs bg-[#ff822d]/10 dark:bg-[#ff822d]/15 text-[#ea580c] dark:text-[#ff822d] border border-[#ff822d]/20 dark:border-[#ff822d]/30 hover:bg-[#ff822d] hover:text-white transition shadow-xs disabled:opacity-50"
                                         >
                                             Sulit
                                         </button>
                                         <button 
-                                            disabled={isSaving} 
+                                            disabled={isSaving || isMastering} 
                                             onClick={() => handleRate(4)} 
                                             className="py-2.5 rounded-xl font-bold text-xs bg-[#fcbf49]/20 dark:bg-[#fcbf49]/15 text-[#b45309] dark:text-[#fbbf24] border border-[#fcbf49]/40 dark:border-[#fcbf49]/30 hover:bg-[#fcbf49] hover:text-slate-900 transition shadow-xs disabled:opacity-50"
                                         >
                                             Bagus
                                         </button>
                                         <button 
-                                            disabled={isSaving} 
+                                            disabled={isSaving || isMastering} 
                                             onClick={() => handleRate(5)} 
                                             className="py-2.5 rounded-xl font-bold text-xs bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0f766e] dark:text-[#60f2ce] border border-[#60f2ce]/50 dark:border-[#60f2ce]/30 hover:bg-[#60f2ce] hover:text-slate-900 transition shadow-xs disabled:opacity-50"
                                         >
                                             Mudah
+                                        </button>
+                                    </div>
+
+                                    {/* Tombol Sudah Hafal — lewati Daily Review selamanya */}
+                                    <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                                        <button
+                                            disabled={isSaving || isMastering}
+                                            onClick={handleMarkMastered}
+                                            className="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-xs disabled:opacity-50"
+                                            title="Tandai kata ini sebagai sudah hafal. Kata tidak akan muncul lagi di Daily Review."
+                                        >
+                                            {isMastering ? (
+                                                <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                                                </svg>
+                                            ) : (
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                            )}
+                                            Sudah Hafal — Tidak perlu review lagi
                                         </button>
                                     </div>
                                 </div>
