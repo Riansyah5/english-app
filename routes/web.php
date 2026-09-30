@@ -80,6 +80,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Rute CRUD Master Materi (Otomatis membuat rute index, create, store, destroy dll)
     Route::post('study-items/import', [StudyItemController::class, 'import'])->name('study-items.import');
+    Route::post('study-items/generate-tts', [StudyItemController::class, 'generateTts'])->name('study-items.generate-tts');
     Route::resource('study-items', StudyItemController::class)->except(['show']);
     
     // Rute Modul Video Learning
