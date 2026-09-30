@@ -220,4 +220,16 @@ class StudyItemController extends Controller
         return redirect()->route('admin.study-items.index')
             ->with('success', "Berhasil menambahkan {$added} materi baru. {$skipped} materi dilewati karena duplikat.");
     }
+
+    public function generateTts()
+    {
+        $items = StudyItem::all();
+        
+        foreach ($items as $item) {
+            \App\Jobs\GenerateTtsAudio::dispatch($item);
+        }
+
+        return redirect()->route('admin.study-items.index')
+            ->with('success', "Proses generate TTS untuk {$items->count()} kosakata telah ditambahkan ke antrean background.");
+    }
 }
