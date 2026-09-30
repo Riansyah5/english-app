@@ -158,6 +158,31 @@ class StudyController extends Controller
         ]);
     }
 
+    // Halaman daftar kata yang sudah ditandai hafal
+    public function mastered(Request $request)
+    {
+        $user  = Auth::user();
+        $query = $request->query('q', '');
+
+        $masteredCards = UserFlashcard::with('studyItem')
+            ->where('user_id', $user->id)
+            ->where('is_mastered', true)
+            ->when($query, function ($q) use ($query) {
+                $q->whereHas('studyItem', function ($s) use ($query) {
+                    $s->where('content', 'like', "%{$query}%")
+                      ->orWhere('translation', 'like', "%{$query}%");
+                });
+            })
+            ->orderByDesc('updated_at')
+            ->paginate(30)
+            ->withQueryString();
+
+        return \Inertia\Inertia::render('Study/Mastered', [
+            'masteredCards' => $masteredCards,
+            'query'         => $query,
+        ]);
+    }
+
     public function listening()
     {
         return \Inertia\Inertia::render('Study/Listening');

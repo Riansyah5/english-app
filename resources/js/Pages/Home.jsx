@@ -10,6 +10,7 @@ export default function Home({
     reviewedToday = 0, 
     dueCardsCount = 0, 
     totalCardsCount = 0,
+    masteredCount = 0,
     streak = 0,
     chartLabels = [],
     chartData = [],
