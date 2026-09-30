@@ -86,6 +86,16 @@ export default function StudyItemIndex({
                             </Link>
 
                             <Link
+                                href="/admin/study-items/generate-tts"
+                                method="post"
+                                as="button"
+                                className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 font-bold text-[11px] sm:text-xs rounded-full shadow-sm hover:bg-indigo-100 dark:hover:bg-indigo-500/20 active:scale-95 transition whitespace-nowrap"
+                            >
+                                <i className="bi bi-soundwave text-xs sm:text-sm"></i>
+                                <span>Generate TTS</span>
+                            </Link>
+
+                            <Link
                                 href="/admin/study-items/create"
                                 className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-bold text-[11px] sm:text-xs rounded-full shadow-sm shadow-[#fcbf49]/20 hover:opacity-95 active:scale-95 transition whitespace-nowrap"
                             >
