@@ -294,6 +294,28 @@ export default function Home({
                                     </span>
                                 </div>
 
+                                {/* Indikator Kata Sudah Hafal */}
+                                <Link
+                                    href="/study/mastered"
+                                    className="flex items-center justify-between p-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition group"
+                                    title="Lihat semua kata yang sudah ditandai hafal"
+                                >
+                                    <span className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        Sudah Hafal
+                                    </span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-bold px-2.5 py-1 bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 rounded-xl shadow-xs border border-emerald-200 dark:border-emerald-500/30">
+                                            {masteredCount} kata
+                                        </span>
+                                        <svg className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                </Link>
+
                                 <div className="flex items-center justify-between p-2.5 rounded-2xl bg-[#fcbf49]/20 dark:bg-[#fcbf49]/15 border border-[#fcbf49]/50 dark:border-[#fcbf49]/30">
                                     <span className="text-xs text-[#b45309] dark:text-[#fbbf24] font-semibold">Study Streak</span>
                                     <span className="text-xs font-bold px-2.5 py-1 bg-white dark:bg-slate-800 text-[#b45309] dark:text-[#fbbf24] rounded-xl shadow-xs flex items-center gap-1 border dark:border-slate-700">
