@@ -60,6 +60,9 @@ class StudyItemController extends Controller
         // 1. Simpan materi ke Bank Materi
         $studyItem = StudyItem::create($request->all());
 
+        // Dispatch background job untuk menggenerate audio TTS
+        \App\Jobs\GenerateTtsAudio::dispatch($studyItem);
+
         // 2. Ambil ID pengguna saja untuk menghemat alokasi memori
         $userIds = User::pluck('id');
         $flashcards = [];
@@ -110,6 +113,9 @@ class StudyItemController extends Controller
         ]);
 
         $studyItem->update($request->all());
+
+        // Dispatch job untuk pre-generate TTS dengan teks baru
+        \App\Jobs\GenerateTtsAudio::dispatch($studyItem);
 
         return redirect()->route('admin.study-items.index')
             ->with('success', 'Materi berhasil diperbarui!');
@@ -192,6 +198,14 @@ class StudyItemController extends Controller
             // Memasukkan data flashcard dalam chunk dan mengabaikan duplikasi
             foreach (array_chunk($flashcards, 2000) as $chunk) {
                 UserFlashcard::insertOrIgnore($chunk);
+            }
+
+            // Dispatch background job untuk audio TTS
+            foreach ($newStudyItems as $si) {
+                $fullModel = StudyItem::find($si->id);
+                if ($fullModel) {
+                    \App\Jobs\GenerateTtsAudio::dispatch($fullModel);
+                }
             }
         }
 
