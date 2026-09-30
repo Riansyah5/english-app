@@ -35,8 +35,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware(['auth'])->group(function () {
     // Rute untuk halaman belajar
     Route::get('/study', [StudyController::class, 'index'])->name('study.index');
-    Route::get('/study/practice', [StudyController::class, 'practice'])->name('study.practice');
     Route::get('/study/mastered', [StudyController::class, 'mastered'])->name('study.mastered.index');
+    Route::get('/study/practice', [StudyController::class, 'practice'])->name('study.practice');
     Route::get('/study/listening', [StudyController::class, 'listening'])->name('study.listening');
     Route::get('/study/listening/session', [StudyController::class, 'listeningSession'])->name('study.listening.session');
 

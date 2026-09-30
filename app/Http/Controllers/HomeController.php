@@ -88,36 +88,36 @@ class HomeController extends Controller
         $dailyVideo = Video::with('folder')->inRandomOrder()->first();
 
         // 4. LOGIKA LESSON REMINDER (PENGINGAT MATERI)
-        // Ambil 1 kategori acak yang memiliki minimal 1 materi
-        $randomCategory = LessonCategory::has('lessons')->inRandomOrder()->first();
+    // Ambil 1 kategori acak yang memiliki minimal 1 materi
+    $randomCategory = LessonCategory::has('lessons')->inRandomOrder()->first();
     
-        $categoryProgress = 0;
-        $nextLessonToRead = null;
+    $categoryProgress = 0;
+    $nextLessonToRead = null;
 
-        if ($randomCategory) {
-            $totalLessons = $randomCategory->lessons()->where('is_published', true)->count();
+    if ($randomCategory) {
+        $totalLessons = $randomCategory->lessons()->where('is_published', true)->count();
+        
+        // Hitung berapa yang sudah selesai di kategori ini
+        $completedIds = LessonProgress::where('user_id', $user->id)
+            ->whereIn('lesson_id', $randomCategory->lessons->pluck('id'))
+            ->count();
+
+        $categoryProgress = $totalLessons > 0 ? round(($completedIds / $totalLessons) * 100) : 0;
+
+        // Cari materi pertama yang BELUM diselesaikan di kategori ini
+        $completedLessonIds = LessonProgress::where('user_id', $user->id)->pluck('lesson_id')->toArray();
+        
+        $nextLessonToRead = $randomCategory->lessons()
+            ->where('is_published', true)
+            ->whereNotIn('id', $completedLessonIds)
+            ->orderBy('order_number', 'asc')
+            ->first();
             
-            // Hitung berapa yang sudah selesai di kategori ini
-            $completedIds = LessonProgress::where('user_id', $user->id)
-                ->whereIn('lesson_id', $randomCategory->lessons->pluck('id'))
-                ->count();
-
-            $categoryProgress = $totalLessons > 0 ? round(($completedIds / $totalLessons) * 100) : 0;
-
-            // Cari materi pertama yang BELUM diselesaikan di kategori ini
-            $completedLessonIds = LessonProgress::where('user_id', $user->id)->pluck('lesson_id')->toArray();
-            
-            $nextLessonToRead = $randomCategory->lessons()
-                ->where('is_published', true)
-                ->whereNotIn('id', $completedLessonIds)
-                ->orderBy('order_number', 'asc')
-                ->first();
-                
-            // Jika semua sudah selesai, tampilkan saja bab pertama sebagai referensi ulang
-            if (!$nextLessonToRead) {
-                $nextLessonToRead = $randomCategory->lessons()->orderBy('order_number', 'asc')->first();
-            }
+        // Jika semua sudah selesai, tampilkan saja bab pertama sebagai referensi ulang
+        if (!$nextLessonToRead) {
+            $nextLessonToRead = $randomCategory->lessons()->orderBy('order_number', 'asc')->first();
         }
+    }
 
         return \Inertia\Inertia::render('Home', [
             'cardsToStudyToday' => $cardsToStudyToday,

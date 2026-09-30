@@ -155,7 +155,7 @@ class StudyController extends Controller
             'selectedType' => $selectedType,
             'source' => $source,
             'limit' => $limit
-        ]);
+        ]);  
     }
 
     // Halaman daftar kata yang sudah ditandai hafal
