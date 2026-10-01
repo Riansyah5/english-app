@@ -6,19 +6,36 @@ import confetti from 'canvas-confetti';
 export default function ListeningSession({ auth, sessionCards = [], mode, direction = 'en-id' }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [phase, setPhase] = useState('content'); // 'word', 'translation', 'example', 'done'
+    const [phase, setPhase] = useState('content'); // 'content', 'translation', 'example'
     const [isFinished, setIsFinished] = useState(false);
     
     const isPlayingRef = useRef(isPlaying);
     const timeoutRef = useRef(null);
     const currentAudioRef = useRef(null);
+    const voicesRef = useRef([]);
 
+    // Muat dan perbarui daftar suara (iOS WebKit memuat voices secara asinkron)
     useEffect(() => {
-        isPlayingRef.current = isPlaying;
-    }, [isPlaying]);
+        const updateVoices = () => {
+            if ('speechSynthesis' in window) {
+                const availableVoices = window.speechSynthesis.getVoices();
+                if (availableVoices && availableVoices.length > 0) {
+                    voicesRef.current = availableVoices;
+                }
+            }
+        };
 
-    useEffect(() => {
+        updateVoices();
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = updateVoices;
+        }
+
         return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.onvoiceschanged = null;
+            }
             if (currentAudioRef.current) {
                 currentAudioRef.current.pause();
                 currentAudioRef.current = null;
@@ -26,6 +43,30 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
     }, []);
+
+    useEffect(() => {
+        isPlayingRef.current = isPlaying;
+    }, [isPlaying]);
+
+    // Pencocokan objek suara eksplisit agar iOS tidak fallback ke suara default perangkat
+    const getBestVoice = (targetLang) => {
+        const voices = voicesRef.current.length > 0 
+            ? voicesRef.current 
+            : ('speechSynthesis' in window ? window.speechSynthesis.getVoices() : []);
+            
+        const cleanTarget = targetLang.replace('_', '-').toLowerCase();
+        const langPrefix = cleanTarget.split('-')[0];
+
+        // 1. Cari kecocokan kode bahasa lengkap (contoh: en-US, id-ID)
+        let matched = voices.find(v => v.lang.replace('_', '-').toLowerCase() === cleanTarget);
+
+        // 2. Jika tidak ada, cocokkan awalan kode bahasa (contoh: en-GB untuk target en-US)
+        if (!matched) {
+            matched = voices.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(langPrefix));
+        }
+
+        return matched || null;
+    };
 
     const playText = (text, lang = 'en-US', rate = 0.9) => {
         return new Promise((resolve) => {
@@ -38,6 +79,11 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = lang;
             utterance.rate = rate;
+
+            const selectedVoice = getBestVoice(lang);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
             
             utterance.onend = resolve;
             utterance.onerror = (e) => {
@@ -139,6 +185,9 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
         if (isPlaying && !isFinished) {
             runSessionSequence();
         } else {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
             if (currentAudioRef.current) {
                 currentAudioRef.current.pause();
             }
@@ -152,6 +201,9 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
     };
 
     const handleSkip = () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
         if (currentAudioRef.current) {
             currentAudioRef.current.pause();
         }
@@ -167,7 +219,7 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
         }
     };
 
-    // State Kosong (Tidak ada kartu jatuh tempo)
+    // State Kosong (Tidak ada kartu)
     if (!sessionCards || sessionCards.length === 0) {
         return (
             <AuthenticatedLayout user={auth.user}>
