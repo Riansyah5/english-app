@@ -60,8 +60,8 @@ class StudyItemController extends Controller
         // 1. Simpan materi ke Bank Materi
         $studyItem = StudyItem::create($request->all());
 
-        // Dispatch background job untuk menggenerate audio TTS
-        \App\Jobs\GenerateTtsAudio::dispatch($studyItem);
+        
+        
 
         // 2. Ambil ID pengguna saja untuk menghemat alokasi memori
         $userIds = User::pluck('id');
@@ -114,8 +114,8 @@ class StudyItemController extends Controller
 
         $studyItem->update($request->all());
 
-        // Dispatch job untuk pre-generate TTS dengan teks baru
-        \App\Jobs\GenerateTtsAudio::dispatch($studyItem);
+        
+        
 
         return redirect()->route('admin.study-items.index')
             ->with('success', 'Materi berhasil diperbarui!');
@@ -200,11 +200,11 @@ class StudyItemController extends Controller
                 UserFlashcard::insertOrIgnore($chunk);
             }
 
-            // Dispatch background job untuk audio TTS
+            
             foreach ($newStudyItems as $si) {
                 $fullModel = StudyItem::find($si->id);
                 if ($fullModel) {
-                    \App\Jobs\GenerateTtsAudio::dispatch($fullModel);
+                    
                 }
             }
         }
@@ -219,17 +219,5 @@ class StudyItemController extends Controller
 
         return redirect()->route('admin.study-items.index')
             ->with('success', "Berhasil menambahkan {$added} materi baru. {$skipped} materi dilewati karena duplikat.");
-    }
-
-    public function generateTts()
-    {
-        $items = StudyItem::all();
-        
-        foreach ($items as $item) {
-            \App\Jobs\GenerateTtsAudio::dispatch($item);
-        }
-
-        return redirect()->route('admin.study-items.index')
-            ->with('success', "Proses generate TTS untuk {$items->count()} kosakata telah ditambahkan ke antrean background.");
     }
 }

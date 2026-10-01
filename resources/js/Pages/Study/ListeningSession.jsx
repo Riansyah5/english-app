@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import confetti from 'canvas-confetti';
@@ -29,46 +29,23 @@ export default function ListeningSession({ auth, sessionCards = [], mode, direct
 
     const playText = (text, lang = 'en-US', rate = 0.9) => {
         return new Promise((resolve) => {
-            if (!text) {
+            if (!text || !('speechSynthesis' in window)) {
                 resolve();
                 return;
             }
 
-            if (currentAudioRef.current) {
-                currentAudioRef.current.pause();
-                currentAudioRef.current.currentTime = 0;
-            }
-
-            let voice = 'en-US-JennyNeural'; 
-            if (lang === 'en-US') {
-                voice = 'en-US-EmmaNeural';
-            } else if (lang === 'id-ID') {
-                voice = 'id-ID-GadisNeural';
-            }
-
-            let rateStr = '+0%';
-            if (rate < 1.0) {
-                const diff = Math.round((1.0 - rate) * 100);
-                rateStr = `-${diff}%`;
-            } else if (rate > 1.0) {
-                const diff = Math.round((rate - 1.0) * 100);
-                rateStr = `+${diff}%`;
-            }
-
-            const url = `/tts?text=${encodeURIComponent(text)}&voice=${voice}&rate=${encodeURIComponent(rateStr)}`;
-            const audio = new Audio(url);
-            currentAudioRef.current = audio;
-
-            audio.onended = () => resolve();
-            audio.onerror = (e) => {
-                console.error("Audio playback error:", e);
-                setTimeout(resolve, 500); 
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = rate;
+            
+            utterance.onend = resolve;
+            utterance.onerror = (e) => {
+                console.error("Speech error", e);
+                resolve();
             };
 
-            audio.play().catch(e => {
-                console.error("Audio play failed (mungkin diblokir browser):", e);
-                resolve(); 
-            });
+            window.speechSynthesis.speak(utterance);
         });
     };
 

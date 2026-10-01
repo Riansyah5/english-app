@@ -14,7 +14,6 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\LessonLearningController;    
 use App\Http\Controllers\Admin\ShadowingController;
 use App\Http\Controllers\ShadowingLearningController;
-use App\Http\Controllers\Api\TtsController;
 
 
 
@@ -69,9 +68,6 @@ Route::middleware(['auth'])->group(function () {
     // Rute Modul Shadowing (Sisi Pengguna)
     Route::get('/shadowing', [ShadowingLearningController::class, 'index'])->name('shadowing.user.index');
     Route::get('/shadowing/{slug}', [ShadowingLearningController::class, 'show'])->name('shadowing.user.show');
-
-    // Rute untuk TTS (Text-to-Speech)
-    Route::get('/tts', [TtsController::class, 'stream'])->name('tts.stream');
 });
 
 
@@ -80,7 +76,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Rute CRUD Master Materi (Otomatis membuat rute index, create, store, destroy dll)
     Route::post('study-items/import', [StudyItemController::class, 'import'])->name('study-items.import');
-    Route::post('study-items/generate-tts', [StudyItemController::class, 'generateTts'])->name('study-items.generate-tts');
     Route::resource('study-items', StudyItemController::class)->except(['show']);
     
     // Rute Modul Video Learning
