@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
@@ -8,17 +8,26 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
     const [isReversed, setIsReversed] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
     const [isMastering, setIsMastering] = useState(false);
-    // Track mastered status locally (in case user toggles multiple times)
+    const [isFading, setIsFading] = useState(false);
+
+    // Track mastered status locally
     const [masteredIds, setMasteredIds] = useState(
         () => new Set(practiceCards.filter(c => c.is_mastered).map(c => c.id))
     );
+
+    // Reset index & state jika filter/cards berubah
+    useEffect(() => {
+        setCurrentIndex(0);
+        setShowAnswer(false);
+        setMasteredIds(new Set(practiceCards.filter(c => c.is_mastered).map(c => c.id)));
+    }, [practiceCards]);
 
     const isComplete = currentIndex >= practiceCards.length || practiceCards.length === 0;
     const currentCard = isComplete ? null : practiceCards[currentIndex];
     const studyItem = currentCard?.study_item;
     const isCurrentMastered = currentCard ? masteredIds.has(currentCard.id) : false;
 
-    const playAudio = (text, e) => {
+    const playAudio = useCallback((text, e) => {
         if (e) e.stopPropagation();
         if (!text || !('speechSynthesis' in window)) return;
 
@@ -27,17 +36,42 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
         utterance.lang = 'en-US';
         utterance.rate = 0.9;
         window.speechSynthesis.speak(utterance);
-    };
+    }, []);
 
-    const handleNext = () => {
-        setShowAnswer(false);
+    // Transisi halus tanpa teks bocor
+    const handleNext = useCallback(() => {
+        if (isFading) return;
+        window.speechSynthesis?.cancel();
+        setIsFading(true);
+
         setTimeout(() => {
             setCurrentIndex(prev => prev + 1);
-        }, 150);
-    };
+            setShowAnswer(false);
 
-    const handleToggleMastered = () => {
-        if (!currentCard) return;
+            setTimeout(() => {
+                setIsFading(false);
+            }, 40);
+        }, 150);
+    }, [isFading]);
+
+    // Opsi mundur ke kartu sebelumnya
+    const handlePrev = useCallback(() => {
+        if (currentIndex === 0 || isFading) return;
+        window.speechSynthesis?.cancel();
+        setIsFading(true);
+
+        setTimeout(() => {
+            setCurrentIndex(prev => prev - 1);
+            setShowAnswer(false);
+
+            setTimeout(() => {
+                setIsFading(false);
+            }, 40);
+        }, 150);
+    }, [currentIndex, isFading]);
+
+    const handleToggleMastered = useCallback(() => {
+        if (!currentCard || isMastering) return;
         setIsMastering(true);
         axios.post(`/study/${currentCard.id}/mastered`)
             .then(res => {
@@ -53,7 +87,51 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                 alert("Gagal mengubah status hafal");
             })
             .finally(() => setIsMastering(false));
-    };
+    }, [currentCard, isMastering]);
+
+    // Keyboard Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            const targetTag = e.target.tagName.toLowerCase();
+            if (targetTag === 'input' || targetTag === 'textarea') return;
+            if (isComplete || isFading) return;
+
+            // Space / Enter -> Buka Jawaban atau Lanjut ke kartu berikutnya
+            if (e.code === 'Space' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                if (!showAnswer) {
+                    setShowAnswer(true);
+                } else {
+                    handleNext();
+                }
+                return;
+            }
+
+            // Arrow Left -> Kartu sebelumnya
+            if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                e.preventDefault();
+                handlePrev();
+                return;
+            }
+
+            // R -> Replay Audio kata bahasa inggris
+            if ((e.key === 'r' || e.key === 'R') && studyItem?.content) {
+                e.preventDefault();
+                playAudio(studyItem.content);
+                return;
+            }
+
+            // M -> Toggle Hafal
+            if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                handleToggleMastered();
+                return;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isComplete, isFading, showAnswer, currentIndex, studyItem, handleNext, handlePrev, handleToggleMastered, playAudio]);
 
     const navLinkClasses = (isActive) => 
         `px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold transition-all rounded-xl whitespace-nowrap ${
@@ -89,8 +167,9 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                         <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
                             <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-200 dark:border-slate-700 shrink-0">
                                 <button 
+                                    type="button"
                                     onClick={() => setIsReversed(false)}
-                                    className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all whitespace-nowrap ${
+                                    className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all whitespace-nowrap cursor-pointer ${
                                         !isReversed 
                                             ? 'bg-[#ff822d] text-white shadow-sm' 
                                             : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
@@ -99,8 +178,9 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                     ID ➔ EN
                                 </button>
                                 <button 
+                                    type="button"
                                     onClick={() => setIsReversed(true)}
-                                    className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all whitespace-nowrap ${
+                                    className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all whitespace-nowrap cursor-pointer ${
                                         isReversed 
                                             ? 'bg-[#ff822d] text-white shadow-sm' 
                                             : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
@@ -185,12 +265,13 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                         : 'Hebat! Semua kartu di sesi latihan bebas ini telah dituntaskan.'}
                                 </p>
                                 <div className="flex justify-center gap-3 flex-wrap">
-                                    <Link 
-                                        href={`/study/practice?type=${selectedType || ''}&source=${source}&limit=${limit}`} 
-                                        className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-full transition border dark:border-slate-700"
+                                    <button 
+                                        type="button"
+                                        onClick={() => { setCurrentIndex(0); setShowAnswer(false); }}
+                                        className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-full transition border dark:border-slate-700 cursor-pointer"
                                     >
-                                        Ulangi Lagi
-                                    </Link>
+                                        Ulangi Sesi Ini
+                                    </button>
                                     <Link 
                                         href="/home" 
                                         className="px-6 py-2.5 bg-gradient-to-r from-[#60f2ce] via-[#fefc7c] to-[#fcbf49] text-slate-950 font-extrabold text-xs rounded-full shadow-md shadow-[#fcbf49]/20 hover:opacity-95 transition"
@@ -201,9 +282,14 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                             </div>
                         </div>
                     ) : (
-                        <div className="relative h-[440px] w-full mx-auto">
-                            {/* Front Card */}
-                            <div className={`absolute inset-0 w-full h-full bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.06)] dark:shadow-none p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 transform ${
+                        /* Card Container dengan Crossfade Anti-Bocor */
+                        <div 
+                            className={`relative h-[450px] w-full mx-auto transition-all duration-150 ease-out ${
+                                isFading ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'
+                            }`}
+                        >
+                            {/* Front Card Face */}
+                            <div className={`absolute inset-0 w-full h-full bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.06)] dark:shadow-none p-6 sm:p-8 flex flex-col justify-between transition-all duration-200 ease-out transform ${
                                 showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
                             }`}>
                                 <div className="flex items-center justify-between gap-2 min-w-0">
@@ -216,7 +302,6 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                                 {studyItem.level}
                                             </span>
                                         )}
-                                        {/* Badge Sudah Hafal */}
                                         {isCurrentMastered && (
                                             <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 whitespace-nowrap">
                                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,24 +312,22 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                         )}
                                     </div>
                                     <span className="shrink-0 text-[11px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                                        Pertanyaan
+                                        Tekan Spasi
                                     </span>
                                 </div>
                                 
-                                <div className="my-auto text-center px-2 sm:px-4">
+                                <div className="my-auto text-center px-2 sm:px-4 py-4">
                                     <div className="flex items-center justify-center gap-3">
                                         <h2 className="font-extrabold text-2xl sm:text-4xl tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                                            {/* ID ➔ EN: Tampilkan terjemahan (ID). EN ➔ ID: Tampilkan konten (EN) */}
                                             {!isReversed ? studyItem?.translation : studyItem?.content}
                                         </h2>
 
-                                        {/* Speaker Front: Hanya tampil jika kartu depan adalah Bahasa Inggris (saat mode isReversed) */}
                                         {isReversed && studyItem?.content && (
                                             <button
                                                 type="button"
                                                 onClick={(e) => playAudio(studyItem.content, e)}
-                                                className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition shrink-0"
-                                                title="Dengarkan pengucapan"
+                                                className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition shrink-0 cursor-pointer"
+                                                title="Dengarkan pengucapan (Tekan R)"
                                             >
                                                 <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
@@ -254,27 +337,41 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                     </div>
                                 </div>
                                 
-                                <div>
+                                <div className="flex items-center gap-2">
+                                    {currentIndex > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={handlePrev}
+                                            className="px-3.5 py-3.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl transition cursor-pointer"
+                                            title="Kembali ke kartu sebelumnya"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/>
+                                            </svg>
+                                        </button>
+                                    )}
                                     <button 
+                                        type="button"
                                         onClick={() => setShowAnswer(true)}
-                                        className="w-full py-3.5 bg-slate-900 dark:bg-[#60f2ce] hover:bg-slate-800 dark:hover:bg-[#4de1bc] text-white dark:text-slate-950 font-bold text-xs rounded-2xl shadow-sm transition-all active:scale-[0.99]"
+                                        className="flex-1 py-3.5 bg-slate-900 dark:bg-[#60f2ce] hover:bg-slate-800 dark:hover:bg-[#4de1bc] text-white dark:text-slate-950 font-bold text-xs rounded-2xl shadow-sm transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                                     >
-                                        Lihat Jawaban
+                                        <span>Lihat Jawaban</span>
+                                        <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-white/20 dark:bg-black/15 rounded text-white dark:text-slate-900">
+                                            Spasi
+                                        </kbd>
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Back Card */}
-                            <div className={`absolute inset-0 w-full h-full bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_12px_32px_-8px_rgba(255,130,45,0.12)] dark:shadow-none p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 transform ${
+                            {/* Back Card Face */}
+                            <div className={`absolute inset-0 w-full h-full bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-[0_12px_32px_-8px_rgba(255,130,45,0.12)] dark:shadow-none p-6 sm:p-8 flex flex-col justify-between transition-all duration-200 ease-out transform ${
                                 !showAnswer ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
                             }`}>
-                                {/* Header Kunci Jawaban */}
                                 <div className="flex items-center justify-between gap-2 min-w-0">
                                     <span className="shrink-0 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-[#60f2ce]/20 dark:bg-[#60f2ce]/15 text-[#0f766e] dark:text-[#60f2ce] border border-[#60f2ce]/50 dark:border-[#60f2ce]/30 uppercase tracking-wider whitespace-nowrap">
                                         Kunci Jawaban
                                     </span>
                                     <span className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-medium truncate text-right">
-                                        {/* Teks pertanyaan di kartu depan */}
                                         {!isReversed ? studyItem?.translation : studyItem?.content}
                                     </span>
                                 </div>
@@ -282,17 +379,15 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                 <div className="my-auto py-2 space-y-3 sm:space-y-4">
                                     <div className="flex items-center justify-center gap-2.5">
                                         <h3 className="font-black text-2xl sm:text-4xl tracking-tight text-[#ea580c] dark:text-[#ff822d] break-words text-center">
-                                            {/* ID ➔ EN: Tampilkan konten (EN). EN ➔ ID: Tampilkan terjemahan (ID) */}
                                             {!isReversed ? studyItem?.content : studyItem?.translation}
                                         </h3>
 
-                                        {/* Speaker Back: Hanya tampil jika kartu belakang adalah Bahasa Inggris (saat !isReversed) */}
                                         {!isReversed && studyItem?.content && (
                                             <button
                                                 type="button"
                                                 onClick={(e) => playAudio(studyItem.content, e)}
-                                                className="p-2 rounded-full text-[#ea580c]/70 hover:text-[#ea580c] dark:text-[#ff822d]/70 dark:hover:text-[#ff822d] hover:bg-orange-50 dark:hover:bg-slate-800 active:scale-95 transition shrink-0"
-                                                title="Dengarkan pengucapan"
+                                                className="p-2 rounded-full text-[#ea580c]/70 hover:text-[#ea580c] dark:text-[#ff822d]/70 dark:hover:text-[#ff822d] hover:bg-orange-50 dark:hover:bg-slate-800 active:scale-95 transition shrink-0 cursor-pointer"
+                                                title="Dengarkan pengucapan (Tekan R)"
                                             >
                                                 <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
@@ -310,7 +405,7 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                                 <button
                                                     type="button"
                                                     onClick={(e) => playAudio(studyItem.example_sentence, e)}
-                                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 active:scale-95 transition"
+                                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 active:scale-95 transition cursor-pointer"
                                                     title="Dengarkan kalimat"
                                                 >
                                                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -338,14 +433,15 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                 <div className="pt-2 space-y-2">
                                     {/* Tombol Toggle Hafal */}
                                     <button
+                                        type="button"
                                         disabled={isMastering}
                                         onClick={handleToggleMastered}
-                                        className={`w-full py-2.5 rounded-2xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.99] disabled:opacity-50 ${
+                                        className={`w-full py-2.5 rounded-2xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.99] disabled:opacity-50 cursor-pointer ${
                                             isCurrentMastered
-                                                ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200 dark:hover:border-rose-500/30'
+                                                ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200 dark:border-rose-500/30'
                                                 : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white'
                                         }`}
-                                        title={isCurrentMastered ? "Hapus tanda hafal" : "Tandai kata ini sebagai sudah hafal"}
+                                        title="Tekan M untuk toggle"
                                     >
                                         {isMastering ? (
                                             <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -357,17 +453,36 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d={isCurrentMastered ? "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" : "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"}/>
                                             </svg>
                                         )}
-                                        {isCurrentMastered ? 'Hapus Tanda Hafal' : 'Tandai Sudah Hafal'}
+                                        <span>{isCurrentMastered ? 'Hapus Tanda Hafal' : 'Tandai Sudah Hafal'}</span>
+                                        <kbd className="hidden sm:inline-block ml-1 px-1 py-0.2 rounded text-[9px] bg-black/5 dark:bg-white/10 font-mono">M</kbd>
                                     </button>
 
-                                    {/* Tombol Lanjut */}
-                                    <button 
-                                        onClick={handleNext} 
-                                        className="w-full py-3 bg-gradient-to-r from-[#ff822d] to-[#fcbf49] text-slate-950 hover:opacity-95 font-extrabold text-xs rounded-2xl shadow-md shadow-[#ff822d]/20 transition-all flex items-center justify-center gap-1.5 active:scale-[0.99]"
-                                    >
-                                        <span>Lanjut Kartu Berikutnya</span>
-                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"/></svg>
-                                    </button>
+                                    {/* Action Bottom: Prev & Next */}
+                                    <div className="flex items-center gap-2">
+                                        {currentIndex > 0 && (
+                                            <button
+                                                type="button"
+                                                onClick={handlePrev}
+                                                className="px-3.5 py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl transition cursor-pointer"
+                                                title="Kartu sebelumnya (Arrow Left)"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/>
+                                                </svg>
+                                            </button>
+                                        )}
+                                        <button 
+                                            type="button"
+                                            onClick={handleNext} 
+                                            className="flex-1 py-3 bg-gradient-to-r from-[#ff822d] to-[#fcbf49] text-slate-950 hover:opacity-95 font-extrabold text-xs rounded-2xl shadow-md shadow-[#ff822d]/20 transition-all flex items-center justify-center gap-1.5 active:scale-[0.99] cursor-pointer"
+                                        >
+                                            <span>Lanjut Kartu Berikutnya</span>
+                                            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-black/10 rounded text-slate-900">
+                                                Enter
+                                            </kbd>
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"/></svg>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
