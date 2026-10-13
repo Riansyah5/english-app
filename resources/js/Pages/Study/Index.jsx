@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
@@ -11,9 +11,54 @@ export default function StudyIndex({ auth, dueFlashcards = [] }) {
     const [isMastering, setIsMastering] = useState(false);
     const [isFading, setIsFading] = useState(false);
 
+    const voicesRef = useRef([]);
+
+    // Muat daftar suara untuk WebKit/Safari iOS
+    useEffect(() => {
+        const updateVoices = () => {
+            if ('speechSynthesis' in window) {
+                const availableVoices = window.speechSynthesis.getVoices();
+                if (availableVoices && availableVoices.length > 0) {
+                    voicesRef.current = availableVoices;
+                }
+            }
+        };
+
+        updateVoices();
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = updateVoices;
+        }
+
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.onvoiceschanged = null;
+            }
+        };
+    }, []);
+
     const isComplete = currentIndex >= dueFlashcards.length || dueFlashcards.length === 0;
     const currentCard = isComplete ? null : dueFlashcards[currentIndex];
     const studyItem = currentCard?.study_item;
+
+    // Helper memilih suara native EN agar tidak di-fallback ke aksen lokal
+    const getBestVoice = (targetLang) => {
+        const voices = voicesRef.current.length > 0
+            ? voicesRef.current
+            : ('speechSynthesis' in window ? window.speechSynthesis.getVoices() : []);
+
+        const cleanTarget = targetLang.replace('_', '-').toLowerCase();
+        const langPrefix = cleanTarget.split('-')[0];
+
+        let matched = voices.find(v => v.lang.replace('_', '-').toLowerCase() === cleanTarget);
+
+        if (!matched) {
+            matched = voices.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(langPrefix));
+        }
+
+        return matched || null;
+    };
 
     const playAudio = useCallback((text, e) => {
         if (e) e.stopPropagation();
@@ -23,6 +68,12 @@ export default function StudyIndex({ auth, dueFlashcards = [] }) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
         utterance.rate = 0.9;
+
+        const enVoice = getBestVoice('en-US');
+        if (enVoice) {
+            utterance.voice = enVoice;
+        }
+
         window.speechSynthesis.speak(utterance);
     }, []);
 
@@ -37,7 +88,7 @@ export default function StudyIndex({ auth, dueFlashcards = [] }) {
             setTimeout(() => {
                 setIsFading(false);
             }, 40);
-        }, 150); // Sesuaikan dengan durasi duration-150 transition container
+        }, 150);
     }, []);
 
     const handleRate = useCallback((quality) => {

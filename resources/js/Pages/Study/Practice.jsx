@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
@@ -9,6 +9,33 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
     const [showAnswer, setShowAnswer] = useState(false);
     const [isMastering, setIsMastering] = useState(false);
     const [isFading, setIsFading] = useState(false);
+
+    const voicesRef = useRef([]);
+
+    // Muat daftar suara untuk WebKit/Safari iOS
+    useEffect(() => {
+        const updateVoices = () => {
+            if ('speechSynthesis' in window) {
+                const availableVoices = window.speechSynthesis.getVoices();
+                if (availableVoices && availableVoices.length > 0) {
+                    voicesRef.current = availableVoices;
+                }
+            }
+        };
+
+        updateVoices();
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = updateVoices;
+        }
+
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.onvoiceschanged = null;
+            }
+        };
+    }, []);
 
     // Track mastered status locally
     const [masteredIds, setMasteredIds] = useState(
@@ -27,6 +54,24 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
     const studyItem = currentCard?.study_item;
     const isCurrentMastered = currentCard ? masteredIds.has(currentCard.id) : false;
 
+    // Helper memilih suara native EN agar tidak di-fallback ke aksen lokal oleh iOS
+    const getBestVoice = (targetLang) => {
+        const voices = voicesRef.current.length > 0
+            ? voicesRef.current
+            : ('speechSynthesis' in window ? window.speechSynthesis.getVoices() : []);
+
+        const cleanTarget = targetLang.replace('_', '-').toLowerCase();
+        const langPrefix = cleanTarget.split('-')[0];
+
+        let matched = voices.find(v => v.lang.replace('_', '-').toLowerCase() === cleanTarget);
+
+        if (!matched) {
+            matched = voices.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(langPrefix));
+        }
+
+        return matched || null;
+    };
+
     const playAudio = useCallback((text, e) => {
         if (e) e.stopPropagation();
         if (!text || !('speechSynthesis' in window)) return;
@@ -35,6 +80,12 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
         utterance.rate = 0.9;
+
+        const enVoice = getBestVoice('en-US');
+        if (enVoice) {
+            utterance.voice = enVoice;
+        }
+
         window.speechSynthesis.speak(utterance);
     }, []);
 
@@ -378,7 +429,7 @@ export default function StudyPractice({ auth, user, practiceCards = [], selected
 
                                 <div className="my-auto py-2 space-y-3 sm:space-y-4">
                                     <div className="flex items-center justify-center gap-2.5">
-                                        <h3 className="font-black text-2xl sm:text-4xl tracking-tight text-[#ea580c] dark:text-[#ff822d] break-words text-center">
+                                        <h3 className="font-black text-2xl sm:4xl tracking-tight text-[#ea580c] dark:text-[#ff822d] break-words text-center">
                                             {!isReversed ? studyItem?.content : studyItem?.translation}
                                         </h3>
 
